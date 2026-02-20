@@ -3,138 +3,456 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Workout of the Day</title>
+  <title>Workout App</title>
   <style>
-    :root { color-scheme: dark; }
-    body {
-      margin: 0; padding: 16px;
-      font-family: Arial, sans-serif;
-      background: #0f0f0f; color: #fff;
-      max-width: 820px; margin-inline: auto;
+    :root{
+      color-scheme: dark;
+      --bg0:#0a0b10;
+      --bg1:#0f1220;
+      --card:#141826;
+      --card2:#101420;
+      --line:#263045;
+      --text:#f2f4ff;
+      --muted:#a8b0c6;
+      --accent:#7c5cff;
+      --accent2:#2de2e6;
+      --good:#2dd4bf;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
     }
-    header { display:flex; flex-direction:column; gap:10px; margin-bottom: 12px; }
-    h1 { margin:0; font-size: 22px; }
-    .sub { color:#bbb; font-size: 13px; line-height: 1.3; }
-    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .pill {
-      background:#1b1b1b; border:1px solid #2a2a2a;
-      border-radius: 999px; padding: 8px 12px; font-size: 13px;
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 900px at 20% -10%, rgba(124,92,255,.35), transparent 60%),
+                  radial-gradient(900px 700px at 110% 20%, rgba(45,226,230,.25), transparent 55%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      color:var(--text);
+      padding:16px;
+      max-width: 920px;
+      margin-inline:auto;
     }
-
-    .card {
-      background: #151515;
-      border: 1px solid #2a2a2a;
-      border-radius: 14px;
-      padding: 14px;
-      margin: 12px 0;
+    header{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-bottom:14px;
     }
-
-    .workout-title {
-      display:flex; align-items:flex-start; justify-content:space-between;
-      gap:12px; margin-bottom: 8px;
+    .topbar{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-    .workout-title h2 { margin:0; font-size: 18px; }
-    .btns { display:flex; gap:10px; }
-    button {
-      background:#2b2b2b; color:#fff; border:1px solid #3a3a3a;
-      border-radius: 10px; padding: 10px 12px; font-size: 14px;
+    h1{margin:0;font-size:20px;letter-spacing:.2px;}
+    .subtitle{color:var(--muted);font-size:13px;line-height:1.35;max-width: 62ch;}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+    .chip{
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      backdrop-filter: blur(8px);
+    }
+    .chip strong{color:var(--text);font-weight:600;}
+    .nav{
+      display:flex;gap:8px;flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .tab{
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
       cursor:pointer;
+      font-size:13px;
     }
-    button:hover { background:#343434; }
+    .tab.active{
+      border-color: rgba(124,92,255,.7);
+      box-shadow: 0 0 0 3px rgba(124,92,255,.15);
+      background: rgba(124,92,255,.18);
+    }
 
-    .videosGrid {
-      display: grid;
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+
+    .row{
+      display:flex;
+      gap:12px;
+      justify-content:space-between;
+      align-items:flex-start;
+      flex-wrap:wrap;
+    }
+    .titleBlock{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 260px;
+    }
+    h2{margin:0;font-size:16px;}
+    .small{font-size:12px;color:var(--muted);}
+
+    button{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      border-radius: 12px;
+      padding:10px 12px;
+      font-size:13px;
+      cursor:pointer;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+    }
+    button:hover{background: rgba(255,255,255,.10);}
+    button:active{transform: translateY(1px);}
+    .btnPrimary{
+      border-color: rgba(124,92,255,.55);
+      background: rgba(124,92,255,.22);
+    }
+    .btnGhost{
+      background: transparent;
+      border-color: rgba(255,255,255,.14);
+    }
+    .btnDanger{
+      border-color: rgba(251,113,133,.55);
+      background: rgba(251,113,133,.15);
+    }
+
+    .progressWrap{
+      margin-top:12px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .progressMeta{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      color:var(--muted);font-size:12px;
+    }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .videosGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (min-width: 820px){
+      .videosGrid{grid-template-columns: 1fr 1fr;}
+    }
+    .videoTitle{margin:0 0 8px 0;color:var(--muted);font-size:12px;}
+    .iframeBox{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      border-radius: 14px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:#000;
+    }
+    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+    .list{
+      margin-top:14px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .item.flash{
+      border-color: rgba(45,212,191,.8);
+      box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+    }
+    .section{
+      background: rgba(255,255,255,.05);
+      border-style: dashed;
+    }
+    .topline{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .topline input{
+      transform: scale(1.35);
+      margin-top:2px;
+      accent-color: var(--accent2);
+    }
+    .name{
+      font-size:13.5px;
+      line-height:1.25;
+      flex:1;
+    }
+    .done .name{
+      text-decoration: line-through;
+      color: rgba(168,176,198,.75);
+    }
+    .meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .timerRow{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .timeBox{
+      font-variant-numeric: tabular-nums;
+      padding: 7px 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      min-width: 92px;
+      text-align:center;
+      font-size: 13px;
+    }
+    .pillBtn{
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(255,255,255,.10);
+      margin: 14px 0;
+    }
+
+    .grid2{
+      display:grid;
       grid-template-columns: 1fr;
       gap: 12px;
-      margin-top: 12px;
     }
-    @media (min-width: 760px) {
-      .videosGrid { grid-template-columns: 1fr 1fr; }
-    }
-    .videoWrap { margin-top: 6px; }
-    .videoTitle { color:#bbb; font-size: 13px; margin: 0 0 8px 0; }
-    .iframeBox {
-      position: relative; width: 100%;
-      padding-top: 56.25%; border-radius: 14px; overflow: hidden;
-      border: 1px solid #2a2a2a; background:#000;
-    }
-    iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
-
-    .list { display:flex; flex-direction:column; gap:10px; margin-top: 12px; }
-    .item {
-      background:#111; border:1px solid #2a2a2a;
-      border-radius: 12px; padding: 10px;
-      display:flex; flex-direction:column; gap:8px;
-    }
-    .topline { display:flex; gap:10px; align-items:flex-start; }
-    .topline input { transform: scale(1.4); margin-top: 2px; }
-    .name { font-size: 14px; line-height: 1.3; }
-    .done .name { text-decoration: line-through; color:#8f8f8f; }
-
-    .meta {
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      color:#bdbdbd; font-size: 13px;
-    }
-    .timer {
-      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
-    }
-    .timebox {
-      font-variant-numeric: tabular-nums;
-      background:#1b1b1b; border:1px solid #2a2a2a;
-      padding: 6px 10px; border-radius: 10px; font-size: 14px;
-      min-width: 86px; text-align:center;
-    }
-    .smallbtn {
-      padding: 8px 10px; font-size: 13px; border-radius: 10px;
+    @media (min-width: 820px){
+      .grid2{grid-template-columns: 1fr 1fr;}
     }
 
-    .footer {
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center;
-      margin-top: 14px; padding-top: 14px; border-top: 1px solid #2a2a2a;
-      color:#9a9a9a; font-size: 12px;
+    .stat{
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .stat .k{color:var(--muted);font-size:12px;}
+    .stat .v{font-size:18px;font-weight:700;}
+    .muted{color:var(--muted);}
+
+    textarea{
+      width:100%;
+      min-height: 260px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .hint{
+      font-size:12px;color:var(--muted);line-height:1.35;
+    }
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.16);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      display:none;
+      z-index: 999;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>Workout of the Day</h1>
-  <div class="row">
-    <span class="pill" id="todayLabel">Today</span>
-    <span class="pill" id="cycleLabel">Cycle</span>
-    <span class="pill" id="savedLabel">Saved</span>
+  <div class="topbar">
+    <div>
+      <h1>Workout App</h1>
+      <div class="subtitle">Stay in the app: workouts, checkboxes, timers, rest timer, and embedded rack videos. Your progress saves automatically.</div>
+    </div>
+    <div class="chips">
+      <div class="chip"><strong id="todayLabel"></strong></div>
+      <div class="chip">Cycle: <strong id="cycleLabel"></strong></div>
+      <div class="chip">Sound: <strong id="soundLabel"></strong></div>
+    </div>
   </div>
-  <div class="sub">
-    Check boxes save automatically. Timers run inside the app. Use Previous/Next to view workouts.
+
+  <div class="nav">
+    <button class="tab active" data-view="workout">Workout</button>
+    <button class="tab" data-view="history">History</button>
+    <button class="tab" data-view="dashboard">Dashboard</button>
+    <button class="tab" data-view="builder">Month Builder</button>
   </div>
 </header>
 
-<div class="card">
-  <div class="workout-title">
-    <h2 id="workoutTitle">Loading…</h2>
-    <div class="btns">
-      <button id="prevBtn">Previous</button>
-      <button id="nextBtn">Next</button>
+<!-- WORKOUT VIEW -->
+<section class="card" id="view-workout">
+  <div class="row">
+    <div class="titleBlock">
+      <h2 id="workoutTitle">Loading…</h2>
+      <div class="small" id="workoutSubtitle"></div>
     </div>
+    <div class="row" style="gap:8px;justify-content:flex-end;">
+      <button id="prevBtn" class="btnGhost">Previous</button>
+      <button id="nextBtn" class="btnGhost">Next</button>
+      <button id="markCompleteBtn" class="btnPrimary">Mark Workout Complete</button>
+    </div>
+  </div>
+
+  <div class="progressWrap">
+    <div class="progressMeta">
+      <div id="progressText">0 / 0 complete</div>
+      <div class="row" style="gap:8px;">
+        <button id="rest60" class="pillBtn">Rest 60s</button>
+        <button id="rest90" class="pillBtn">Rest 90s</button>
+        <button id="rest120" class="pillBtn">Rest 120s</button>
+        <button id="stopAllTimers" class="pillBtn btnDanger">Stop Timer</button>
+        <button id="toggleSound" class="pillBtn">Toggle Sound</button>
+      </div>
+    </div>
+    <div class="bar"><div id="progressBar"></div></div>
+  </div>
+
+  <div id="restTimerRow" class="timerRow" style="margin-top:10px;display:none;">
+    <div class="timeBox" id="restTimeBox">60s</div>
+    <button class="pillBtn" id="restStart">Start Rest</button>
+    <button class="pillBtn" id="restReset">Reset</button>
+    <button class="pillBtn" id="restStop">Stop</button>
+    <span class="hint">Rest timer stays in-app.</span>
   </div>
 
   <div id="videosSection" class="videosGrid" style="display:none;"></div>
 
   <div class="list" id="exerciseList"></div>
+</section>
 
-  <div class="footer">
-    <div>Tip: Tap “Start” on a timed set. (One timer at a time is recommended.)</div>
-    <div>Monthly updates: edit the <b>WORKOUTS</b> array.</div>
+<!-- HISTORY VIEW -->
+<section class="card" id="view-history" style="display:none;">
+  <div class="row">
+    <div class="titleBlock">
+      <h2>Workout Completion History</h2>
+      <div class="small">Completed workouts are logged here. This powers your streak + dashboard.</div>
+    </div>
+    <div class="row" style="gap:8px;justify-content:flex-end;">
+      <button id="clearHistory" class="btnDanger">Clear History</button>
+    </div>
   </div>
-</div>
+  <div class="divider"></div>
+  <div id="historyList" class="list"></div>
+</section>
+
+<!-- DASHBOARD VIEW -->
+<section class="card" id="view-dashboard" style="display:none;">
+  <div class="row">
+    <div class="titleBlock">
+      <h2>Performance Dashboard</h2>
+      <div class="small">High-level stats to keep you consistent.</div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="grid2">
+    <div class="stat"><div class="k">Workouts Completed (All Time)</div><div class="v" id="statTotal">0</div></div>
+    <div class="stat"><div class="k">Current Streak</div><div class="v" id="statStreak">0</div><div class="k muted">Days in a row</div></div>
+    <div class="stat"><div class="k">Most Recent Completion</div><div class="v" id="statRecent">—</div></div>
+    <div class="stat"><div class="k">Avg Completion Rate (Current Workout)</div><div class="v" id="statRate">0%</div></div>
+  </div>
+  <div class="divider"></div>
+  <div class="hint">
+    Next upgrades (if you want later): weight tracking per lift, weekly view calendar, and auto-scheduling your 4 workouts/week.
+  </div>
+</section>
+
+<!-- BUILDER VIEW -->
+<section class="card" id="view-builder" style="display:none;">
+  <div class="row">
+    <div class="titleBlock">
+      <h2>Custom Month Builder</h2>
+      <div class="small">Edit your month in JSON. Save to update the app instantly.</div>
+    </div>
+    <div class="row" style="gap:8px;justify-content:flex-end;">
+      <button id="loadDefault" class="btnGhost">Load Default</button>
+      <button id="loadCurrent" class="btnGhost">Load Current</button>
+      <button id="saveBuilder" class="btnPrimary">Save Month</button>
+      <button id="exportMonth" class="btnGhost">Export JSON</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="hint">
+    Schema notes:
+    <ul>
+      <li><b>title</b>: string</li>
+      <li><b>videos</b>: optional array of { label, url }</li>
+      <li><b>exercises</b>: array of items:
+        <ul>
+          <li>{ label, type: \"section\" } for zone headers</li>
+          <li>{ label, seconds: 60 } for timed sets (timer appears)</li>
+          <li>{ label, type: \"note\" } for notes like bench sets</li>
+          <li>{ label, type: \"videoRef\" } for “Rack Video #2” lines</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <textarea id="builderText"></textarea>
+</section>
+
+<div class="toast" id="toast"></div>
 
 <script>
-/** =========================
- *  WORKOUTS (EDIT THIS MONTHLY)
- *  - For timed items, add: seconds: 45 (or 60)
- *  - For rack workouts, add: videos: [{label, url}, ...]
- *  ========================= */
-const WORKOUTS = [
+/* ===========================
+   DEFAULT WORKOUTS (FEB SET)
+   You can update monthly in the Builder tab
+   =========================== */
+const DEFAULT_WORKOUTS = [
   {
     id: "w1",
     title: "Workout 1 – Rack Upper",
@@ -155,17 +473,14 @@ const WORKOUTS = [
       { label: "Back Squat", seconds: 60 },
       { label: "Romanian Deadlift", seconds: 60 },
       { label: "Front Squat", seconds: 60 },
-
       { label: "Zone 2 (50–60 sec)", type: "section" },
       { label: "Walking DB Lunges", seconds: 60 },
       { label: "Barbell Step-Ups", seconds: 60 },
       { label: "Kettlebell Swings", seconds: 60 },
-
       { label: "Zone 3 (45–60 sec)", type: "section" },
       { label: "Bulgarian Split Squat (R)", seconds: 60 },
       { label: "Bulgarian Split Squat (L)", seconds: 60 },
       { label: "Heels-Elevated DB Squat", seconds: 60 },
-
       { label: "Finish", type: "section" },
       { label: "Barbell Bench Press – 4–5 sets", type: "note" }
     ]
@@ -188,12 +503,10 @@ const WORKOUTS = [
       { label: "Deadlift", seconds: 60 },
       { label: "Front Squat", seconds: 60 },
       { label: "Tempo Back Squat", seconds: 60 },
-
       { label: "Zone 2 (50–60 sec)", type: "section" },
       { label: "Reverse Lunges", seconds: 60 },
       { label: "Single-Leg DB RDL", seconds: 60 },
       { label: "KB Front Rack Squats", seconds: 60 },
-
       { label: "Zone 3 (45–60 sec)", type: "section" },
       { label: "Lateral Lunges", seconds: 60 },
       { label: "DB Squat to Press", seconds: 60 },
@@ -220,17 +533,14 @@ const WORKOUTS = [
       { label: "Back Squat", seconds: 60 },
       { label: "Romanian Deadlift", seconds: 60 },
       { label: "Narrow Stance Barbell Squat", seconds: 60 },
-
       { label: "Zone 2 (50–60 sec)", type: "section" },
       { label: "Elevated Split Squat (R)", seconds: 60 },
       { label: "Elevated Split Squat (L)", seconds: 60 },
       { label: "Hip Thrust", seconds: 60 },
-
       { label: "Zone 3 (45–60 sec)", type: "section" },
       { label: "Kettlebell Swings", seconds: 60 },
       { label: "Step-Back Lunges", seconds: 60 },
       { label: "Heels-Elevated DB Squat Pulses", seconds: 60 },
-
       { label: "Finish", type: "section" },
       { label: "Barbell Bench Press – 5 sets", type: "note" }
     ]
@@ -253,12 +563,10 @@ const WORKOUTS = [
       { label: "Deadlift", seconds: 60 },
       { label: "Front Squat", seconds: 60 },
       { label: "Tempo Back Squat", seconds: 60 },
-
       { label: "Zone 2 (50–60 sec)", type: "section" },
       { label: "Walking Lunges", seconds: 60 },
       { label: "Barbell Step-Ups", seconds: 60 },
       { label: "Single-Leg DB RDL", seconds: 60 },
-
       { label: "Zone 3 (45–60 sec)", type: "section" },
       { label: "KB Swings", seconds: 60 },
       { label: "Narrow Stance Squat", seconds: 60 },
@@ -267,128 +575,244 @@ const WORKOUTS = [
   }
 ];
 
-/** =========================
- *  APP LOGIC
- *  ========================= */
-const STORAGE_KEY = "workout_app_v2";
+/* ===========================
+   STORAGE + UTIL
+   =========================== */
+const STORAGE_KEY = "workout_app_pro_v1";
+const MONTH_KEY = "workouts_custom_month_v1";
+const SOUND_KEY = "sound_enabled_v1";
 const todayKey = new Date().toISOString().slice(0,10); // YYYY-MM-DD
 
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { dayIndex: 0, checks: {}, lastDate: "" };
-  } catch {
-    return { dayIndex: 0, checks: {}, lastDate: "" };
-  }
-}
-function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
+const $ = (id) => document.getElementById(id);
+const toastEl = $("toast");
 
-function toEmbedUrl(url) {
-  if (!url) return "";
+function toast(msg){
+  toastEl.textContent = msg;
+  toastEl.style.display = "block";
+  setTimeout(()=> toastEl.style.display = "none", 1800);
+}
+
+function loadJSON(key, fallback){
+  try{
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }catch{ return fallback; }
+}
+function saveJSON(key, val){
+  localStorage.setItem(key, JSON.stringify(val));
+}
+
+function toEmbedUrl(url){
+  if(!url) return "";
   const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/);
-  if (!m) return "";
+  if(!m) return "";
   return `https://www.youtube.com/embed/${m[1]}`;
 }
 
-function getDailyIndex() {
+function getDailyIndex(len){
   const epochDays = Math.floor(Date.now() / (1000*60*60*24));
-  return epochDays % WORKOUTS.length;
+  return epochDays % len;
 }
 
-let state = loadState();
-if (!state.lastDate || state.lastDate !== todayKey) {
-  state.dayIndex = getDailyIndex();
+function formatTime(sec){
+  const m = Math.floor(sec/60);
+  const s = sec % 60;
+  return m>0 ? `${m}:${String(s).padStart(2,"0")}` : `${sec}s`;
+}
+
+/* ===========================
+   SOUND (simple + reliable)
+   =========================== */
+let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
+function setSoundEnabled(v){
+  soundEnabled = v;
+  localStorage.setItem(SOUND_KEY, v ? "true" : "false");
+  $("soundLabel").textContent = v ? "On" : "Off";
+  toast(v ? "Sound ON" : "Sound OFF");
+}
+function beep(freq=880, ms=120){
+  if(!soundEnabled) return;
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "sine";
+    o.frequency.value = freq;
+    g.gain.value = 0.06;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); ctx.close(); }, ms);
+  }catch{}
+}
+function successChime(){
+  beep(880,120); setTimeout(()=>beep(1175,140),140);
+}
+
+/* ===========================
+   STATE
+   =========================== */
+const defaultState = { lastDate:"", dayIndex:0, checks:{}, history:[] };
+let state = loadJSON(STORAGE_KEY, defaultState);
+
+let WORKOUTS = loadJSON(MONTH_KEY, null);
+if(!Array.isArray(WORKOUTS) || WORKOUTS.length === 0){
+  WORKOUTS = DEFAULT_WORKOUTS;
+  saveJSON(MONTH_KEY, WORKOUTS);
+}
+
+// Sync day index daily
+if(state.lastDate !== todayKey){
+  state.dayIndex = getDailyIndex(WORKOUTS.length);
   state.lastDate = todayKey;
-  saveState(state);
+  saveJSON(STORAGE_KEY, state);
 }
 
 let currentIndex = state.dayIndex;
+let activeTimer = null; // only one workout timer at a time
+let restTimer = null;
 
-const workoutTitleEl = document.getElementById("workoutTitle");
-const listEl = document.getElementById("exerciseList");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-const todayLabel = document.getElementById("todayLabel");
-const cycleLabel = document.getElementById("cycleLabel");
-const savedLabel = document.getElementById("savedLabel");
-const videosSection = document.getElementById("videosSection");
-
-todayLabel.textContent = `Today: ${todayKey}`;
-savedLabel.textContent = "Progress: Saved";
-
-let activeTimer = null;
-
-function formatTime(sec) {
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${sec}s`;
-}
-function workoutStorageKey(workoutId) {
+/* ===========================
+   CHECKS
+   =========================== */
+function workoutStorageKey(workoutId){
   return `${todayKey}::${workoutId}`;
 }
-function getChecksFor(workoutId) {
-  const key = workoutStorageKey(workoutId);
-  return state.checks[key] || {};
+function getChecksFor(workoutId){
+  return state.checks[workoutStorageKey(workoutId)] || {};
 }
-function setCheck(workoutId, itemIndex, value) {
-  const key = workoutStorageKey(workoutId);
-  if (!state.checks[key]) state.checks[key] = {};
-  state.checks[key][itemIndex] = value;
-  saveState(state);
+function setCheck(workoutId, itemIndex, value){
+  const k = workoutStorageKey(workoutId);
+  if(!state.checks[k]) state.checks[k] = {};
+  state.checks[k][itemIndex] = value;
+  saveJSON(STORAGE_KEY, state);
 }
-function stopActiveTimer() {
-  if (activeTimer && activeTimer.interval) clearInterval(activeTimer.interval);
+function stopActiveTimer(){
+  if(activeTimer?.interval) clearInterval(activeTimer.interval);
   activeTimer = null;
 }
+function stopRestTimer(){
+  if(restTimer?.interval) clearInterval(restTimer.interval);
+  restTimer = null;
+  $("restTimerRow").style.display = "none";
+}
 
-function renderVideos(workout) {
-  videosSection.innerHTML = "";
-  const vids = Array.isArray(workout.videos) ? workout.videos : [];
-  if (!vids.length) {
-    videosSection.style.display = "none";
-    return;
+/* ===========================
+   HISTORY + STREAK
+   =========================== */
+function addHistoryEntry(workoutTitle){
+  // prevent duplicates same day
+  const exists = state.history.some(h => h.date === todayKey && h.title === workoutTitle);
+  if(!exists){
+    state.history.unshift({ date: todayKey, title: workoutTitle, ts: Date.now() });
+    saveJSON(STORAGE_KEY, state);
   }
-  videosSection.style.display = "grid";
-  vids.forEach(v => {
-    const embed = toEmbedUrl(v.url);
-    if (!embed) return;
+}
+function computeStreak(){
+  // streak = consecutive days with at least one completion entry
+  const days = new Set(state.history.map(h => h.date));
+  let streak = 0;
+  let d = new Date();
+  while(true){
+    const key = d.toISOString().slice(0,10);
+    if(days.has(key)){
+      streak += 1;
+      d.setDate(d.getDate() - 1);
+    } else break;
+  }
+  return streak;
+}
 
+/* ===========================
+   RENDER
+   =========================== */
+function setView(view){
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.toggle("active", t.dataset.view === view);
+  });
+  $("view-workout").style.display = view==="workout" ? "block" : "none";
+  $("view-history").style.display = view==="history" ? "block" : "none";
+  $("view-dashboard").style.display = view==="dashboard" ? "block" : "none";
+  $("view-builder").style.display = view==="builder" ? "block" : "none";
+
+  if(view==="history") renderHistory();
+  if(view==="dashboard") renderDashboard();
+  if(view==="builder") renderBuilderText();
+}
+
+function renderVideos(workout){
+  const sec = $("videosSection");
+  sec.innerHTML = "";
+  const vids = Array.isArray(workout.videos) ? workout.videos : [];
+  if(!vids.length){ sec.style.display="none"; return; }
+  sec.style.display="grid";
+  vids.forEach(v=>{
+    const embed = toEmbedUrl(v.url);
+    if(!embed) return;
     const wrap = document.createElement("div");
-    wrap.className = "videoWrap";
     wrap.innerHTML = `
       <p class="videoTitle">${v.label}</p>
       <div class="iframeBox">
         <iframe src="${embed}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-      </div>
-    `;
-    videosSection.appendChild(wrap);
+      </div>`;
+    sec.appendChild(wrap);
   });
 }
 
-function render() {
+function isCheckable(ex){
+  return ex.type !== "section";
+}
+function isTimed(ex){
+  return typeof ex.seconds === "number" && ex.seconds > 0;
+}
+
+function updateProgress(workout){
+  const checks = getChecksFor(workout.id);
+  const checkableIndexes = workout.exercises
+    .map((ex,i)=>({ex,i}))
+    .filter(({ex})=>isCheckable(ex))
+    .map(({i})=>i);
+
+  const doneCount = checkableIndexes.filter(i=>!!checks[i]).length;
+  const total = checkableIndexes.length;
+
+  $("progressText").textContent = `${doneCount} / ${total} complete`;
+  const pct = total ? Math.round((doneCount/total)*100) : 0;
+  $("progressBar").style.width = `${pct}%`;
+  $("workoutSubtitle").textContent = `Progress: ${pct}% • Tap timers to stay inside the app.`;
+}
+
+function scrollToItem(itemEl){
+  itemEl.scrollIntoView({ behavior: "smooth", block: "center" });
+  itemEl.classList.add("flash");
+  setTimeout(()=> itemEl.classList.remove("flash"), 900);
+}
+
+function renderWorkout(){
   stopActiveTimer();
+  stopRestTimer();
 
   const workout = WORKOUTS[currentIndex];
-  workoutTitleEl.textContent = workout.title;
-  cycleLabel.textContent = `Workout ${currentIndex + 1} of ${WORKOUTS.length}`;
+  $("todayLabel").textContent = `Today: ${todayKey}`;
+  $("cycleLabel").textContent = `${currentIndex + 1} / ${WORKOUTS.length}`;
+  $("soundLabel").textContent = soundEnabled ? "On" : "Off";
 
+  $("workoutTitle").textContent = workout.title;
   renderVideos(workout);
 
-  listEl.innerHTML = "";
+  const list = $("exerciseList");
+  list.innerHTML = "";
+
   const checks = getChecksFor(workout.id);
 
   workout.exercises.forEach((ex, idx) => {
-    const isSection = ex.type === "section";
-    const isNote = ex.type === "note";
-    const isVideoRef = ex.type === "videoRef";
-    const hasTimer = typeof ex.seconds === "number" && ex.seconds > 0;
-
     const item = document.createElement("div");
     item.className = "item";
 
-    if (isSection) {
+    if(ex.type === "section"){
+      item.classList.add("section");
       item.innerHTML = `<div class="meta"><b>${ex.label}</b></div>`;
-      listEl.appendChild(item);
+      list.appendChild(item);
       return;
     }
 
@@ -407,63 +831,92 @@ function render() {
     top.appendChild(name);
     item.appendChild(top);
 
-    function applyDoneStyle() {
-      if (cb.checked) item.classList.add("done");
-      else item.classList.remove("done");
-    }
-    applyDoneStyle();
-
-    cb.addEventListener("change", () => {
-      setCheck(workout.id, idx, cb.checked);
-      applyDoneStyle();
-    });
-
     const meta = document.createElement("div");
     meta.className = "meta";
 
-    if (isVideoRef) meta.innerHTML = `<span>Video-based</span>`;
-    else if (isNote) meta.innerHTML = `<span>Note</span>`;
-    else if (hasTimer) meta.innerHTML = `<span>Timed set</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
+    if(ex.type === "videoRef") meta.innerHTML = `<span>Video-based</span>`;
+    else if(ex.type === "note") meta.innerHTML = `<span>Note</span>`;
+    else if(isTimed(ex)) meta.innerHTML = `<span>Timed set</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
+    else meta.innerHTML = `<span>Exercise</span>`;
 
     item.appendChild(meta);
 
-    if (hasTimer) {
+    function applyDone(){
+      item.classList.toggle("done", cb.checked);
+    }
+    applyDone();
+
+    cb.addEventListener("change", () => {
+      setCheck(workout.id, idx, cb.checked);
+      applyDone();
+      updateProgress(workout);
+      if(cb.checked){
+        // subtle positive feedback
+        if(navigator.vibrate) navigator.vibrate(35);
+        beep(660,70);
+      }
+    });
+
+    // Timer block for timed items
+    if(isTimed(ex)){
       const timerRow = document.createElement("div");
-      timerRow.className = "timer";
+      timerRow.className = "timerRow";
 
       const timeBox = document.createElement("div");
-      timeBox.className = "timebox";
-
+      timeBox.className = "timeBox";
       let remaining = ex.seconds;
+
       const updateBox = () => timeBox.textContent = formatTime(remaining);
       updateBox();
 
       const startBtn = document.createElement("button");
-      startBtn.className = "smallbtn";
+      startBtn.className = "pillBtn btnPrimary";
       startBtn.textContent = "Start";
 
       const resetBtn = document.createElement("button");
-      resetBtn.className = "smallbtn";
+      resetBtn.className = "pillBtn";
       resetBtn.textContent = "Reset";
 
       const stopBtn = document.createElement("button");
-      stopBtn.className = "smallbtn";
+      stopBtn.className = "pillBtn btnDanger";
       stopBtn.textContent = "Stop";
 
       startBtn.addEventListener("click", () => {
         stopActiveTimer();
-        if (remaining <= 0) remaining = ex.seconds;
+        if(remaining <= 0) remaining = ex.seconds;
         updateBox();
+        beep(520,70);
+
         activeTimer = {
           interval: setInterval(() => {
             remaining -= 1;
-            if (remaining <= 0) {
+            if(remaining <= 0){
               remaining = 0;
               updateBox();
               clearInterval(activeTimer.interval);
               activeTimer = null;
-              if (navigator.vibrate) navigator.vibrate([200,100,200]);
-            } else updateBox();
+
+              // Auto-check on finish
+              if(!cb.checked){
+                cb.checked = true;
+                setCheck(workout.id, idx, true);
+                applyDone();
+                updateProgress(workout);
+              }
+
+              // End cue + vibration
+              successChime();
+              if(navigator.vibrate) navigator.vibrate([200,100,200]);
+
+              // Auto-scroll to next checkable item
+              const next = findNextCheckableElement(list, idx);
+              if(next) scrollToItem(next);
+
+            } else {
+              // last 5 seconds tick
+              if(remaining <= 5) beep(950,35);
+              updateBox();
+            }
           }, 1000)
         };
       });
@@ -484,20 +937,199 @@ function render() {
       item.appendChild(timerRow);
     }
 
-    listEl.appendChild(item);
+    list.appendChild(item);
+  });
+
+  updateProgress(workout);
+}
+
+function findNextCheckableElement(listEl, currentIdx){
+  // Finds next item DOM node corresponding to the next checkable exercise
+  const workout = WORKOUTS[currentIndex];
+  for(let i = currentIdx + 1; i < workout.exercises.length; i++){
+    if(isCheckable(workout.exercises[i])){
+      // DOM list includes section items too; index alignment is consistent by render order.
+      return listEl.children[i];
+    }
+  }
+  return null;
+}
+
+/* ===========================
+   REST TIMER
+   =========================== */
+let restPreset = 60;
+function showRestTimer(seconds){
+  stopRestTimer();
+  restPreset = seconds;
+  $("restTimerRow").style.display = "flex";
+  let remaining = seconds;
+  const box = $("restTimeBox");
+  const update = () => box.textContent = formatTime(remaining);
+  update();
+
+  $("restStart").onclick = () => {
+    stopRestTimer();
+    beep(520,70);
+    restTimer = {
+      interval: setInterval(() => {
+        remaining -= 1;
+        if(remaining <= 0){
+          remaining = 0; update();
+          clearInterval(restTimer.interval);
+          restTimer = null;
+          successChime();
+          if(navigator.vibrate) navigator.vibrate([150,70,150]);
+          toast("Rest done");
+        } else {
+          if(remaining <= 5) beep(950,35);
+          update();
+        }
+      }, 1000)
+    };
+  };
+  $("restReset").onclick = () => { remaining = restPreset; update(); };
+  $("restStop").onclick = () => { stopRestTimer(); };
+}
+
+/* ===========================
+   HISTORY VIEW
+   =========================== */
+function renderHistory(){
+  const list = $("historyList");
+  list.innerHTML = "";
+
+  if(state.history.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "item";
+    empty.innerHTML = `<div class="meta"><b>No workouts completed yet.</b></div><div class="hint">Tap “Mark Workout Complete” after a session.</div>`;
+    list.appendChild(empty);
+    return;
+  }
+
+  state.history.slice(0, 60).forEach(h=>{
+    const it = document.createElement("div");
+    it.className = "item";
+    it.innerHTML = `
+      <div class="meta"><b>${h.date}</b> • <span>${new Date(h.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span></div>
+      <div class="name">${h.title}</div>
+    `;
+    list.appendChild(it);
   });
 }
 
-prevBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
-  render();
-});
-nextBtn.addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % WORKOUTS.length;
-  render();
+/* ===========================
+   DASHBOARD
+   =========================== */
+function renderDashboard(){
+  $("statTotal").textContent = String(state.history.length);
+  $("statStreak").textContent = String(computeStreak());
+  $("statRecent").textContent = state.history[0]?.date ?? "—";
+
+  // completion rate for current workout (today)
+  const w = WORKOUTS[currentIndex];
+  const checks = getChecksFor(w.id);
+  const total = w.exercises.filter(isCheckable).length;
+  const done = w.exercises.map((_,i)=>i).filter(i=>isCheckable(w.exercises[i]) && !!checks[i]).length;
+  const pct = total ? Math.round((done/total)*100) : 0;
+  $("statRate").textContent = `${pct}%`;
+}
+
+/* ===========================
+   BUILDER
+   =========================== */
+function renderBuilderText(){
+  $("builderText").value = JSON.stringify(WORKOUTS, null, 2);
+}
+function loadDefaultToBuilder(){
+  $("builderText").value = JSON.stringify(DEFAULT_WORKOUTS, null, 2);
+}
+function loadCurrentToBuilder(){
+  $("builderText").value = JSON.stringify(WORKOUTS, null, 2);
+}
+function saveBuilder(){
+  try{
+    const parsed = JSON.parse($("builderText").value);
+    if(!Array.isArray(parsed) || parsed.length === 0) throw new Error("Must be a non-empty array");
+    // basic validation
+    parsed.forEach((w, i)=>{
+      if(!w.id) w.id = `w${i+1}`;
+      if(!w.title) throw new Error("Every workout needs a title");
+      if(!Array.isArray(w.exercises)) throw new Error("Every workout needs exercises array");
+    });
+
+    WORKOUTS = parsed;
+    saveJSON(MONTH_KEY, WORKOUTS);
+
+    // re-sync current index to today, to avoid out-of-range
+    currentIndex = getDailyIndex(WORKOUTS.length);
+    state.dayIndex = currentIndex;
+    saveJSON(STORAGE_KEY, state);
+
+    toast("Month saved");
+    setView("workout");
+    renderWorkout();
+  }catch(e){
+    toast("JSON error: " + e.message);
+  }
+}
+function exportMonth(){
+  const text = JSON.stringify(WORKOUTS, null, 2);
+  navigator.clipboard?.writeText(text);
+  toast("Copied JSON to clipboard");
+}
+
+/* ===========================
+   WIRING
+   =========================== */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click", ()=> setView(t.dataset.view));
 });
 
-render();
+$("prevBtn").addEventListener("click", ()=>{
+  currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
+  renderWorkout();
+});
+$("nextBtn").addEventListener("click", ()=>{
+  currentIndex = (currentIndex + 1) % WORKOUTS.length;
+  renderWorkout();
+});
+
+$("markCompleteBtn").addEventListener("click", ()=>{
+  const w = WORKOUTS[currentIndex];
+  addHistoryEntry(w.title);
+  toast("Workout logged ✅");
+  successChime();
+});
+
+$("clearHistory").addEventListener("click", ()=>{
+  if(!confirm("Clear all workout history?")) return;
+  state.history = [];
+  saveJSON(STORAGE_KEY, state);
+  renderHistory();
+  toast("History cleared");
+});
+
+$("rest60").addEventListener("click", ()=> showRestTimer(60));
+$("rest90").addEventListener("click", ()=> showRestTimer(90));
+$("rest120").addEventListener("click", ()=> showRestTimer(120));
+$("stopAllTimers").addEventListener("click", ()=>{
+  stopActiveTimer();
+  stopRestTimer();
+  toast("Timer stopped");
+});
+
+$("toggleSound").addEventListener("click", ()=> setSoundEnabled(!soundEnabled));
+setSoundEnabled(soundEnabled);
+
+$("loadDefault").addEventListener("click", loadDefaultToBuilder);
+$("loadCurrent").addEventListener("click", loadCurrentToBuilder);
+$("saveBuilder").addEventListener("click", saveBuilder);
+$("exportMonth").addEventListener("click", exportMonth);
+
+// initial render
+setView("workout");
+renderWorkout();
 </script>
 
 </body>
