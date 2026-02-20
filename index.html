@@ -70,7 +70,7 @@
     .row{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;}
     .titleBlock{display:flex;flex-direction:column;gap:6px;min-width: 260px;}
 
-    /* ✅ Bigger, bolder workout title */
+    /* Bigger, bolder workout title */
     #workoutTitle{
       margin:0;
       font-size: 22px;
@@ -108,7 +108,7 @@
     .bar{height: 10px;border-radius: 999px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);overflow:hidden;}
     .bar > div{height:100%;width:0%;background: linear-gradient(90deg, var(--accent), var(--accent2));border-radius: 999px;transition: width .25s ease;}
 
-    /* ===== Global Timer (Full Width) ===== */
+    /* Global Timer (Full Width) */
     .globalTimer{
       margin-top:12px;
       display:none;
@@ -118,13 +118,7 @@
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.22);
     }
-    .timerTop{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      width:100%;
-    }
-    /* ✅ Bigger timer numbers */
+    .timerTop{display:flex;flex-direction:column;gap:10px;width:100%;}
     .timerBig{
       font-variant-numeric: tabular-nums;
       font-size: 52px;
@@ -136,49 +130,23 @@
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
     }
-    .timerMeta{
-      display:flex;
-      flex-direction:column;
-      gap:3px;
-      width:100%;
-    }
+    .timerMeta{display:flex;flex-direction:column;gap:3px;width:100%;}
     .timerMeta .k{color:var(--muted); font-size: 12px;}
     .timerMeta .v{color:var(--text); font-size: 14px; font-weight: 800;}
-
-    .timerCustomRow{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      width:100%;
-    }
-    .timerCustomRow label{
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
+    .timerCustomRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%;}
+    .timerCustomRow label{font-size:12px;color:var(--muted);white-space:nowrap;}
     .timerInput{
-      flex:1;
-      min-width: 120px;
-      padding:10px 12px;
-      border-radius: 12px;
+      flex:1;min-width:120px;
+      padding:10px 12px;border-radius:12px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.25);
       color: var(--text);
       font-size: 14px;
       outline: none;
     }
-
-    /* Buttons full width on ONE line: START - STOP - RESET */
-    .timerBtns{
-      display:flex;
-      gap:10px;
-      width:100%;
-      flex-wrap:nowrap;
-    }
+    .timerBtns{display:flex;gap:10px;width:100%;flex-wrap:nowrap;}
     .timerBtns button{
-      flex:1;
-      width: 100%;
+      flex:1;width:100%;
       border-radius: 14px;
       padding:12px 10px;
       font-weight: 800;
@@ -255,23 +223,10 @@
       position: relative;
       overflow:hidden;
     }
-    .celebrateTitle{
-      margin:0;
-      font-size: 18px;
-      font-weight: 900;
-      letter-spacing: .2px;
-    }
-    .celebrateMsg{
-      margin:10px 0 0 0;
-      color: rgba(242,244,255,.92);
-      line-height: 1.35;
-      font-size: 14px;
-    }
+    .celebrateTitle{margin:0;font-size:18px;font-weight:900;letter-spacing:.2px;}
+    .celebrateMsg{margin:10px 0 0 0;color:rgba(242,244,255,.92);line-height:1.35;font-size:14px;}
     .sparkles{
-      position:absolute;
-      inset:-40px;
-      opacity:.9;
-      pointer-events:none;
+      position:absolute;inset:-40px;opacity:.9;pointer-events:none;
       background:
         radial-gradient(circle at 10% 20%, rgba(124,92,255,.55), transparent 35%),
         radial-gradient(circle at 90% 30%, rgba(45,226,230,.45), transparent 40%),
@@ -288,7 +243,7 @@
     }
     @keyframes fall{ to{ transform: translateY(110vh) rotate(360deg); opacity: 1; } }
 
-    /* ✅ Visual flash when timer ends */
+    /* Visual flash when timer ends */
     .flash{
       position: fixed;
       inset: 0;
@@ -411,18 +366,13 @@
   </div>
 </div>
 
-<!-- ✅ Flash layer -->
 <div class="flash" id="flash"></div>
 
 <script>
-const CELEBRATION_MESSAGES = [
-  "Look at you, doing the thing. Unreasonably impressive.",
-  "You showed up. That already puts you ahead of yesterday-you.",
-  "Congrats. Your muscles filed a complaint and lost.",
-  "Another workout completed. Main character behavior.",
-  "You did it. Try not to be too powerful now."
-];
-
+/* ===========================
+   DEFAULT FALLBACK WORKOUTS
+   (used only if workouts.json fails to load)
+   =========================== */
 const DEFAULT_WORKOUTS = [
   {
     id: "w1",
@@ -435,125 +385,22 @@ const DEFAULT_WORKOUTS = [
       { label: "Rack Video #2", type: "videoRef" },
       { label: "Rack Video #4", type: "videoRef" }
     ]
-  },
-  {
-    id: "w2",
-    title: "Workout 2 – 30 Min Leg Power Builder",
-    exercises: [
-      { label: "Zone 1 (60 sec)", type: "section" },
-      { label: "Back Squat", seconds: 60 },
-      { label: "Romanian Deadlift", seconds: 60 },
-      { label: "Front Squat", seconds: 60 },
-      { label: "Zone 2 (50–60 sec)", type: "section" },
-      { label: "Walking DB Lunges", seconds: 60 },
-      { label: "Barbell Step-Ups", seconds: 60 },
-      { label: "Kettlebell Swings", seconds: 60 },
-      { label: "Zone 3 (45–60 sec)", type: "section" },
-      { label: "Bulgarian Split Squat (R)", seconds: 60 },
-      { label: "Bulgarian Split Squat (L)", seconds: 60 },
-      { label: "Heels-Elevated DB Squat", seconds: 60 },
-      { label: "Finish", type: "section" },
-      { label: "Barbell Bench Press – 4–5 sets", type: "note" }
-    ]
-  },
-  {
-    id: "w3",
-    title: "Workout 3 – Rack Hybrid",
-    videos: [
-      { label: "Rack Video #3", url: "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
-    ],
-    exercises: [
-      { label: "Rack Video #3", type: "videoRef" }
-    ]
-  },
-  {
-    id: "w4",
-    title: "Workout 4 – 30 Min Athletic Leg Conditioning",
-    exercises: [
-      { label: "Zone 1 (60 sec)", type: "section" },
-      { label: "Deadlift", seconds: 60 },
-      { label: "Front Squat", seconds: 60 },
-      { label: "Tempo Back Squat", seconds: 60 },
-      { label: "Zone 2 (50–60 sec)", type: "section" },
-      { label: "Reverse Lunges", seconds: 60 },
-      { label: "Single-Leg DB RDL", seconds: 60 },
-      { label: "KB Front Rack Squats", seconds: 60 },
-      { label: "Zone 3 (45–60 sec)", type: "section" },
-      { label: "Lateral Lunges", seconds: 60 },
-      { label: "DB Squat to Press", seconds: 60 },
-      { label: "Broad Jump → Reset", seconds: 60 }
-    ]
-  },
-  {
-    id: "w5",
-    title: "Workout 5 – Rack Upper",
-    videos: [
-      { label: "Rack Video #2", url: "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
-      { label: "Rack Video #4", url: "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
-    ],
-    exercises: [
-      { label: "Rack Video #2", type: "videoRef" },
-      { label: "Rack Video #4", type: "videoRef" }
-    ]
-  },
-  {
-    id: "w6",
-    title: "Workout 6 – 30 Min Strength Bias Leg Day",
-    exercises: [
-      { label: "Zone 1 (60 sec)", type: "section" },
-      { label: "Back Squat", seconds: 60 },
-      { label: "Romanian Deadlift", seconds: 60 },
-      { label: "Narrow Stance Barbell Squat", seconds: 60 },
-      { label: "Zone 2 (50–60 sec)", type: "section" },
-      { label: "Elevated Split Squat (R)", seconds: 60 },
-      { label: "Elevated Split Squat (L)", seconds: 60 },
-      { label: "Hip Thrust", seconds: 60 },
-      { label: "Zone 3 (45–60 sec)", type: "section" },
-      { label: "Kettlebell Swings", seconds: 60 },
-      { label: "Step-Back Lunges", seconds: 60 },
-      { label: "Heels-Elevated DB Squat Pulses", seconds: 60 },
-      { label: "Finish", type: "section" },
-      { label: "Barbell Bench Press – 5 sets", type: "note" }
-    ]
-  },
-  {
-    id: "w7",
-    title: "Workout 7 – Rack Hybrid",
-    videos: [
-      { label: "Rack Video #3", url: "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
-    ],
-    exercises: [
-      { label: "Rack Video #3", type: "videoRef" }
-    ]
-  },
-  {
-    id: "w8",
-    title: "Workout 8 – 30 Min Leg Endurance Finisher",
-    exercises: [
-      { label: "Zone 1 (60 sec)", type: "section" },
-      { label: "Deadlift", seconds: 60 },
-      { label: "Front Squat", seconds: 60 },
-      { label: "Tempo Back Squat", seconds: 60 },
-      { label: "Zone 2 (50–60 sec)", type: "section" },
-      { label: "Walking Lunges", seconds: 60 },
-      { label: "Barbell Step-Ups", seconds: 60 },
-      { label: "Single-Leg DB RDL", seconds: 60 },
-      { label: "Zone 3 (45–60 sec)", type: "section" },
-      { label: "KB Swings", seconds: 60 },
-      { label: "Narrow Stance Squat", seconds: 60 },
-      { label: "Lateral DB Lunges", seconds: 60 }
-    ]
   }
 ];
 
-const STORAGE_KEY = "workout_app_global_timer_v4";
-const MONTH_KEY = "workouts_custom_month_hidden_v4";
-const SOUND_KEY = "sound_enabled_global_v4";
-const todayKey = new Date().toISOString().slice(0,10);
+/* ===========================
+   STORAGE KEYS
+   =========================== */
+const STORAGE_KEY = "workout_app_state_v_json1";
+const SOUND_KEY   = "sound_enabled_global_v_json1";
 
+const todayKey = new Date().toISOString().slice(0,10);
 const $ = (id)=>document.getElementById(id);
 const toastEl = $("toast");
 
+/* ===========================
+   UTIL
+   =========================== */
 function toast(msg){
   toastEl.textContent = msg;
   toastEl.style.display = "block";
@@ -564,7 +411,6 @@ function loadJSON(key, fallback){
   catch{ return fallback; }
 }
 function saveJSON(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
-
 function toEmbedUrl(url){
   if(!url) return "";
   const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/);
@@ -580,8 +426,6 @@ function formatTime(sec){
   const s = sec % 60;
   return m>0 ? `${m}:${String(s).padStart(2,"0")}` : `${sec}s`;
 }
-
-/* ✅ flash when timer ends */
 function flashScreen(){
   const f = $("flash");
   f.classList.add("on");
@@ -590,6 +434,9 @@ function flashScreen(){
   setTimeout(()=>f.classList.remove("on"), 340);
 }
 
+/* ===========================
+   SOUND
+   =========================== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
 function setSoundEnabled(v){
   soundEnabled = v;
@@ -612,12 +459,28 @@ function beep(freq=880, ms=120){
 }
 function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
 
-let WORKOUTS = loadJSON(MONTH_KEY, null);
-if(!Array.isArray(WORKOUTS) || WORKOUTS.length === 0){
-  WORKOUTS = DEFAULT_WORKOUTS;
-  saveJSON(MONTH_KEY, WORKOUTS);
+/* ===========================
+   LOAD WORKOUTS FROM workouts.json
+   =========================== */
+let WORKOUTS = [];
+
+async function loadWorkoutsFromFile(){
+  try{
+    const res = await fetch("./workouts.json", { cache: "no-store" });
+    if(!res.ok) throw new Error("Missing workouts.json");
+    const data = await res.json();
+    if(!Array.isArray(data) || data.length === 0) throw new Error("Invalid workouts.json");
+    WORKOUTS = data;
+  }catch(err){
+    console.warn("Using DEFAULT_WORKOUTS fallback:", err);
+    WORKOUTS = DEFAULT_WORKOUTS;
+    toast("Using fallback workouts (workouts.json not loaded)");
+  }
 }
 
+/* ===========================
+   APP STATE
+   =========================== */
 const defaultState = {
   lastDate:"",
   dayIndex:0,
@@ -627,23 +490,18 @@ const defaultState = {
   timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 }
 };
 let state = loadJSON(STORAGE_KEY, defaultState);
-
-if(state.lastDate !== todayKey){
-  state.dayIndex = getDailyIndex(WORKOUTS.length);
-  state.lastDate = todayKey;
-  saveJSON(STORAGE_KEY, state);
-}
-
-let currentIndex = state.dayIndex;
+let currentIndex = 0;
 let timerInterval = null;
 
+/* ===========================
+   HELPERS
+   =========================== */
 function stopTimerHard(){
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
 }
-
 function workoutDayKey(workoutId){ return `${todayKey}::${workoutId}`; }
 function getChecksFor(workoutId){ return state.checks[workoutDayKey(workoutId)] || {}; }
 function setCheck(workoutId, itemIndex, value){
@@ -698,7 +556,6 @@ function updateProgressAndComplete(workout){
   $("markCompleteBtn").disabled = !allDone;
 }
 function scrollToItem(el){ el.scrollIntoView({ behavior: "smooth", block: "center" }); }
-
 function renderVideos(workout){
   const sec = $("videosSection");
   sec.innerHTML = "";
@@ -722,6 +579,9 @@ function findVideoForExercise(workout, exerciseLabel){
   return vids.find(v => v.label === exerciseLabel) || vids.find(v => exerciseLabel.includes(v.label));
 }
 
+/* ===========================
+   HISTORY / DASH
+   =========================== */
 function addHistoryEntry(workoutTitle){
   const exists = state.history.some(h => h.date === todayKey && h.title === workoutTitle);
   if(!exists){
@@ -740,8 +600,6 @@ function computeStreak(){
   }
   return streak;
 }
-
-/* ✅ Completed workouts italic in history */
 function renderHistory(){
   const list = $("historyList");
   list.innerHTML = "";
@@ -785,7 +643,6 @@ function renderDashboard(){
   list.appendChild(mk("Most Recent Completion", recent));
   list.appendChild(mk("Current Workout Completion Rate", `${pct}%`));
 }
-
 function setView(view){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===view));
   $("view-workout").style.display = view==="workout" ? "block" : "none";
@@ -795,6 +652,16 @@ function setView(view){
   if(view==="dashboard") renderDashboard();
 }
 
+/* ===========================
+   CELEBRATION
+   =========================== */
+const CELEBRATION_MESSAGES = [
+  "Look at you, doing the thing. Unreasonably impressive.",
+  "You showed up. That already puts you ahead of yesterday-you.",
+  "Congrats. Your muscles filed a complaint and lost.",
+  "Another workout completed. Main character behavior.",
+  "You did it. Try not to be too powerful now."
+];
 function spawnConfetti(){
   const box = $("confetti");
   box.innerHTML = "";
@@ -810,8 +677,6 @@ function spawnConfetti(){
     box.appendChild(p);
   }
 }
-
-/* ✅ Celebration stays 10 seconds (or tap to dismiss) */
 let celebrationTimeout = null;
 function hideCelebration(){
   $("overlay").style.display = "none";
@@ -827,11 +692,13 @@ function showCelebration(){
   if(navigator.vibrate) navigator.vibrate([80,40,80]);
 
   if(celebrationTimeout) clearTimeout(celebrationTimeout);
-  celebrationTimeout = setTimeout(hideCelebration, 10000); // ✅ 10 seconds
+  celebrationTimeout = setTimeout(hideCelebration, 10000);
 }
 $("overlay").addEventListener("click", hideCelebration);
 
-/* ===== Customizable Timer Logic ===== */
+/* ===========================
+   TIMER (CUSTOMIZABLE)
+   =========================== */
 function readCustomSeconds(){
   const raw = ($("timerSecondsInput").value || "").trim();
   if(raw === "") return null;
@@ -839,9 +706,7 @@ function readCustomSeconds(){
   if(Number.isFinite(n) && n >= 10 && n <= 600) return n;
   return null;
 }
-function setInputPlaceholder(val){
-  $("timerSecondsInput").placeholder = String(val);
-}
+function setInputPlaceholder(val){ $("timerSecondsInput").placeholder = String(val); }
 
 function setGlobalTimerForActive(workout, activeIdx){
   const ex = workout.exercises[activeIdx];
@@ -881,7 +746,6 @@ function setGlobalTimerForActive(workout, activeIdx){
   $("timerExerciseName").textContent = `${ex.label} • default ${formatTime(baseSeconds)}`;
   $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
 }
-
 function applyCustomDurationIfAny(){
   const custom = readCustomSeconds();
   if(custom == null) return;
@@ -892,7 +756,6 @@ function applyCustomDurationIfAny(){
   $("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
 }
-
 function tickTimer(){
   state.timer.remaining -= 1;
 
@@ -904,12 +767,8 @@ function tickTimer(){
     const idx = state.timer.exerciseIndex;
 
     stopTimerHard();
-
-    // ✅ Visual cue (in case sound fails)
     flashScreen();
     toast("Timer finished ✅");
-
-    // optional sound
     beep(950,60);
 
     const checks = getChecksFor(workout.id);
@@ -934,7 +793,6 @@ function tickTimer(){
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
 }
-
 function startTimer(){
   if(timerInterval) return;
   state.timer.running = true;
@@ -957,11 +815,11 @@ function resetTimer(){
   $("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
 }
-function stopTimer(){
-  pauseTimer();
-  toast("Timer stopped");
-}
+function stopTimer(){ pauseTimer(); toast("Timer stopped"); }
 
+/* ===========================
+   RENDER
+   =========================== */
 function renderWorkout(){
   if(state.timer.running && !timerInterval){
     state.timer.running = false;
@@ -1083,7 +941,9 @@ function renderWorkout(){
   }, 40);
 }
 
-/* ===== wiring ===== */
+/* ===========================
+   WIRING
+   =========================== */
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click", ()=> setView(t.dataset.view));
 });
@@ -1110,7 +970,6 @@ $("soundChip").addEventListener("click", ()=>{
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
 
-// Timer controls order: START - STOP - RESET
 $("timerStartPause").addEventListener("click", ()=>{
   if(!state.timer.running) applyCustomDurationIfAny();
   if(state.timer.running) pauseTimer();
@@ -1143,17 +1002,6 @@ $("timerSecondsInput").addEventListener("keydown", (e)=>{
     $("timerSecondsInput").blur();
   }
 });
-$("timerSecondsInput").addEventListener("blur", ()=>{
-  if(!state.timer.running){
-    const custom = readCustomSeconds();
-    if(custom != null){
-      state.timer.duration = custom;
-      state.timer.remaining = custom;
-      saveJSON(STORAGE_KEY, state);
-      $("timerBig").textContent = formatTime(state.timer.remaining);
-    }
-  }
-});
 
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
@@ -1181,9 +1029,24 @@ $("clearHistory").addEventListener("click", ()=>{
   toast("History cleared");
 });
 
-setView("workout");
-renderWorkout();
-renderDashboard();
+/* ===========================
+   INIT (loads workouts.json first)
+   =========================== */
+(async function init(){
+  await loadWorkoutsFromFile();
+
+  // Ensure daily index is valid after workouts load
+  if(state.lastDate !== todayKey){
+    state.dayIndex = getDailyIndex(WORKOUTS.length);
+    state.lastDate = todayKey;
+    saveJSON(STORAGE_KEY, state);
+  }
+  currentIndex = state.dayIndex;
+
+  setView("workout");
+  renderWorkout();
+  renderDashboard();
+})();
 </script>
 
 </body>
