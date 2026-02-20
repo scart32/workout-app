@@ -1,62 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Workout of the Day</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: white;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-    }
-    h1 {
-      text-align: center;
-    }
-    h2 {
-      margin-top: 30px;
-    }
-    .exercise {
-      background: #222;
-      margin: 8px 0;
-      padding: 12px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-    }
-    input[type="checkbox"] {
-      margin-right: 15px;
-      transform: scale(1.4);
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Workout App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+h1 { text-align: center; }
+.exercise {
+  background: #222;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+input { margin-right: 12px; transform: scale(1.3); }
+button {
+  margin: 10px 5px;
+  padding: 10px 15px;
+  background: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+button:hover { background: #666; }
+</style>
 </head>
 <body>
 
-<h1>Workout of the Day</h1>
-<h2 id="workoutTitle"></h2>
-<div id="workoutContainer"></div>
+<h1>Workout App</h1>
+<h2 id="title"></h2>
+<div id="workout"></div>
+
+<div style="text-align:center;">
+<button onclick="prevWorkout()">Previous</button>
+<button onclick="nextWorkout()">Next</button>
+</div>
 
 <script>
-const workouts = [
 
+const workouts = [
 {
-name: "Workout 1 – Rack Upper",
-exercises: [
-"Rack Video #2",
-"Rack Video #4"
+name:"Workout 1 – Rack Upper",
+exercises:["Rack Video #2","Rack Video #4"]
+},
+{
+name:"Workout 2 – 30 Min Leg Power Builder",
+exercises:[
+"Zone 1 (60 sec)","Back Squat","Romanian Deadlift","Front Squat",
+"Zone 2 (50–60 sec)","Walking DB Lunges","Barbell Step-Ups","Kettlebell Swings",
+"Zone 3 (45–60 sec)","Bulgarian Split Squat (R)","Bulgarian Split Squat (L)","Heels-Elevated DB Squat",
+"Finish","Barbell Bench Press – 4–5 sets"
 ]
 },
-
 {
-name: "Workout 2 – 30 Min Leg Power Builder",
-exercises: [
-"Zone 1 (60 sec)",
-"Back Squat",
-"Romanian Deadlift",
-"Front Squat",
-"Zone 2 (50–60 sec)",
-"Walking DB Lunges",
-"Barbe
+name:"Workout 3 – Rack Hybrid",
+exercises:["Rack Video #3"]
+},
+{
+name:"Workout 4 – 30 Min Athletic Leg Conditioning",
+exercises:[
+"Zone 1 (60 sec)","Deadlift","Front Squat","Tempo Back Squat",
+"Zone 2 (50–60 sec)","Reverse Lunges","Single-Leg DB RDL","KB Front Rack Squats",
+"Zone 3 (45–60 sec)","Lateral Lunges","DB Squat to Press","Broad Jump → Reset"
+]
+},
+{
+name:"Workout 5 – Rack Upper",
+exercises:["Rack Video #2","Rack Video #4"]
+},
+{
+name:"Workout 6 – 30 Min Strength Bias Leg Day",
+exercises:[
+"Zone 1 (60 sec)","Back Squat","Romanian Deadlift","Narrow Stance Barbell Squat",
+"Zone 2 (50–60 sec)","Elevated Split Squat (R)","Elevated Split Squat (L)","Hip Thrust",
+"Zone 3 (45–60 sec)","Kettlebell Swings","Step-Back Lunges","Heels-Elevated DB Squat Pulses",
+"Finish","Barbell Bench Press – 5 sets"
+]
+},
+{
+name:"Workout 7 – Rack Hybrid",
+exercises:["Rack Video #3"]
+},
+{
+name:"Workout 8 – 30 Min Leg Endurance Finisher (Final Week Push)",
+exercises:[
+"Zone 1 (60 sec)","Deadlift","Front Squat","Tempo Back Squat",
+"Zone 2 (50–60 sec)","Walking Lunges","Barbell Step-Ups","Single-Leg DB RDL",
+"Zone 3 (45–60 sec)","KB Swings","Narrow Stance Squat","Lateral DB Lunges"
+]
+}
+];
+
+let current = 0;
+
+function renderWorkout(){
+document.getElementById("title").innerText = workouts[current].name;
+const container = document.getElementById("wo
+
