@@ -13,23 +13,20 @@
   },
   {
     "id": "w2",
-    "title": "Workout 2 – 30 Min Leg Power Builder",
+    "title": "Workout 2 – 30 Min Leg Power Builder (Bench Finish)",
     "exercises": [
       { "label": "Zone 1 (60 sec)", "type": "section" },
       { "label": "Back Squat", "seconds": 60 },
-      { "label": "Romanian Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
       { "label": "Front Squat", "seconds": 60 },
-
-      { "label": "Zone 2 (50–60 sec)", "type": "section" },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
       { "label": "Walking DB Lunges", "seconds": 60 },
       { "label": "Barbell Step-Ups", "seconds": 60 },
       { "label": "Kettlebell Swings", "seconds": 60 },
-
-      { "label": "Zone 3 (45–60 sec)", "type": "section" },
-      { "label": "Bulgarian Split Squat (R)", "seconds": 60 },
-      { "label": "Bulgarian Split Squat (L)", "seconds": 60 },
-      { "label": "Heels-Elevated DB Squat", "seconds": 60 },
-
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Bulgarian Split Squat (Right)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Left)", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
       { "label": "Finish", "type": "section" },
       { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
     ]
@@ -51,19 +48,18 @@
       { "label": "Zone 1 (60 sec)", "type": "section" },
       { "label": "Deadlift", "seconds": 60 },
       { "label": "Front Squat", "seconds": 60 },
-      { "label": "Tempo Back Squat", "seconds": 60 },
-
-      { "label": "Zone 2 (50–60 sec)", "type": "section" },
-      { "label": "Reverse Lunges", "seconds": 60 },
-      { "label": "Single-Leg DB RDL", "seconds": 60 },
-      { "label": "KB Front Rack Squats", "seconds": 60 },
-
-      { "label": "Zone 3 (45–60 sec)", "type": "section" },
-      { "label": "Lateral Lunges", "seconds": 60 },
-      { "label": "DB Squat to Press", "seconds": 60 },
-      { "label": "Broad Jump → Reset", "seconds": 60 }
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Broad Jumps (jump → reset)", "seconds": 60 }
     ]
   },
+
   {
     "id": "w5",
     "title": "Workout 5 – Rack Upper",
@@ -78,23 +74,20 @@
   },
   {
     "id": "w6",
-    "title": "Workout 6 – 30 Min Strength Bias Leg Day",
+    "title": "Workout 6 – 30 Min Strength Bias Leg Day (Bench Finish)",
     "exercises": [
       { "label": "Zone 1 (60 sec)", "type": "section" },
-      { "label": "Back Squat", "seconds": 60 },
-      { "label": "Romanian Deadlift", "seconds": 60 },
-      { "label": "Narrow Stance Barbell Squat", "seconds": 60 },
-
-      { "label": "Zone 2 (50–60 sec)", "type": "section" },
-      { "label": "Elevated Split Squat (R)", "seconds": 60 },
-      { "label": "Elevated Split Squat (L)", "seconds": 60 },
-      { "label": "Hip Thrust", "seconds": 60 },
-
-      { "label": "Zone 3 (45–60 sec)", "type": "section" },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Narrow-Stance Barbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
       { "label": "Kettlebell Swings", "seconds": 60 },
-      { "label": "Step-Back Lunges", "seconds": 60 },
-      { "label": "Heels-Elevated DB Squat Pulses", "seconds": 60 },
-
+      { "label": "Step-Back Lunges (DB)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
       { "label": "Finish", "type": "section" },
       { "label": "Barbell Bench Press – 5 sets", "type": "note" }
     ]
@@ -116,17 +109,1418 @@
       { "label": "Zone 1 (60 sec)", "type": "section" },
       { "label": "Deadlift", "seconds": 60 },
       { "label": "Front Squat", "seconds": 60 },
-      { "label": "Tempo Back Squat", "seconds": 60 },
-
-      { "label": "Zone 2 (50–60 sec)", "type": "section" },
-      { "label": "Walking Lunges", "seconds": 60 },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Walking DB Lunges", "seconds": 60 },
       { "label": "Barbell Step-Ups", "seconds": 60 },
-      { "label": "Single-Leg DB RDL", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 }
+    ]
+  },
 
-      { "label": "Zone 3 (45–60 sec)", "type": "section" },
-      { "label": "KB Swings", "seconds": 60 },
-      { "label": "Narrow Stance Squat", "seconds": 60 },
-      { "label": "Lateral DB Lunges", "seconds": 60 }
+  {
+    "id": "w9",
+    "title": "Workout 9 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w10",
+    "title": "Workout 10 – 30 Min Quad + Glute Builder (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Box Squat", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Bulgarian Split Squat (Right)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Left)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w11",
+    "title": "Workout 11 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w12",
+    "title": "Workout 12 – 30 Min Posterior Chain + Athletic",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (Barbell)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Skater Jumps", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w13",
+    "title": "Workout 13 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w14",
+    "title": "Workout 14 – 30 Min Strength Ladder Legs (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Low-Bar Back Squat", "seconds": 60 },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Single-Leg Hip Thrust (Right)", "seconds": 60 },
+      { "label": "Single-Leg Hip Thrust (Left)", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w15",
+    "title": "Workout 15 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w16",
+    "title": "Workout 16 – 30 Min Lunge + Squat Density",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Walking Barbell Lunges", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w17",
+    "title": "Workout 17 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w18",
+    "title": "Workout 18 – 30 Min Squat Mechanics + Unilateral (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Pin Squat (from safeties)", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Front-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Front-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w19",
+    "title": "Workout 19 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w20",
+    "title": "Workout 20 – 30 Min Deadlift + Split Squat Engine",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Box Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Rear-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Rear-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Cossack Squats (DB)", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w21",
+    "title": "Workout 21 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w22",
+    "title": "Workout 22 – 30 Min Glute + Hamstring Strength (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "B-Stance RDL (DB, Right)", "seconds": 60 },
+      { "label": "B-Stance RDL (DB, Left)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w23",
+    "title": "Workout 23 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w24",
+    "title": "Workout 24 – 30 Min Athletic Legs + Core",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Bear Crawl", "seconds": 60 },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w25",
+    "title": "Workout 25 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w26",
+    "title": "Workout 26 – 30 Min Squat Volume + Step-Up (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w27",
+    "title": "Workout 27 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w28",
+    "title": "Workout 28 – 30 Min Posterior Strength + Carry",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Suitcase Carry (Right)", "seconds": 60 },
+      { "label": "Suitcase Carry (Left)", "seconds": 60 },
+      { "label": "Kettlebell Deadlift", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (Barbell)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w29",
+    "title": "Workout 29 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w30",
+    "title": "Workout 30 – 30 Min Front Squat Focus + Unilateral (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Box Front Squat", "seconds": 60 },
+      { "label": "Dumbbell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Bulgarian Split Squat (Right)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Left)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w31",
+    "title": "Workout 31 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w32",
+    "title": "Workout 32 – 30 Min Lateral + Power Mix",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Wide-Stance Barbell Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Cossack Squats (bodyweight)", "seconds": 60 },
+      { "label": "Skater Jumps", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w33",
+    "title": "Workout 33 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w34",
+    "title": "Workout 34 – 30 Min Deadlift Variations + Legs (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Block Pull Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Step-Back Lunges (Barbell)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w35",
+    "title": "Workout 35 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w36",
+    "title": "Workout 36 – 30 Min Squat + Carry Conditioning",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Front Rack Carry (DB)", "seconds": 60 },
+      { "label": "Suitcase Deadlift (DB)", "seconds": 60 },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w37",
+    "title": "Workout 37 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w38",
+    "title": "Workout 38 – 30 Min Mixed Leg Strength (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Anderson Squat (dead stop)", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Rear-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Rear-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w39",
+    "title": "Workout 39 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w40",
+    "title": "Workout 40 – 30 Min Unilateral Endurance + Core",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Dumbbell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w41",
+    "title": "Workout 41 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w42",
+    "title": "Workout 42 – 30 Min Squat Strength + Hinge (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Low-Bar Back Squat", "seconds": 60 },
+      { "label": "Stiff-Leg Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Step-Back Lunges (DB)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w43",
+    "title": "Workout 43 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w44",
+    "title": "Workout 44 – 30 Min Athletic Legs (Low Impact)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w45",
+    "title": "Workout 45 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w46",
+    "title": "Workout 46 – 30 Min Front Squat + Step-Up Volume (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Box Front Squat", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w47",
+    "title": "Workout 47 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w48",
+    "title": "Workout 48 – 30 Min Hinge + Carry + Core",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Suitcase Carry (Right)", "seconds": 60 },
+      { "label": "Suitcase Carry (Left)", "seconds": 60 },
+      { "label": "Kettlebell Deadlift", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w49",
+    "title": "Workout 49 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w50",
+    "title": "Workout 50 – 30 Min Squat + Unilateral Strength (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Pin Squat (from safeties)", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Front-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Front-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w51",
+    "title": "Workout 51 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w52",
+    "title": "Workout 52 – 30 Min Lateral + Carry Finisher",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Wide-Stance Barbell Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Cossack Squats (DB)", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w53",
+    "title": "Workout 53 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w54",
+    "title": "Workout 54 – 30 Min Posterior Chain Power (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w55",
+    "title": "Workout 55 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w56",
+    "title": "Workout 56 – 30 Min Unilateral Grind",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Rear-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Rear-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w57",
+    "title": "Workout 57 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w58",
+    "title": "Workout 58 – 30 Min Squat Density + Core (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w59",
+    "title": "Workout 59 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w60",
+    "title": "Workout 60 – 30 Min Hinge + Step-Up Blend",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Box Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Step-Back Lunges (DB)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w61",
+    "title": "Workout 61 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w62",
+    "title": "Workout 62 – 30 Min Front Squat + Hinge (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Stiff-Leg Deadlift", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (Barbell)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w63",
+    "title": "Workout 63 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w64",
+    "title": "Workout 64 – 30 Min Lateral Strength + Carry",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Wide-Stance Barbell Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Cossack Squats (bodyweight)", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Suitcase Carry (Right)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Suitcase Carry (Left)", "seconds": 60 },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w65",
+    "title": "Workout 65 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w66",
+    "title": "Workout 66 – 30 Min Posterior Strength + Unilateral (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "B-Stance RDL (DB, Right)", "seconds": 60 },
+      { "label": "B-Stance RDL (DB, Left)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w67",
+    "title": "Workout 67 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w68",
+    "title": "Workout 68 – 30 Min Squat + Step-Up Endurance",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w69",
+    "title": "Workout 69 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w70",
+    "title": "Workout 70 – 30 Min Squat Strength + Hinge (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Low-Bar Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Rear-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Rear-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w71",
+    "title": "Workout 71 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w72",
+    "title": "Workout 72 – 30 Min Lateral + Core Focus",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Cossack Squats (DB)", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w73",
+    "title": "Workout 73 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w74",
+    "title": "Workout 74 – 30 Min Posterior Chain Builder (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w75",
+    "title": "Workout 75 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w76",
+    "title": "Workout 76 – 30 Min Unilateral + Step-Up Mix",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Dumbbell Front Rack Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Right)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Left)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w77",
+    "title": "Workout 77 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w78",
+    "title": "Workout 78 – 30 Min Squat + Carry (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Stiff-Leg Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Front Rack Carry (DB)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Reverse Lunges (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w79",
+    "title": "Workout 79 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w80",
+    "title": "Workout 80 – 30 Min Lateral Strength + Balance",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Wide-Stance Barbell Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Cossack Squats (bodyweight)", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Side Plank (Right)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w81",
+    "title": "Workout 81 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w82",
+    "title": "Workout 82 – 30 Min Posterior Chain + Unilateral (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Step-Back Lunges (Barbell)", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w83",
+    "title": "Workout 83 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w84",
+    "title": "Workout 84 – 30 Min Squat Endurance + Core",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Hollow Hold", "seconds": 45 }
+    ]
+  },
+
+  {
+    "id": "w85",
+    "title": "Workout 85 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w86",
+    "title": "Workout 86 – 30 Min Squat + Hinge Strength (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Low-Bar Back Squat", "seconds": 60 },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Rear-Foot Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Rear-Foot Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Hip Thrust (Barbell)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w87",
+    "title": "Workout 87 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w88",
+    "title": "Workout 88 – 30 Min Lateral + Carry (Low Impact)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Front Rack Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Cossack Squats (DB)", "seconds": 60 },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Farmer Carry (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Side Plank (Right)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w89",
+    "title": "Workout 89 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w90",
+    "title": "Workout 90 – 30 Min Posterior Chain + Core (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w91",
+    "title": "Workout 91 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w92",
+    "title": "Workout 92 – 30 Min Unilateral + Step-Up Endurance",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Single-Leg DB RDL (Right)", "seconds": 60 },
+      { "label": "Single-Leg DB RDL (Left)", "seconds": 60 },
+      { "label": "Dumbbell Goblet Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Elevated Split Squat (Right)", "seconds": 60 },
+      { "label": "Elevated Split Squat (Left)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Side Plank (Left)", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w93",
+    "title": "Workout 93 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w94",
+    "title": "Workout 94 – 30 Min Squat + Lateral Mix (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Lateral Lunges (DB)", "seconds": 60 },
+      { "label": "Cossack Squats (bodyweight)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Seated DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w95",
+    "title": "Workout 95 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w96",
+    "title": "Workout 96 – 30 Min Posterior + Carry Finisher",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Good Morning (Barbell)", "seconds": 60 },
+      { "label": "Box Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Suitcase Carry (Right)", "seconds": 60 },
+      { "label": "Suitcase Carry (Left)", "seconds": 60 },
+      { "label": "Kettlebell Deadlift", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Hamstring Slide Curls (towel/slider)", "seconds": 60 },
+      { "label": "Wall Sit (bodyweight)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
+    ]
+  },
+
+  {
+    "id": "w97",
+    "title": "Workout 97 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w98",
+    "title": "Workout 98 – 30 Min Full Leg Blend (Bench Finish)",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "High-Bar Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift (Barbell)", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Dumbbell Step-Ups", "seconds": 60 },
+      { "label": "Hip Thrust (DB)", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Standing DB Calf Raises", "seconds": 60 },
+      { "label": "Plank", "seconds": 60 },
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w99",
+    "title": "Workout 99 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w100",
+    "title": "Workout 100 – 30 Min Legs + Core Final Burner",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Tempo Back Squat (3-1-1)", "seconds": 60 },
+      { "label": "Romanian Deadlift (DB)", "seconds": 60 },
+      { "label": "Heels-Elevated Dumbbell Squat", "seconds": 60 },
+      { "label": "Zone 2 (60 sec)", "type": "section" },
+      { "label": "Bulgarian Split Squat (Right)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (Left)", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Zone 3 (60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Wall Sit (DB on lap)", "seconds": 60 },
+      { "label": "Dead Bug", "seconds": 60 }
     ]
   }
 ]
