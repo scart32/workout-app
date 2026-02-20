@@ -9,81 +9,54 @@
       font-family: Arial, sans-serif;
       background: #111;
       color: white;
-      text-align: center;
       padding: 20px;
+      max-width: 600px;
+      margin: auto;
     }
     h1 {
-      margin-bottom: 10px;
+      text-align: center;
+    }
+    h2 {
+      margin-top: 30px;
     }
     .exercise {
       background: #222;
-      margin: 10px 0;
-      padding: 15px;
+      margin: 8px 0;
+      padding: 12px;
       border-radius: 8px;
-      text-align: left;
       display: flex;
       align-items: center;
     }
     input[type="checkbox"] {
       margin-right: 15px;
-      transform: scale(1.5);
+      transform: scale(1.4);
     }
   </style>
 </head>
 <body>
 
 <h1>Workout of the Day</h1>
-<h2 id="dayTitle"></h2>
-
+<h2 id="workoutTitle"></h2>
 <div id="workoutContainer"></div>
 
 <script>
-  const workouts = [
-    {
-      name: "Chest Day",
-      exercises: ["Bench Press - 4x8", "Incline Dumbbell Press - 3x10", "Chest Flys - 3x12"]
-    },
-    {
-      name: "Back Day",
-      exercises: ["Pull Ups - 4x8", "Lat Pulldown - 3x10", "Seated Rows - 3x12"]
-    },
-    {
-      name: "Leg Day",
-      exercises: ["Squats - 4x8", "Leg Press - 3x10", "Hamstring Curls - 3x12"]
-    },
-    {
-      name: "Shoulder Day",
-      exercises: ["Overhead Press - 4x8", "Lateral Raises - 3x12", "Rear Delt Flys - 3x12"]
-    },
-    {
-      name: "Arm Day",
-      exercises: ["Barbell Curls - 4x10", "Tricep Pushdowns - 3x12", "Hammer Curls - 3x12"]
-    }
-  ];
+const workouts = [
 
-  const today = new Date().getDay();
-  const workout = workouts[today % workouts.length];
+{
+name: "Workout 1 – Rack Upper",
+exercises: [
+"Rack Video #2",
+"Rack Video #4"
+]
+},
 
-  document.getElementById("dayTitle").innerText = workout.name;
-
-  const container = document.getElementById("workoutContainer");
-
-  workout.exercises.forEach((exercise, index) => {
-    const div = document.createElement("div");
-    div.className = "exercise";
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-
-    const label = document.createElement("label");
-    label.innerText = exercise;
-
-    div.appendChild(checkbox);
-    div.appendChild(label);
-    container.appendChild(div);
-  });
-</script>
-
-</body>
-</html>
-
+{
+name: "Workout 2 – 30 Min Leg Power Builder",
+exercises: [
+"Zone 1 (60 sec)",
+"Back Squat",
+"Romanian Deadlift",
+"Front Squat",
+"Zone 2 (50–60 sec)",
+"Walking DB Lunges",
+"Barbe
