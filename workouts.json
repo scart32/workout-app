@@ -1,0 +1,23 @@
+[
+  {
+    "id": "w1",
+    "title": "Workout 1 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w2",
+    "title": "Workout 2 – 30 Min Leg Power Builder",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift", "seconds": 60 }
+    ]
+  }
+]
