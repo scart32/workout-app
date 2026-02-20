@@ -1,129 +1,89 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
-
-const workouts = [
-  { title: "Workout 1 – Rack Upper", exercises: ["Rack Video #2", "Rack Video #4"] },
-  { title: "Workout 2 – 30 Min Leg Power Builder", exercises: ["Back Squat","Romanian Deadlift","Front Squat","Walking DB Lunges","Barbell Step-Ups","Kettlebell Swings","Bulgarian Split Squat (R)","Bulgarian Split Squat (L)","Heels-Elevated DB Squat","Bench Press – 4–5 sets"] },
-  { title: "Workout 3 – Rack Hybrid", exercises: ["Rack Video #3"] },
-  { title: "Workout 4 – 30 Min Athletic Leg Conditioning", exercises: ["Deadlift","Front Squat","Tempo Back Squat","Reverse Lunges","Single-Leg DB RDL","KB Front Rack Squats","Lateral Lunges","DB Squat to Press","Broad Jump → Reset"] },
-  { title: "Workout 5 – Rack Upper", exercises: ["Rack Video #2", "Rack Video #4"] },
-  { title: "Workout 6 – 30 Min Strength Bias Leg Day", exercises: ["Back Squat","Romanian Deadlift","Narrow Stance Barbell Squat","Elevated Split Squat (R)","Elevated Split Squat (L)","Hip Thrust","Kettlebell Swings","Step-Back Lunges","Heels-Elevated DB Squat Pulses","Bench Press – 5 sets"] },
-  { title: "Workout 7 – Rack Hybrid", exercises: ["Rack Video #3"] },
-  { title: "Workout 8 – 30 Min Leg Endurance Finisher", exercises: ["Deadlift","Front Squat","Tempo Back Squat","Walking Lunges","Barbell Step-Ups","Single-Leg DB RDL","KB Swings","Narrow Stance Squat","Lateral DB Lunges"] },
-];
-
-export default function WorkoutTracker() {
-  const [currentWorkoutIndex, setCurrentWorkoutIndex] = useState(0);
-  const [completed, setCompleted] = useState({});
-  const [seconds, setSeconds] = useState(45);
-  const [timeLeft, setTimeLeft] = useState(45);
-  const [isRunning, setIsRunning] = useState(false);
-  const [history, setHistory] = useState([]);
-
-  // Load from localStorage
-  useEffect(() => {
-    const savedIndex = localStorage.getItem("currentWorkoutIndex");
-    const savedHistory = localStorage.getItem("workoutHistory");
-    if (savedIndex) setCurrentWorkoutIndex(parseInt(savedIndex));
-    if (savedHistory) setHistory(JSON.parse(savedHistory));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("currentWorkoutIndex", currentWorkoutIndex);
-  }, [currentWorkoutIndex]);
-
-  useEffect(() => {
-    localStorage.setItem("workoutHistory", JSON.stringify(history));
-  }, [history]);
-
-  // Timer logic
-  useEffect(() => {
-    let timer;
-    if (isRunning && timeLeft > 0) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Workout of the Day</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
     }
-    if (timeLeft === 0) setIsRunning(false);
-    return () => clearTimeout(timer);
-  }, [isRunning, timeLeft]);
-
-  const toggleExercise = (exercise) => {
-    setCompleted((prev) => ({ ...prev, [exercise]: !prev[exercise] }));
-  };
-
-  const completeWorkout = () => {
-    const today = new Date().toLocaleDateString();
-    setHistory([...history, { date: today, workout: workouts[currentWorkoutIndex].title }]);
-    if (currentWorkoutIndex < workouts.length - 1) {
-      setCurrentWorkoutIndex(currentWorkoutIndex + 1);
-      setCompleted({});
+    h1 {
+      margin-bottom: 10px;
     }
-  };
+    .exercise {
+      background: #222;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+    }
+    input[type="checkbox"] {
+      margin-right: 15px;
+      transform: scale(1.5);
+    }
+  </style>
+</head>
+<body>
 
-  const startTimer = (sec) => {
-    setSeconds(sec);
-    setTimeLeft(sec);
-    setIsRunning(true);
-  };
+<h1>Workout of the Day</h1>
+<h2 id="dayTitle"></h2>
 
-  const currentWorkout = workouts[currentWorkoutIndex];
+<div id="workoutContainer"></div>
 
-  return (
-    <div className="min-h-screen bg-gray-50 p-4 flex flex-col items-center">
-      <Card className="w-full max-w-xl shadow-xl rounded-2xl mb-6">
-        <CardContent className="p-6">
-          <motion.h1
-            className="text-2xl font-bold mb-4"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {currentWorkout.title}
-          </motion.h1>
+<script>
+  const workouts = [
+    {
+      name: "Chest Day",
+      exercises: ["Bench Press - 4x8", "Incline Dumbbell Press - 3x10", "Chest Flys - 3x12"]
+    },
+    {
+      name: "Back Day",
+      exercises: ["Pull Ups - 4x8", "Lat Pulldown - 3x10", "Seated Rows - 3x12"]
+    },
+    {
+      name: "Leg Day",
+      exercises: ["Squats - 4x8", "Leg Press - 3x10", "Hamstring Curls - 3x12"]
+    },
+    {
+      name: "Shoulder Day",
+      exercises: ["Overhead Press - 4x8", "Lateral Raises - 3x12", "Rear Delt Flys - 3x12"]
+    },
+    {
+      name: "Arm Day",
+      exercises: ["Barbell Curls - 4x10", "Tricep Pushdowns - 3x12", "Hammer Curls - 3x12"]
+    }
+  ];
 
-          <div className="space-y-3 mb-6">
-            {currentWorkout.exercises.map((exercise, index) => (
-              <div key={index} className="flex justify-between items-center bg-white p-3 rounded-xl shadow-sm">
-                <span className={`${completed[exercise] ? "line-through text-gray-400" : ""}`}>
-                  {exercise}
-                </span>
-                <input
-                  type="checkbox"
-                  checked={completed[exercise] || false}
-                  onChange={() => toggleExercise(exercise)}
-                />
-              </div>
-            ))}
-          </div>
+  const today = new Date().getDay();
+  const workout = workouts[today % workouts.length];
 
-          <div className="mb-6 text-center">
-            <div className="text-3xl font-bold mb-2">{timeLeft}s</div>
-            <div className="flex justify-center gap-2">
-              <Button onClick={() => startTimer(45)} className="rounded-2xl">45s</Button>
-              <Button onClick={() => startTimer(60)} className="rounded-2xl">60s</Button>
-              <Button onClick={() => setIsRunning(false)} className="rounded-2xl">Stop</Button>
-            </div>
-          </div>
+  document.getElementById("dayTitle").innerText = workout.name;
 
-          <Button onClick={completeWorkout} className="w-full rounded-2xl">
-            Complete Workout & Go to Next
-          </Button>
-        </CardContent>
-      </Card>
+  const container = document.getElementById("workoutContainer");
 
-      <Card className="w-full max-w-xl shadow-lg rounded-2xl">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-bold mb-4">Workout History</h2>
-          <div className="space-y-2">
-            {history.length === 0 && <p>No workouts completed yet.</p>}
-            {history.map((item, i) => (
-              <div key={i} className="bg-white p-2 rounded-xl shadow-sm text-sm">
-                {item.date} – {item.workout}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+  workout.exercises.forEach((exercise, index) => {
+    const div = document.createElement("div");
+    div.className = "exercise";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    const label = document.createElement("label");
+    label.innerText = exercise;
+
+    div.appendChild(checkbox);
+    div.appendChild(label);
+    container.appendChild(div);
+  });
+</script>
+
+</body>
+</html>
+
