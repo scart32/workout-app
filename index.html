@@ -33,7 +33,6 @@
     header{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
     .topbar{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
     h1{margin:0;font-size:20px;letter-spacing:.2px;}
-    .subtitle{color:var(--muted);font-size:13px;line-height:1.35;max-width: 62ch;}
     .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
     .chip{
       background: rgba(255,255,255,.06);
@@ -81,10 +80,11 @@
       padding:10px 12px;
       font-size:13px;
       cursor:pointer;
-      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
     }
     button:hover{background: rgba(255,255,255,.10);}
     button:active{transform: translateY(1px);}
+    button:disabled{opacity:.45; cursor:not-allowed;}
     .btnPrimary{
       border-color: rgba(124,92,255,.55);
       background: rgba(124,92,255,.22);
@@ -112,27 +112,28 @@
       display:flex;
       flex-direction:column;
       gap:10px;
-      transition: border-color .15s ease, background .15s ease, transform .05s ease;
+      transition: border-color .15s ease, background .15s ease, transform .05s ease, opacity .15s ease;
       cursor: pointer;
     }
     .item:active{transform: translateY(1px);}
     .item.active{
       border-color: rgba(45,212,191,.8);
       box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+      opacity: 1;
     }
     .item.section{
       cursor: default;
       background: rgba(255,255,255,.05);
       border-style: dashed;
+      opacity: 1;
     }
     .topline{display:flex;gap:10px;align-items:flex-start;}
     .topline input{transform: scale(1.35);margin-top:2px;accent-color: var(--accent2);}
     .name{font-size:13.5px;line-height:1.25;flex:1;}
     .done .name{text-decoration: line-through;color: rgba(168,176,198,.75);}
 
-    /* Collapsed items show only the top line */
     .collapsed .meta, .collapsed .timerRow { display:none; }
-    .collapsed{opacity:.75;}
+    .collapsed{opacity:.72;}
 
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color: var(--muted);font-size: 12px;}
     .timerRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
@@ -178,7 +179,6 @@
   <div class="topbar">
     <div>
       <h1>Workout App</h1>
-      <div class="subtitle">Only the active exercise expands. Checked exercises minimize automatically. Timers + rack videos stay inside the app.</div>
     </div>
     <div class="chips">
       <div class="chip"><strong id="todayLabel"></strong></div>
@@ -202,7 +202,8 @@
       <h2 id="workoutTitle">Loading…</h2>
       <div class="small" id="workoutSubtitle"></div>
     </div>
-    <div class="row" style="gap:8px;justify-content:flex-end;">
+
+    <div class="row" style="gap:8px;justify-content:flex-end;" id="topControls">
       <button id="prevBtn" class="btnGhost">Previous</button>
       <button id="nextBtn" class="btnGhost">Next</button>
       <button id="stopTimer" class="btnDanger">Stop Timer</button>
@@ -213,18 +214,19 @@
   <div class="progressWrap">
     <div class="progressMeta">
       <div id="progressText">0 / 0 complete</div>
-      <div class="small">Tip: Tap an exercise to make it active.</div>
+      <div class="small" id="completeHint"></div>
     </div>
     <div class="bar"><div id="progressBar"></div></div>
   </div>
 
   <div id="videosSection" class="videosGrid" style="display:none;"></div>
-
   <div class="list" id="exerciseList"></div>
 
-  <!-- MOVED TO VERY BOTTOM -->
+  <!-- Button at bottom; only enabled when all checkable exercises are completed -->
   <div class="divider"></div>
-  <button id="markCompleteBtn" class="btnPrimary" style="width:100%;">Mark Workout Complete</button>
+  <button id="markCompleteBtn" class="btnPrimary" style="width:100%;" disabled>
+    Mark Workout Complete
+  </button>
 </section>
 
 <!-- HISTORY VIEW -->
@@ -247,7 +249,7 @@
   <div class="row">
     <div class="titleBlock">
       <h2>Performance Dashboard</h2>
-      <div class="small">High-level stats to keep you consistent.</div>
+      <div class="small">High-level stats.</div>
     </div>
   </div>
   <div class="divider"></div>
@@ -278,7 +280,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ===== DEFAULT MONTH (your Feb set) ===== */
+/* ===== DEFAULT MONTH ===== */
 const DEFAULT_WORKOUTS = [
   {
     id: "w1",
@@ -403,9 +405,9 @@ const DEFAULT_WORKOUTS = [
 ];
 
 /* ===== storage + helpers ===== */
-const STORAGE_KEY = "workout_app_active_v1";
-const MONTH_KEY = "workouts_custom_month_v2";
-const SOUND_KEY = "sound_enabled_v2";
+const STORAGE_KEY = "workout_app_active_v2";
+const MONTH_KEY = "workouts_custom_month_v3";
+const SOUND_KEY = "sound_enabled_v3";
 const todayKey = new Date().toISOString().slice(0,10);
 
 const $ = (id)=>document.getElementById(id);
@@ -489,12 +491,8 @@ function stopActiveTimer(){
   activeTimer = null;
 }
 
-function workoutDayKey(workoutId){
-  return `${todayKey}::${workoutId}`;
-}
-function getChecksFor(workoutId){
-  return state.checks[workoutDayKey(workoutId)] || {};
-}
+function workoutDayKey(workoutId){ return `${todayKey}::${workoutId}`; }
+function getChecksFor(workoutId){ return state.checks[workoutDayKey(workoutId)] || {}; }
 function setCheck(workoutId, itemIndex, value){
   const k = workoutDayKey(workoutId);
   if(!state.checks[k]) state.checks[k] = {};
@@ -505,12 +503,18 @@ function setCheck(workoutId, itemIndex, value){
 function isCheckable(ex){ return ex.type !== "section"; }
 function isTimed(ex){ return typeof ex.seconds === "number" && ex.seconds > 0; }
 
+// Rack day definition: ONLY checkable items are videoRef (no timed sets)
+function isRackDay(workout){
+  const checkable = workout.exercises.filter(isCheckable);
+  if(checkable.length === 0) return false;
+  return checkable.every(ex => ex.type === "videoRef");
+}
+
 function findFirstUncheckedIndex(workout){
   const checks = getChecksFor(workout.id);
   for(let i=0;i<workout.exercises.length;i++){
     if(isCheckable(workout.exercises[i]) && !checks[i]) return i;
   }
-  // if all checked, fallback to first checkable
   for(let i=0;i<workout.exercises.length;i++){
     if(isCheckable(workout.exercises[i])) return i;
   }
@@ -530,25 +534,28 @@ function getActiveIndex(workout){
   return first;
 }
 
-function updateProgress(workout){
+function computeCompletion(workout){
   const checks = getChecksFor(workout.id);
-  const checkable = workout.exercises
-    .map((ex,i)=>({ex,i}))
-    .filter(({ex})=>isCheckable(ex))
-    .map(({i})=>i);
-
-  const done = checkable.filter(i=>!!checks[i]).length;
-  const total = checkable.length;
-  $("progressText").textContent = `${done} / ${total} complete`;
+  const checkableIdx = workout.exercises.map((ex,i)=>({ex,i})).filter(({ex})=>isCheckable(ex)).map(({i})=>i);
+  const done = checkableIdx.filter(i => !!checks[i]).length;
+  const total = checkableIdx.length;
   const pct = total ? Math.round((done/total)*100) : 0;
+  return { done, total, pct, allDone: total > 0 && done === total };
+}
+
+function updateProgressAndComplete(workout){
+  const { done, total, pct, allDone } = computeCompletion(workout);
+  $("progressText").textContent = `${done} / ${total} complete`;
   $("progressBar").style.width = `${pct}%`;
-  $("workoutSubtitle").textContent = `Progress: ${pct}% • Timers auto-check + advance.`;
+  $("workoutSubtitle").textContent = `Progress: ${pct}%`;
+  $("completeHint").textContent = allDone ? "Ready to complete" : "Complete all exercises to unlock";
+
+  const btn = $("markCompleteBtn");
+  btn.disabled = !allDone;
 }
 
 function scrollToItem(el){
   el.scrollIntoView({ behavior: "smooth", block: "center" });
-  el.classList.add("active");
-  setTimeout(()=>el.classList.remove("active"), 700);
 }
 
 function renderVideos(workout){
@@ -595,7 +602,7 @@ function renderHistory(){
   if(state.history.length === 0){
     const it = document.createElement("div");
     it.className = "item";
-    it.innerHTML = `<div class="meta"><b>No workouts completed yet.</b></div><div class="hint">Use “Mark Workout Complete” at the bottom after your session.</div>`;
+    it.innerHTML = `<div class="meta"><b>No workouts completed yet.</b></div>`;
     list.appendChild(it);
     return;
   }
@@ -615,14 +622,12 @@ function renderDashboard(){
   const recent = state.history[0]?.date ?? "—";
 
   const w = WORKOUTS[currentIndex];
-  const checks = getChecksFor(w.id);
-  const totalItems = w.exercises.filter(isCheckable).length;
-  const doneItems = w.exercises.map((_,i)=>i).filter(i=>isCheckable(w.exercises[i]) && !!checks[i]).length;
-  const pct = totalItems ? Math.round((doneItems/totalItems)*100) : 0;
+  const { pct } = computeCompletion(w);
 
   const mk = (k,v,sub="") => {
     const it = document.createElement("div");
     it.className = "item";
+    it.style.cursor = "default";
     it.innerHTML = `<div class="meta"><b>${k}</b></div><div class="name" style="font-size:18px;font-weight:800;">${v}</div>${sub?`<div class="meta">${sub}</div>`:""}`;
     return it;
   };
@@ -671,17 +676,23 @@ function saveBuilder(){
   }
 }
 
-/* ===== main render with active expanded behavior ===== */
+/* ===== main render ===== */
 function renderWorkout(){
   stopActiveTimer();
 
   const workout = WORKOUTS[currentIndex];
+
   $("todayLabel").textContent = `Today: ${todayKey}`;
   $("cycleLabel").textContent = `${currentIndex + 1} / ${WORKOUTS.length}`;
   setSoundEnabled(soundEnabled);
 
   $("workoutTitle").textContent = workout.title;
   renderVideos(workout);
+
+  // Hide stop timer + toggle sound for rack days
+  const rack = isRackDay(workout);
+  $("stopTimer").style.display = rack ? "none" : "inline-block";
+  $("toggleSound").style.display = rack ? "none" : "inline-block";
 
   const list = $("exerciseList");
   list.innerHTML = "";
@@ -693,15 +704,14 @@ function renderWorkout(){
     const item = document.createElement("div");
     item.className = "item";
 
-    // section (always visible)
     if(ex.type === "section"){
       item.classList.add("section");
+      item.style.cursor = "default";
       item.innerHTML = `<div class="meta"><b>${ex.label}</b></div>`;
       list.appendChild(item);
       return;
     }
 
-    // collapse if checked OR not active
     const isActive = idx === activeIndex;
     const isChecked = !!checks[idx];
 
@@ -709,14 +719,13 @@ function renderWorkout(){
     item.classList.toggle("collapsed", !isActive || isChecked);
     item.classList.toggle("done", isChecked);
 
-    // allow tap to make active
     item.addEventListener("click", (e) => {
-      // don't toggle checkbox accidentally when clicking buttons
       if(e.target.tagName.toLowerCase() === "button" || e.target.tagName.toLowerCase() === "input") return;
       activeIndex = idx;
       setActiveIndex(workout.id, idx);
       renderWorkout();
-      scrollToItem(list.children[idx]);
+      const el = list.children[idx];
+      if(el) scrollToItem(el);
     });
 
     const top = document.createElement("div");
@@ -736,31 +745,28 @@ function renderWorkout(){
 
     const meta = document.createElement("div");
     meta.className = "meta";
-    if(ex.type === "videoRef") meta.innerHTML = `<span>Video-based</span>`;
+    if(ex.type === "videoRef") meta.innerHTML = `<span>Video</span>`;
     else if(ex.type === "note") meta.innerHTML = `<span>Note</span>`;
-    else if(isTimed(ex)) meta.innerHTML = `<span>Timed set</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
+    else if(isTimed(ex)) meta.innerHTML = `<span>Timed</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
     else meta.innerHTML = `<span>Exercise</span>`;
     item.appendChild(meta);
 
     cb.addEventListener("change", () => {
       setCheck(workout.id, idx, cb.checked);
+
       if(cb.checked){
         if(navigator.vibrate) navigator.vibrate(35);
         beep(660,70);
-
-        // when checked, move active to next unchecked
         const next = findFirstUncheckedIndex(workout);
         setActiveIndex(workout.id, next);
       } else {
-        // if unchecked, make it active
         setActiveIndex(workout.id, idx);
       }
 
       renderWorkout();
-      updateProgress(workout);
+      updateProgressAndComplete(workout);
     });
 
-    // timer only visible when active (since collapsed hides it)
     if(isTimed(ex)){
       const timerRow = document.createElement("div");
       timerRow.className = "timerRow";
@@ -808,13 +814,12 @@ function renderWorkout(){
               successChime();
               if(navigator.vibrate) navigator.vibrate([200,100,200]);
 
-              // advance active
               const nextIdx = findFirstUncheckedIndex(workout);
               setActiveIndex(workout.id, nextIdx);
 
               renderWorkout();
+              updateProgressAndComplete(workout);
 
-              // scroll to new active
               setTimeout(() => {
                 const newActive = list.children[nextIdx];
                 if(newActive) scrollToItem(newActive);
@@ -841,12 +846,13 @@ function renderWorkout(){
     list.appendChild(item);
   });
 
-  updateProgress(workout);
+  // Ensure rack upper days: separate checkbox entries for video #2 and #4
+  // (already in data, this just prevents accidental merging later)
+  updateProgressAndComplete(workout);
 
-  // make sure active is visible on load
+  // scroll active into view
   setTimeout(() => {
-    const w = WORKOUTS[currentIndex];
-    const activeIdx = getActiveIndex(w);
+    const activeIdx = getActiveIndex(workout);
     const el = $("exerciseList").children[activeIdx];
     if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 60);
@@ -878,6 +884,11 @@ $("toggleSound").addEventListener("click", ()=>{
 
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
+  const { allDone } = computeCompletion(w);
+  if(!allDone){
+    toast("Complete all exercises first");
+    return;
+  }
   addHistoryEntry(w.title);
   toast("Workout logged ✅");
   successChime();
