@@ -17,7 +17,116 @@
     "exercises": [
       { "label": "Zone 1 (60 sec)", "type": "section" },
       { "label": "Back Squat", "seconds": 60 },
-      { "label": "Romanian Deadlift", "seconds": 60 }
+      { "label": "Romanian Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+
+      { "label": "Zone 2 (50–60 sec)", "type": "section" },
+      { "label": "Walking DB Lunges", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+
+      { "label": "Zone 3 (45–60 sec)", "type": "section" },
+      { "label": "Bulgarian Split Squat (R)", "seconds": 60 },
+      { "label": "Bulgarian Split Squat (L)", "seconds": 60 },
+      { "label": "Heels-Elevated DB Squat", "seconds": 60 },
+
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 4–5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w3",
+    "title": "Workout 3 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w4",
+    "title": "Workout 4 – 30 Min Athletic Leg Conditioning",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Tempo Back Squat", "seconds": 60 },
+
+      { "label": "Zone 2 (50–60 sec)", "type": "section" },
+      { "label": "Reverse Lunges", "seconds": 60 },
+      { "label": "Single-Leg DB RDL", "seconds": 60 },
+      { "label": "KB Front Rack Squats", "seconds": 60 },
+
+      { "label": "Zone 3 (45–60 sec)", "type": "section" },
+      { "label": "Lateral Lunges", "seconds": 60 },
+      { "label": "DB Squat to Press", "seconds": 60 },
+      { "label": "Broad Jump → Reset", "seconds": 60 }
+    ]
+  },
+  {
+    "id": "w5",
+    "title": "Workout 5 – Rack Upper",
+    "videos": [
+      { "label": "Rack Video #2", "url": "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { "label": "Rack Video #4", "url": "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #2", "type": "videoRef" },
+      { "label": "Rack Video #4", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w6",
+    "title": "Workout 6 – 30 Min Strength Bias Leg Day",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Back Squat", "seconds": 60 },
+      { "label": "Romanian Deadlift", "seconds": 60 },
+      { "label": "Narrow Stance Barbell Squat", "seconds": 60 },
+
+      { "label": "Zone 2 (50–60 sec)", "type": "section" },
+      { "label": "Elevated Split Squat (R)", "seconds": 60 },
+      { "label": "Elevated Split Squat (L)", "seconds": 60 },
+      { "label": "Hip Thrust", "seconds": 60 },
+
+      { "label": "Zone 3 (45–60 sec)", "type": "section" },
+      { "label": "Kettlebell Swings", "seconds": 60 },
+      { "label": "Step-Back Lunges", "seconds": 60 },
+      { "label": "Heels-Elevated DB Squat Pulses", "seconds": 60 },
+
+      { "label": "Finish", "type": "section" },
+      { "label": "Barbell Bench Press – 5 sets", "type": "note" }
+    ]
+  },
+  {
+    "id": "w7",
+    "title": "Workout 7 – Rack Hybrid",
+    "videos": [
+      { "label": "Rack Video #3", "url": "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    "exercises": [
+      { "label": "Rack Video #3", "type": "videoRef" }
+    ]
+  },
+  {
+    "id": "w8",
+    "title": "Workout 8 – 30 Min Leg Endurance Finisher",
+    "exercises": [
+      { "label": "Zone 1 (60 sec)", "type": "section" },
+      { "label": "Deadlift", "seconds": 60 },
+      { "label": "Front Squat", "seconds": 60 },
+      { "label": "Tempo Back Squat", "seconds": 60 },
+
+      { "label": "Zone 2 (50–60 sec)", "type": "section" },
+      { "label": "Walking Lunges", "seconds": 60 },
+      { "label": "Barbell Step-Ups", "seconds": 60 },
+      { "label": "Single-Leg DB RDL", "seconds": 60 },
+
+      { "label": "Zone 3 (45–60 sec)", "type": "section" },
+      { "label": "KB Swings", "seconds": 60 },
+      { "label": "Narrow Stance Squat", "seconds": 60 },
+      { "label": "Lateral DB Lunges", "seconds": 60 }
     ]
   }
 ]
