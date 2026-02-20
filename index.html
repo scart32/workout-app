@@ -165,7 +165,7 @@
     .name{font-size:13.5px;line-height:1.25;flex:1;}
     .done .name{text-decoration: line-through;color: rgba(168,176,198,.75);}
 
-    .collapsed .meta { display:none; }
+    .collapsed .meta, .collapsed .iframeBox { display:none; }
     .collapsed{opacity:.72;}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color: var(--muted);font-size: 12px;}
 
@@ -305,7 +305,9 @@
     <button class="pillBtn btnDanger" id="timerStop">Stop</button>
   </div>
 
+  <!-- Non-rack days show videos here (rack days embed per exercise card) -->
   <div id="videosSection" class="videosGrid" style="display:none;"></div>
+
   <div class="list" id="exerciseList"></div>
 
   <div class="divider"></div>
@@ -356,8 +358,6 @@
 <script>
 /* ===========================
    Celebration messages
-   (Default is sarcastic, NOT insulting.)
-   You can customize these locally if you want.
    =========================== */
 const CELEBRATION_MESSAGES = [
   "Look at you, doing the thing. Unreasonably impressive.",
@@ -492,9 +492,9 @@ const DEFAULT_WORKOUTS = [
 ];
 
 /* ===== storage + helpers ===== */
-const STORAGE_KEY = "workout_app_global_timer_v1";
-const MONTH_KEY = "workouts_custom_month_hidden_v1";
-const SOUND_KEY = "sound_enabled_global_v1";
+const STORAGE_KEY = "workout_app_global_timer_v2";
+const MONTH_KEY = "workouts_custom_month_hidden_v2";
+const SOUND_KEY = "sound_enabled_global_v2";
 const todayKey = new Date().toISOString().slice(0,10);
 
 const $ = (id)=>document.getElementById(id);
@@ -647,7 +647,6 @@ function updateProgressAndComplete(workout){
   $("progressBar").style.width = `${pct}%`;
   $("workoutSubtitle").textContent = `Progress: ${pct}%`;
   $("completeHint").textContent = allDone ? "Ready to complete" : "Complete all exercises to unlock";
-
   $("markCompleteBtn").disabled = !allDone;
 }
 
@@ -655,11 +654,19 @@ function scrollToItem(el){
   el.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
+/* For NON-rack days, show videos up top. For rack days, hide this and embed per exercise card. */
 function renderVideos(workout){
   const sec = $("videosSection");
   sec.innerHTML = "";
+
+  if (isRackDay(workout)) {
+    sec.style.display = "none";
+    return;
+  }
+
   const vids = Array.isArray(workout.videos) ? workout.videos : [];
   if(!vids.length){ sec.style.display="none"; return; }
+
   sec.style.display="grid";
   vids.forEach(v=>{
     const embed = toEmbedUrl(v.url);
@@ -672,6 +679,12 @@ function renderVideos(workout){
       </div>`;
     sec.appendChild(wrap);
   });
+}
+
+/* Match a video object to the exercise label */
+function findVideoForExercise(workout, exerciseLabel){
+  const vids = Array.isArray(workout.videos) ? workout.videos : [];
+  return vids.find(v => v.label === exerciseLabel) || vids.find(v => exerciseLabel.includes(v.label));
 }
 
 /* ===== history + dashboard ===== */
@@ -757,8 +770,6 @@ function spawnConfetti(){
     const p = document.createElement("i");
     p.style.left = Math.random()*100 + "%";
     p.style.animationDelay = (Math.random()*0.15) + "s";
-    p.style.transform = `translateY(-10px) rotate(${Math.random()*180}deg)`;
-    // varied colors
     const colors = ["rgba(124,92,255,.9)","rgba(45,226,230,.9)","rgba(45,212,191,.9)","rgba(255,255,255,.85)"];
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
     p.style.width = (8 + Math.random()*6) + "px";
@@ -784,15 +795,12 @@ function setGlobalTimerForActive(workout, activeIdx){
   const rack = isRackDay(workout);
   const globalTimerEl = $("globalTimer");
 
-  // only show on non-rack days when active exercise is timed
   if(rack || !isTimedActive){
     globalTimerEl.style.display = "none";
-    // stop any running timer if you land on non-timed active
     if(state.timer.running) stopTimerHard();
     return;
   }
 
-  // If timer is associated to different active exercise, reset it
   const needsReset =
     state.timer.workoutId !== workout.id ||
     state.timer.exerciseIndex !== activeIdx ||
@@ -813,7 +821,6 @@ function setGlobalTimerForActive(workout, activeIdx){
   globalTimerEl.style.display = "flex";
   $("timerBig").textContent = formatTime(state.timer.remaining);
   $("timerExerciseName").textContent = `${ex.label} • ${formatTime(ex.seconds)}`;
-
   $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
 }
 
@@ -824,20 +831,17 @@ function tickTimer(){
     state.timer.remaining = 0;
     saveJSON(STORAGE_KEY, state);
 
-    // timer done => auto-check the exercise + advance
     const workout = WORKOUTS[currentIndex];
     const idx = state.timer.exerciseIndex;
 
     stopTimerHard();
     beep(950,60);
 
-    // mark checked if not checked
     const checks = getChecksFor(workout.id);
     if(!checks[idx]){
       setCheck(workout.id, idx, true);
     }
 
-    // advance active to next unchecked
     const nextIdx = findFirstUncheckedIndex(workout);
     setActiveIndex(workout.id, nextIdx);
 
@@ -852,7 +856,6 @@ function tickTimer(){
     return;
   }
 
-  // last 5 sec chirps
   if(state.timer.remaining <= 5) beep(950,35);
 
   saveJSON(STORAGE_KEY, state);
@@ -888,9 +891,7 @@ function stopTimer(){
 
 /* ===== main render ===== */
 function renderWorkout(){
-  // ensure timer buttons reflect state
   if(state.timer.running && !timerInterval){
-    // if app reloaded while "running", we pause (safer than drifting)
     state.timer.running = false;
     saveJSON(STORAGE_KEY, state);
   }
@@ -901,9 +902,10 @@ function renderWorkout(){
   setSoundEnabled(soundEnabled);
 
   $("workoutTitle").textContent = workout.title;
+
+  // Non-rack videos up top; rack videos embedded per exercise
   renderVideos(workout);
 
-  // Rack day: remove stop timer button; timed day: show it
   const rack = isRackDay(workout);
   $("stopTimer").style.display = rack ? "none" : "inline-block";
 
@@ -936,10 +938,7 @@ function renderWorkout(){
       if(e.target.tagName.toLowerCase() === "input") return;
       activeIndex = idx;
       setActiveIndex(workout.id, idx);
-
-      // changing active resets global timer if active is timed
       setGlobalTimerForActive(workout, idx);
-
       renderWorkout();
       const el = list.children[idx];
       if(el) scrollToItem(el);
@@ -968,6 +967,21 @@ function renderWorkout(){
     else meta.innerHTML = `<span>Exercise</span>`;
     item.appendChild(meta);
 
+    // ✅ KEY FIX: embed each rack video inside its own exercise card
+    if (ex.type === "videoRef") {
+      const vid = findVideoForExercise(workout, ex.label);
+      const embed = toEmbedUrl(vid?.url || "");
+      if (embed) {
+        const videoWrap = document.createElement("div");
+        videoWrap.innerHTML = `
+          <div class="iframeBox">
+            <iframe src="${embed}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        `;
+        item.appendChild(videoWrap);
+      }
+    }
+
     cb.addEventListener("change", () => {
       setCheck(workout.id, idx, cb.checked);
 
@@ -976,8 +990,6 @@ function renderWorkout(){
         beep(660,60);
         const next = findFirstUncheckedIndex(workout);
         setActiveIndex(workout.id, next);
-
-        // active changed => reset global timer for new active
         setGlobalTimerForActive(workout, next);
       } else {
         setActiveIndex(workout.id, idx);
@@ -993,11 +1005,9 @@ function renderWorkout(){
 
   updateProgressAndComplete(workout);
 
-  // global timer setup based on active exercise
   const activeIdx = getActiveIndex(workout);
   setGlobalTimerForActive(workout, activeIdx);
 
-  // scroll active into view
   setTimeout(() => {
     const el = $("exerciseList").children[activeIdx];
     if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1051,7 +1061,6 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   addHistoryEntry(w.title);
   showCelebration();
 
-  // move to next workout after celebration
   setTimeout(()=>{
     pauseTimer();
     currentIndex = (currentIndex + 1) % WORKOUTS.length;
