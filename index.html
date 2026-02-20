@@ -1,108 +1,504 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Workout App</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: white;
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-}
-h1 { text-align: center; }
-.exercise {
-  background: #222;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-}
-input { margin-right: 12px; transform: scale(1.3); }
-button {
-  margin: 10px 5px;
-  padding: 10px 15px;
-  background: #444;
-  color: white;
-  border: none;
-  border-radius: 6px;
-}
-button:hover { background: #666; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout of the Day</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0; padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f; color: #fff;
+      max-width: 820px; margin-inline: auto;
+    }
+    header { display:flex; flex-direction:column; gap:10px; margin-bottom: 12px; }
+    h1 { margin:0; font-size: 22px; }
+    .sub { color:#bbb; font-size: 13px; line-height: 1.3; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .pill {
+      background:#1b1b1b; border:1px solid #2a2a2a;
+      border-radius: 999px; padding: 8px 12px; font-size: 13px;
+    }
+
+    .card {
+      background: #151515;
+      border: 1px solid #2a2a2a;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 12px 0;
+    }
+
+    .workout-title {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:12px; margin-bottom: 8px;
+    }
+    .workout-title h2 { margin:0; font-size: 18px; }
+    .btns { display:flex; gap:10px; }
+    button {
+      background:#2b2b2b; color:#fff; border:1px solid #3a3a3a;
+      border-radius: 10px; padding: 10px 12px; font-size: 14px;
+      cursor:pointer;
+    }
+    button:hover { background:#343434; }
+
+    .videosGrid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (min-width: 760px) {
+      .videosGrid { grid-template-columns: 1fr 1fr; }
+    }
+    .videoWrap { margin-top: 6px; }
+    .videoTitle { color:#bbb; font-size: 13px; margin: 0 0 8px 0; }
+    .iframeBox {
+      position: relative; width: 100%;
+      padding-top: 56.25%; border-radius: 14px; overflow: hidden;
+      border: 1px solid #2a2a2a; background:#000;
+    }
+    iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+    .list { display:flex; flex-direction:column; gap:10px; margin-top: 12px; }
+    .item {
+      background:#111; border:1px solid #2a2a2a;
+      border-radius: 12px; padding: 10px;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .topline { display:flex; gap:10px; align-items:flex-start; }
+    .topline input { transform: scale(1.4); margin-top: 2px; }
+    .name { font-size: 14px; line-height: 1.3; }
+    .done .name { text-decoration: line-through; color:#8f8f8f; }
+
+    .meta {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      color:#bdbdbd; font-size: 13px;
+    }
+    .timer {
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    }
+    .timebox {
+      font-variant-numeric: tabular-nums;
+      background:#1b1b1b; border:1px solid #2a2a2a;
+      padding: 6px 10px; border-radius: 10px; font-size: 14px;
+      min-width: 86px; text-align:center;
+    }
+    .smallbtn {
+      padding: 8px 10px; font-size: 13px; border-radius: 10px;
+    }
+
+    .footer {
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:space-between; align-items:center;
+      margin-top: 14px; padding-top: 14px; border-top: 1px solid #2a2a2a;
+      color:#9a9a9a; font-size: 12px;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Workout of the Day</h1>
-<h2 id="title"></h2>
-<div id="workout"></div>
+<header>
+  <h1>Workout of the Day</h1>
+  <div class="row">
+    <span class="pill" id="todayLabel">Today</span>
+    <span class="pill" id="cycleLabel">Cycle</span>
+    <span class="pill" id="savedLabel">Saved</span>
+  </div>
+  <div class="sub">
+    Check boxes save automatically. Timers run inside the app. Use Previous/Next to view workouts.
+  </div>
+</header>
 
-<div style="text-align:center;">
-<button onclick="prevWorkout()">Previous</button>
-<button onclick="nextWorkout()">Next</button>
+<div class="card">
+  <div class="workout-title">
+    <h2 id="workoutTitle">Loading…</h2>
+    <div class="btns">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <div id="videosSection" class="videosGrid" style="display:none;"></div>
+
+  <div class="list" id="exerciseList"></div>
+
+  <div class="footer">
+    <div>Tip: Tap “Start” on a timed set. (One timer at a time is recommended.)</div>
+    <div>Monthly updates: edit the <b>WORKOUTS</b> array.</div>
+  </div>
 </div>
 
 <script>
+/** =========================
+ *  WORKOUTS (EDIT THIS MONTHLY)
+ *  - For timed items, add: seconds: 45 (or 60)
+ *  - For rack workouts, add: videos: [{label, url}, ...]
+ *  ========================= */
+const WORKOUTS = [
+  {
+    id: "w1",
+    title: "Workout 1 – Rack Upper",
+    videos: [
+      { label: "Rack Video #2", url: "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { label: "Rack Video #4", url: "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    exercises: [
+      { label: "Rack Video #2", type: "videoRef" },
+      { label: "Rack Video #4", type: "videoRef" }
+    ]
+  },
+  {
+    id: "w2",
+    title: "Workout 2 – 30 Min Leg Power Builder",
+    exercises: [
+      { label: "Zone 1 (60 sec)", type: "section" },
+      { label: "Back Squat", seconds: 60 },
+      { label: "Romanian Deadlift", seconds: 60 },
+      { label: "Front Squat", seconds: 60 },
 
-const workouts = [
-{
-name:"Workout 1 – Rack Upper",
-exercises:["Rack Video #2","Rack Video #4"]
-},
-{
-name:"Workout 2 – 30 Min Leg Power Builder",
-exercises:[
-"Zone 1 (60 sec)","Back Squat","Romanian Deadlift","Front Squat",
-"Zone 2 (50–60 sec)","Walking DB Lunges","Barbell Step-Ups","Kettlebell Swings",
-"Zone 3 (45–60 sec)","Bulgarian Split Squat (R)","Bulgarian Split Squat (L)","Heels-Elevated DB Squat",
-"Finish","Barbell Bench Press – 4–5 sets"
-]
-},
-{
-name:"Workout 3 – Rack Hybrid",
-exercises:["Rack Video #3"]
-},
-{
-name:"Workout 4 – 30 Min Athletic Leg Conditioning",
-exercises:[
-"Zone 1 (60 sec)","Deadlift","Front Squat","Tempo Back Squat",
-"Zone 2 (50–60 sec)","Reverse Lunges","Single-Leg DB RDL","KB Front Rack Squats",
-"Zone 3 (45–60 sec)","Lateral Lunges","DB Squat to Press","Broad Jump → Reset"
-]
-},
-{
-name:"Workout 5 – Rack Upper",
-exercises:["Rack Video #2","Rack Video #4"]
-},
-{
-name:"Workout 6 – 30 Min Strength Bias Leg Day",
-exercises:[
-"Zone 1 (60 sec)","Back Squat","Romanian Deadlift","Narrow Stance Barbell Squat",
-"Zone 2 (50–60 sec)","Elevated Split Squat (R)","Elevated Split Squat (L)","Hip Thrust",
-"Zone 3 (45–60 sec)","Kettlebell Swings","Step-Back Lunges","Heels-Elevated DB Squat Pulses",
-"Finish","Barbell Bench Press – 5 sets"
-]
-},
-{
-name:"Workout 7 – Rack Hybrid",
-exercises:["Rack Video #3"]
-},
-{
-name:"Workout 8 – 30 Min Leg Endurance Finisher (Final Week Push)",
-exercises:[
-"Zone 1 (60 sec)","Deadlift","Front Squat","Tempo Back Squat",
-"Zone 2 (50–60 sec)","Walking Lunges","Barbell Step-Ups","Single-Leg DB RDL",
-"Zone 3 (45–60 sec)","KB Swings","Narrow Stance Squat","Lateral DB Lunges"
-]
-}
+      { label: "Zone 2 (50–60 sec)", type: "section" },
+      { label: "Walking DB Lunges", seconds: 60 },
+      { label: "Barbell Step-Ups", seconds: 60 },
+      { label: "Kettlebell Swings", seconds: 60 },
+
+      { label: "Zone 3 (45–60 sec)", type: "section" },
+      { label: "Bulgarian Split Squat (R)", seconds: 60 },
+      { label: "Bulgarian Split Squat (L)", seconds: 60 },
+      { label: "Heels-Elevated DB Squat", seconds: 60 },
+
+      { label: "Finish", type: "section" },
+      { label: "Barbell Bench Press – 4–5 sets", type: "note" }
+    ]
+  },
+  {
+    id: "w3",
+    title: "Workout 3 – Rack Hybrid",
+    videos: [
+      { label: "Rack Video #3", url: "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    exercises: [
+      { label: "Rack Video #3", type: "videoRef" }
+    ]
+  },
+  {
+    id: "w4",
+    title: "Workout 4 – 30 Min Athletic Leg Conditioning",
+    exercises: [
+      { label: "Zone 1 (60 sec)", type: "section" },
+      { label: "Deadlift", seconds: 60 },
+      { label: "Front Squat", seconds: 60 },
+      { label: "Tempo Back Squat", seconds: 60 },
+
+      { label: "Zone 2 (50–60 sec)", type: "section" },
+      { label: "Reverse Lunges", seconds: 60 },
+      { label: "Single-Leg DB RDL", seconds: 60 },
+      { label: "KB Front Rack Squats", seconds: 60 },
+
+      { label: "Zone 3 (45–60 sec)", type: "section" },
+      { label: "Lateral Lunges", seconds: 60 },
+      { label: "DB Squat to Press", seconds: 60 },
+      { label: "Broad Jump → Reset", seconds: 60 }
+    ]
+  },
+  {
+    id: "w5",
+    title: "Workout 5 – Rack Upper",
+    videos: [
+      { label: "Rack Video #2", url: "https://www.youtube.com/watch?v=agELHJBNCuw&t=2s" },
+      { label: "Rack Video #4", url: "https://www.youtube.com/watch?v=1Kj-OLK9VR0" }
+    ],
+    exercises: [
+      { label: "Rack Video #2", type: "videoRef" },
+      { label: "Rack Video #4", type: "videoRef" }
+    ]
+  },
+  {
+    id: "w6",
+    title: "Workout 6 – 30 Min Strength Bias Leg Day",
+    exercises: [
+      { label: "Zone 1 (60 sec)", type: "section" },
+      { label: "Back Squat", seconds: 60 },
+      { label: "Romanian Deadlift", seconds: 60 },
+      { label: "Narrow Stance Barbell Squat", seconds: 60 },
+
+      { label: "Zone 2 (50–60 sec)", type: "section" },
+      { label: "Elevated Split Squat (R)", seconds: 60 },
+      { label: "Elevated Split Squat (L)", seconds: 60 },
+      { label: "Hip Thrust", seconds: 60 },
+
+      { label: "Zone 3 (45–60 sec)", type: "section" },
+      { label: "Kettlebell Swings", seconds: 60 },
+      { label: "Step-Back Lunges", seconds: 60 },
+      { label: "Heels-Elevated DB Squat Pulses", seconds: 60 },
+
+      { label: "Finish", type: "section" },
+      { label: "Barbell Bench Press – 5 sets", type: "note" }
+    ]
+  },
+  {
+    id: "w7",
+    title: "Workout 7 – Rack Hybrid",
+    videos: [
+      { label: "Rack Video #3", url: "https://www.youtube.com/watch?v=xh6ZgnyZrh8" }
+    ],
+    exercises: [
+      { label: "Rack Video #3", type: "videoRef" }
+    ]
+  },
+  {
+    id: "w8",
+    title: "Workout 8 – 30 Min Leg Endurance Finisher",
+    exercises: [
+      { label: "Zone 1 (60 sec)", type: "section" },
+      { label: "Deadlift", seconds: 60 },
+      { label: "Front Squat", seconds: 60 },
+      { label: "Tempo Back Squat", seconds: 60 },
+
+      { label: "Zone 2 (50–60 sec)", type: "section" },
+      { label: "Walking Lunges", seconds: 60 },
+      { label: "Barbell Step-Ups", seconds: 60 },
+      { label: "Single-Leg DB RDL", seconds: 60 },
+
+      { label: "Zone 3 (45–60 sec)", type: "section" },
+      { label: "KB Swings", seconds: 60 },
+      { label: "Narrow Stance Squat", seconds: 60 },
+      { label: "Lateral DB Lunges", seconds: 60 }
+    ]
+  }
 ];
 
-let current = 0;
+/** =========================
+ *  APP LOGIC
+ *  ========================= */
+const STORAGE_KEY = "workout_app_v2";
+const todayKey = new Date().toISOString().slice(0,10); // YYYY-MM-DD
 
-function renderWorkout(){
-document.getElementById("title").innerText = workouts[current].name;
-const container = document.getElementById("wo
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { dayIndex: 0, checks: {}, lastDate: "" };
+  } catch {
+    return { dayIndex: 0, checks: {}, lastDate: "" };
+  }
+}
+function saveState(s) { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
 
+function toEmbedUrl(url) {
+  if (!url) return "";
+  const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{6,})/);
+  if (!m) return "";
+  return `https://www.youtube.com/embed/${m[1]}`;
+}
+
+function getDailyIndex() {
+  const epochDays = Math.floor(Date.now() / (1000*60*60*24));
+  return epochDays % WORKOUTS.length;
+}
+
+let state = loadState();
+if (!state.lastDate || state.lastDate !== todayKey) {
+  state.dayIndex = getDailyIndex();
+  state.lastDate = todayKey;
+  saveState(state);
+}
+
+let currentIndex = state.dayIndex;
+
+const workoutTitleEl = document.getElementById("workoutTitle");
+const listEl = document.getElementById("exerciseList");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const todayLabel = document.getElementById("todayLabel");
+const cycleLabel = document.getElementById("cycleLabel");
+const savedLabel = document.getElementById("savedLabel");
+const videosSection = document.getElementById("videosSection");
+
+todayLabel.textContent = `Today: ${todayKey}`;
+savedLabel.textContent = "Progress: Saved";
+
+let activeTimer = null;
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${sec}s`;
+}
+function workoutStorageKey(workoutId) {
+  return `${todayKey}::${workoutId}`;
+}
+function getChecksFor(workoutId) {
+  const key = workoutStorageKey(workoutId);
+  return state.checks[key] || {};
+}
+function setCheck(workoutId, itemIndex, value) {
+  const key = workoutStorageKey(workoutId);
+  if (!state.checks[key]) state.checks[key] = {};
+  state.checks[key][itemIndex] = value;
+  saveState(state);
+}
+function stopActiveTimer() {
+  if (activeTimer && activeTimer.interval) clearInterval(activeTimer.interval);
+  activeTimer = null;
+}
+
+function renderVideos(workout) {
+  videosSection.innerHTML = "";
+  const vids = Array.isArray(workout.videos) ? workout.videos : [];
+  if (!vids.length) {
+    videosSection.style.display = "none";
+    return;
+  }
+  videosSection.style.display = "grid";
+  vids.forEach(v => {
+    const embed = toEmbedUrl(v.url);
+    if (!embed) return;
+
+    const wrap = document.createElement("div");
+    wrap.className = "videoWrap";
+    wrap.innerHTML = `
+      <p class="videoTitle">${v.label}</p>
+      <div class="iframeBox">
+        <iframe src="${embed}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    `;
+    videosSection.appendChild(wrap);
+  });
+}
+
+function render() {
+  stopActiveTimer();
+
+  const workout = WORKOUTS[currentIndex];
+  workoutTitleEl.textContent = workout.title;
+  cycleLabel.textContent = `Workout ${currentIndex + 1} of ${WORKOUTS.length}`;
+
+  renderVideos(workout);
+
+  listEl.innerHTML = "";
+  const checks = getChecksFor(workout.id);
+
+  workout.exercises.forEach((ex, idx) => {
+    const isSection = ex.type === "section";
+    const isNote = ex.type === "note";
+    const isVideoRef = ex.type === "videoRef";
+    const hasTimer = typeof ex.seconds === "number" && ex.seconds > 0;
+
+    const item = document.createElement("div");
+    item.className = "item";
+
+    if (isSection) {
+      item.innerHTML = `<div class="meta"><b>${ex.label}</b></div>`;
+      listEl.appendChild(item);
+      return;
+    }
+
+    const top = document.createElement("div");
+    top.className = "topline";
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!checks[idx];
+
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = ex.label;
+
+    top.appendChild(cb);
+    top.appendChild(name);
+    item.appendChild(top);
+
+    function applyDoneStyle() {
+      if (cb.checked) item.classList.add("done");
+      else item.classList.remove("done");
+    }
+    applyDoneStyle();
+
+    cb.addEventListener("change", () => {
+      setCheck(workout.id, idx, cb.checked);
+      applyDoneStyle();
+    });
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    if (isVideoRef) meta.innerHTML = `<span>Video-based</span>`;
+    else if (isNote) meta.innerHTML = `<span>Note</span>`;
+    else if (hasTimer) meta.innerHTML = `<span>Timed set</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
+
+    item.appendChild(meta);
+
+    if (hasTimer) {
+      const timerRow = document.createElement("div");
+      timerRow.className = "timer";
+
+      const timeBox = document.createElement("div");
+      timeBox.className = "timebox";
+
+      let remaining = ex.seconds;
+      const updateBox = () => timeBox.textContent = formatTime(remaining);
+      updateBox();
+
+      const startBtn = document.createElement("button");
+      startBtn.className = "smallbtn";
+      startBtn.textContent = "Start";
+
+      const resetBtn = document.createElement("button");
+      resetBtn.className = "smallbtn";
+      resetBtn.textContent = "Reset";
+
+      const stopBtn = document.createElement("button");
+      stopBtn.className = "smallbtn";
+      stopBtn.textContent = "Stop";
+
+      startBtn.addEventListener("click", () => {
+        stopActiveTimer();
+        if (remaining <= 0) remaining = ex.seconds;
+        updateBox();
+        activeTimer = {
+          interval: setInterval(() => {
+            remaining -= 1;
+            if (remaining <= 0) {
+              remaining = 0;
+              updateBox();
+              clearInterval(activeTimer.interval);
+              activeTimer = null;
+              if (navigator.vibrate) navigator.vibrate([200,100,200]);
+            } else updateBox();
+          }, 1000)
+        };
+      });
+
+      resetBtn.addEventListener("click", () => {
+        remaining = ex.seconds;
+        updateBox();
+      });
+
+      stopBtn.addEventListener("click", () => {
+        stopActiveTimer();
+      });
+
+      timerRow.appendChild(timeBox);
+      timerRow.appendChild(startBtn);
+      timerRow.appendChild(resetBtn);
+      timerRow.appendChild(stopBtn);
+      item.appendChild(timerRow);
+    }
+
+    listEl.appendChild(item);
+  });
+}
+
+prevBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
+  render();
+});
+nextBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % WORKOUTS.length;
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
