@@ -42,6 +42,7 @@
       font-size:12px;
       color:var(--muted);
       backdrop-filter: blur(8px);
+      user-select:none;
     }
     .chip strong{color:var(--text);font-weight:600;}
 
@@ -97,6 +98,38 @@
     .bar{height: 10px;border-radius: 999px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);overflow:hidden;}
     .bar > div{height:100%;width:0%;background: linear-gradient(90deg, var(--accent), var(--accent2));border-radius: 999px;transition: width .25s ease;}
 
+    .globalTimer{
+      margin-top:12px;
+      display:none;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding:10px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+    }
+    .timerBig{
+      font-variant-numeric: tabular-nums;
+      font-size: 22px;
+      font-weight: 800;
+      min-width: 110px;
+      text-align:center;
+      padding:8px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .timerMeta{
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+      min-width: 180px;
+    }
+    .timerMeta .k{color:var(--muted); font-size: 12px;}
+    .timerMeta .v{color:var(--text); font-size: 13px; font-weight: 600;}
+    .pillBtn{padding: 8px 10px;border-radius: 999px;font-size: 12px;}
+
     .videosGrid{display:grid;grid-template-columns: 1fr;gap:12px;margin-top:14px;}
     @media (min-width: 820px){.videosGrid{grid-template-columns: 1fr 1fr;}}
     .videoTitle{margin:0 0 8px 0;color:var(--muted);font-size:12px;}
@@ -132,24 +165,12 @@
     .name{font-size:13.5px;line-height:1.25;flex:1;}
     .done .name{text-decoration: line-through;color: rgba(168,176,198,.75);}
 
-    .collapsed .meta, .collapsed .timerRow { display:none; }
+    .collapsed .meta { display:none; }
     .collapsed{opacity:.72;}
-
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color: var(--muted);font-size: 12px;}
-    .timerRow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
-    .timeBox{
-      font-variant-numeric: tabular-nums;
-      padding: 7px 10px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      min-width: 92px;
-      text-align:center;
-      font-size: 13px;
-    }
-    .pillBtn{padding: 8px 10px;border-radius: 999px;font-size: 12px;}
 
     .divider{height:1px;background: rgba(255,255,255,.10);margin: 14px 0;}
+
     .toast{
       position: fixed;left: 50%;transform: translateX(-50%);
       bottom: 18px;background: rgba(0,0,0,.55);
@@ -160,30 +181,85 @@
       display:none;z-index: 999;
     }
 
-    textarea{
-      width:100%;min-height: 260px;border-radius: 14px;
-      background: rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.12);
-      color: var(--text);
-      padding: 12px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.35;
+    /* Celebration overlay */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 1000;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
     }
-    .hint{font-size:12px;color:var(--muted);line-height:1.35;}
+    .celebrateCard{
+      width: min(520px, 92vw);
+      border-radius: 18px;
+      padding: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow:hidden;
+    }
+    .celebrateTitle{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .celebrateMsg{
+      margin:10px 0 0 0;
+      color: rgba(242,244,255,.92);
+      line-height: 1.35;
+      font-size: 14px;
+    }
+    .sparkles{
+      position:absolute;
+      inset:-40px;
+      opacity:.9;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(124,92,255,.55), transparent 35%),
+        radial-gradient(circle at 90% 30%, rgba(45,226,230,.45), transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(45,212,191,.35), transparent 45%);
+      filter: blur(2px);
+      animation: floaty 1.4s ease-in-out infinite alternate;
+    }
+    @keyframes floaty{
+      from{ transform: translateY(0px); }
+      to{ transform: translateY(-8px); }
+    }
+
+    .confetti{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .confetti i{
+      position:absolute;
+      width:10px;height:14px;
+      background: rgba(255,255,255,.8);
+      top:-20px;
+      border-radius: 3px;
+      opacity:.9;
+      animation: fall 1.1s linear forwards;
+    }
+    @keyframes fall{
+      to{ transform: translateY(110vh) rotate(360deg); opacity: 1; }
+    }
   </style>
 </head>
 <body>
 
 <header>
   <div class="topbar">
-    <div>
-      <h1>Workout App</h1>
-    </div>
+    <div><h1>Workout App</h1></div>
     <div class="chips">
       <div class="chip"><strong id="todayLabel"></strong></div>
       <div class="chip">Cycle: <strong id="cycleLabel"></strong></div>
-      <div class="chip">Sound: <strong id="soundLabel"></strong></div>
+      <div class="chip" id="soundChip" style="cursor:pointer;">Sound: <strong id="soundLabel"></strong></div>
     </div>
   </div>
 
@@ -191,7 +267,6 @@
     <button class="tab active" data-view="workout">Workout</button>
     <button class="tab" data-view="history">History</button>
     <button class="tab" data-view="dashboard">Dashboard</button>
-    <button class="tab" data-view="builder">Month Builder</button>
   </div>
 </header>
 
@@ -207,7 +282,6 @@
       <button id="prevBtn" class="btnGhost">Previous</button>
       <button id="nextBtn" class="btnGhost">Next</button>
       <button id="stopTimer" class="btnDanger">Stop Timer</button>
-      <button id="toggleSound" class="btnGhost">Toggle Sound</button>
     </div>
   </div>
 
@@ -219,10 +293,21 @@
     <div class="bar"><div id="progressBar"></div></div>
   </div>
 
+  <!-- Global timer (timed days only) -->
+  <div class="globalTimer" id="globalTimer">
+    <div class="timerBig" id="timerBig">60s</div>
+    <div class="timerMeta">
+      <div class="k">Active</div>
+      <div class="v" id="timerExerciseName">—</div>
+    </div>
+    <button class="pillBtn btnPrimary" id="timerStartPause">Start</button>
+    <button class="pillBtn" id="timerReset">Reset</button>
+    <button class="pillBtn btnDanger" id="timerStop">Stop</button>
+  </div>
+
   <div id="videosSection" class="videosGrid" style="display:none;"></div>
   <div class="list" id="exerciseList"></div>
 
-  <!-- Button at bottom; only enabled when all checkable exercises are completed -->
   <div class="divider"></div>
   <button id="markCompleteBtn" class="btnPrimary" style="width:100%;" disabled>
     Mark Workout Complete
@@ -256,31 +341,33 @@
   <div class="list" id="dashList"></div>
 </section>
 
-<!-- BUILDER VIEW -->
-<section class="card" id="view-builder" style="display:none;">
-  <div class="row">
-    <div class="titleBlock">
-      <h2>Custom Month Builder</h2>
-      <div class="small">Edit workouts in JSON. Save month instantly.</div>
-    </div>
-    <div class="row" style="gap:8px;justify-content:flex-end;">
-      <button id="loadDefault" class="btnGhost">Load Default</button>
-      <button id="loadCurrent" class="btnGhost">Load Current</button>
-      <button id="saveBuilder" class="btnPrimary">Save Month</button>
-      <button id="exportMonth" class="btnGhost">Export JSON</button>
-    </div>
-  </div>
-  <div class="divider"></div>
-  <div class="hint">
-    Timed sets: <code>{"label":"Back Squat","seconds":60}</code> • Zone headers: <code>{"label":"Zone 1","type":"section"}</code> • Notes: <code>{"type":"note"}</code> • Videos: <code>videos:[{label,url}]</code>
-  </div>
-  <textarea id="builderText"></textarea>
-</section>
-
 <div class="toast" id="toast"></div>
 
+<!-- Celebration overlay -->
+<div class="overlay" id="overlay">
+  <div class="celebrateCard">
+    <div class="sparkles"></div>
+    <div class="confetti" id="confetti"></div>
+    <h3 class="celebrateTitle">Workout Complete ✅</h3>
+    <p class="celebrateMsg" id="celebrateMsg"></p>
+  </div>
+</div>
+
 <script>
-/* ===== DEFAULT MONTH ===== */
+/* ===========================
+   Celebration messages
+   (Default is sarcastic, NOT insulting.)
+   You can customize these locally if you want.
+   =========================== */
+const CELEBRATION_MESSAGES = [
+  "Look at you, doing the thing. Unreasonably impressive.",
+  "You showed up. That already puts you ahead of yesterday-you.",
+  "Congrats. Your muscles filed a complaint and lost.",
+  "Another workout completed. Main character behavior.",
+  "You did it. Try not to be too powerful now."
+];
+
+/* ===== DEFAULT WORKOUTS ===== */
 const DEFAULT_WORKOUTS = [
   {
     id: "w1",
@@ -405,9 +492,9 @@ const DEFAULT_WORKOUTS = [
 ];
 
 /* ===== storage + helpers ===== */
-const STORAGE_KEY = "workout_app_active_v2";
-const MONTH_KEY = "workouts_custom_month_v3";
-const SOUND_KEY = "sound_enabled_v3";
+const STORAGE_KEY = "workout_app_global_timer_v1";
+const MONTH_KEY = "workouts_custom_month_hidden_v1";
+const SOUND_KEY = "sound_enabled_global_v1";
 const todayKey = new Date().toISOString().slice(0,10);
 
 const $ = (id)=>document.getElementById(id);
@@ -473,7 +560,14 @@ if(!Array.isArray(WORKOUTS) || WORKOUTS.length === 0){
   saveJSON(MONTH_KEY, WORKOUTS);
 }
 
-const defaultState = { lastDate:"", dayIndex:0, checks:{}, history:[], activeByKey:{} };
+const defaultState = {
+  lastDate:"",
+  dayIndex:0,
+  checks:{},
+  history:[],
+  activeByKey:{},
+  timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 }
+};
 let state = loadJSON(STORAGE_KEY, defaultState);
 
 // daily sync
@@ -484,11 +578,15 @@ if(state.lastDate !== todayKey){
 }
 
 let currentIndex = state.dayIndex;
-let activeTimer = null;
 
-function stopActiveTimer(){
-  if(activeTimer?.interval) clearInterval(activeTimer.interval);
-  activeTimer = null;
+// Global timer runtime
+let timerInterval = null;
+
+function stopTimerHard(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  state.timer.running = false;
+  saveJSON(STORAGE_KEY, state);
 }
 
 function workoutDayKey(workoutId){ return `${todayKey}::${workoutId}`; }
@@ -550,8 +648,7 @@ function updateProgressAndComplete(workout){
   $("workoutSubtitle").textContent = `Progress: ${pct}%`;
   $("completeHint").textContent = allDone ? "Ready to complete" : "Complete all exercises to unlock";
 
-  const btn = $("markCompleteBtn");
-  btn.disabled = !allDone;
+  $("markCompleteBtn").disabled = !allDone;
 }
 
 function scrollToItem(el){
@@ -602,6 +699,7 @@ function renderHistory(){
   if(state.history.length === 0){
     const it = document.createElement("div");
     it.className = "item";
+    it.style.cursor = "default";
     it.innerHTML = `<div class="meta"><b>No workouts completed yet.</b></div>`;
     list.appendChild(it);
     return;
@@ -609,6 +707,7 @@ function renderHistory(){
   state.history.slice(0,80).forEach(h=>{
     const it = document.createElement("div");
     it.className = "item";
+    it.style.cursor = "default";
     it.innerHTML = `<div class="meta"><b>${h.date}</b> • ${new Date(h.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div><div class="name">${h.title}</div>`;
     list.appendChild(it);
   });
@@ -644,44 +743,159 @@ function setView(view){
   $("view-workout").style.display = view==="workout" ? "block" : "none";
   $("view-history").style.display = view==="history" ? "block" : "none";
   $("view-dashboard").style.display = view==="dashboard" ? "block" : "none";
-  $("view-builder").style.display = view==="builder" ? "block" : "none";
 
   if(view==="history") renderHistory();
   if(view==="dashboard") renderDashboard();
-  if(view==="builder") $("builderText").value = JSON.stringify(WORKOUTS, null, 2);
 }
 
-/* ===== builder ===== */
-function saveBuilder(){
-  try{
-    const parsed = JSON.parse($("builderText").value);
-    if(!Array.isArray(parsed) || parsed.length === 0) throw new Error("Must be a non-empty array");
-    parsed.forEach((w,i)=>{
-      if(!w.id) w.id = `w${i+1}`;
-      if(!w.title) throw new Error("Every workout needs a title");
-      if(!Array.isArray(w.exercises)) throw new Error("Every workout needs exercises array");
-    });
-    WORKOUTS = parsed;
-    saveJSON(MONTH_KEY, WORKOUTS);
+/* ===== celebration ===== */
+function spawnConfetti(){
+  const box = $("confetti");
+  box.innerHTML = "";
+  const n = 26;
+  for(let i=0;i<n;i++){
+    const p = document.createElement("i");
+    p.style.left = Math.random()*100 + "%";
+    p.style.animationDelay = (Math.random()*0.15) + "s";
+    p.style.transform = `translateY(-10px) rotate(${Math.random()*180}deg)`;
+    // varied colors
+    const colors = ["rgba(124,92,255,.9)","rgba(45,226,230,.9)","rgba(45,212,191,.9)","rgba(255,255,255,.85)"];
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.width = (8 + Math.random()*6) + "px";
+    p.style.height = (10 + Math.random()*8) + "px";
+    box.appendChild(p);
+  }
+}
+function showCelebration(){
+  const msg = CELEBRATION_MESSAGES[Math.floor(Math.random()*CELEBRATION_MESSAGES.length)];
+  $("celebrateMsg").textContent = msg;
+  spawnConfetti();
+  $("overlay").style.display = "flex";
+  successChime();
+  if(navigator.vibrate) navigator.vibrate([80,40,80]);
+  setTimeout(()=> { $("overlay").style.display = "none"; }, 1200);
+}
 
-    currentIndex = getDailyIndex(WORKOUTS.length);
-    state.dayIndex = currentIndex;
+/* ===== global timer wiring ===== */
+function setGlobalTimerForActive(workout, activeIdx){
+  const ex = workout.exercises[activeIdx];
+  const isTimedActive = ex && isTimed(ex);
+
+  const rack = isRackDay(workout);
+  const globalTimerEl = $("globalTimer");
+
+  // only show on non-rack days when active exercise is timed
+  if(rack || !isTimedActive){
+    globalTimerEl.style.display = "none";
+    // stop any running timer if you land on non-timed active
+    if(state.timer.running) stopTimerHard();
+    return;
+  }
+
+  // If timer is associated to different active exercise, reset it
+  const needsReset =
+    state.timer.workoutId !== workout.id ||
+    state.timer.exerciseIndex !== activeIdx ||
+    state.timer.duration !== ex.seconds;
+
+  if(needsReset){
+    stopTimerHard();
+    state.timer = {
+      running:false,
+      remaining: ex.seconds,
+      duration: ex.seconds,
+      workoutId: workout.id,
+      exerciseIndex: activeIdx
+    };
+    saveJSON(STORAGE_KEY, state);
+  }
+
+  globalTimerEl.style.display = "flex";
+  $("timerBig").textContent = formatTime(state.timer.remaining);
+  $("timerExerciseName").textContent = `${ex.label} • ${formatTime(ex.seconds)}`;
+
+  $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
+}
+
+function tickTimer(){
+  state.timer.remaining -= 1;
+
+  if(state.timer.remaining <= 0){
+    state.timer.remaining = 0;
     saveJSON(STORAGE_KEY, state);
 
-    toast("Month saved");
-    setView("workout");
+    // timer done => auto-check the exercise + advance
+    const workout = WORKOUTS[currentIndex];
+    const idx = state.timer.exerciseIndex;
+
+    stopTimerHard();
+    beep(950,60);
+
+    // mark checked if not checked
+    const checks = getChecksFor(workout.id);
+    if(!checks[idx]){
+      setCheck(workout.id, idx, true);
+    }
+
+    // advance active to next unchecked
+    const nextIdx = findFirstUncheckedIndex(workout);
+    setActiveIndex(workout.id, nextIdx);
+
     renderWorkout();
-  }catch(e){
-    toast("JSON error: " + e.message);
+    updateProgressAndComplete(workout);
+
+    setTimeout(() => {
+      const el = $("exerciseList").children[nextIdx];
+      if(el) scrollToItem(el);
+    }, 60);
+
+    return;
   }
+
+  // last 5 sec chirps
+  if(state.timer.remaining <= 5) beep(950,35);
+
+  saveJSON(STORAGE_KEY, state);
+  $("timerBig").textContent = formatTime(state.timer.remaining);
+}
+
+function startTimer(){
+  if(timerInterval) return;
+  state.timer.running = true;
+  saveJSON(STORAGE_KEY, state);
+  $("timerStartPause").textContent = "Pause";
+  beep(520,70);
+  timerInterval = setInterval(tickTimer, 1000);
+}
+function pauseTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  state.timer.running = false;
+  saveJSON(STORAGE_KEY, state);
+  $("timerStartPause").textContent = "Start";
+}
+function resetTimer(){
+  pauseTimer();
+  state.timer.remaining = state.timer.duration;
+  saveJSON(STORAGE_KEY, state);
+  $("timerBig").textContent = formatTime(state.timer.remaining);
+  beep(660,50);
+}
+function stopTimer(){
+  pauseTimer();
+  toast("Timer stopped");
 }
 
 /* ===== main render ===== */
 function renderWorkout(){
-  stopActiveTimer();
+  // ensure timer buttons reflect state
+  if(state.timer.running && !timerInterval){
+    // if app reloaded while "running", we pause (safer than drifting)
+    state.timer.running = false;
+    saveJSON(STORAGE_KEY, state);
+  }
 
   const workout = WORKOUTS[currentIndex];
-
   $("todayLabel").textContent = `Today: ${todayKey}`;
   $("cycleLabel").textContent = `${currentIndex + 1} / ${WORKOUTS.length}`;
   setSoundEnabled(soundEnabled);
@@ -689,10 +903,9 @@ function renderWorkout(){
   $("workoutTitle").textContent = workout.title;
   renderVideos(workout);
 
-  // Hide stop timer + toggle sound for rack days
+  // Rack day: remove stop timer button; timed day: show it
   const rack = isRackDay(workout);
   $("stopTimer").style.display = rack ? "none" : "inline-block";
-  $("toggleSound").style.display = rack ? "none" : "inline-block";
 
   const list = $("exerciseList");
   list.innerHTML = "";
@@ -720,9 +933,13 @@ function renderWorkout(){
     item.classList.toggle("done", isChecked);
 
     item.addEventListener("click", (e) => {
-      if(e.target.tagName.toLowerCase() === "button" || e.target.tagName.toLowerCase() === "input") return;
+      if(e.target.tagName.toLowerCase() === "input") return;
       activeIndex = idx;
       setActiveIndex(workout.id, idx);
+
+      // changing active resets global timer if active is timed
+      setGlobalTimerForActive(workout, idx);
+
       renderWorkout();
       const el = list.children[idx];
       if(el) scrollToItem(el);
@@ -755,107 +972,36 @@ function renderWorkout(){
       setCheck(workout.id, idx, cb.checked);
 
       if(cb.checked){
-        if(navigator.vibrate) navigator.vibrate(35);
-        beep(660,70);
+        if(navigator.vibrate) navigator.vibrate(30);
+        beep(660,60);
         const next = findFirstUncheckedIndex(workout);
         setActiveIndex(workout.id, next);
+
+        // active changed => reset global timer for new active
+        setGlobalTimerForActive(workout, next);
       } else {
         setActiveIndex(workout.id, idx);
+        setGlobalTimerForActive(workout, idx);
       }
 
       renderWorkout();
       updateProgressAndComplete(workout);
     });
 
-    if(isTimed(ex)){
-      const timerRow = document.createElement("div");
-      timerRow.className = "timerRow";
-
-      const timeBox = document.createElement("div");
-      timeBox.className = "timeBox";
-
-      let remaining = ex.seconds;
-      const updateBox = () => timeBox.textContent = formatTime(remaining);
-      updateBox();
-
-      const startBtn = document.createElement("button");
-      startBtn.className = "pillBtn btnPrimary";
-      startBtn.textContent = "Start";
-
-      const resetBtn = document.createElement("button");
-      resetBtn.className = "pillBtn";
-      resetBtn.textContent = "Reset";
-
-      const stopBtn = document.createElement("button");
-      stopBtn.className = "pillBtn btnDanger";
-      stopBtn.textContent = "Stop";
-
-      startBtn.addEventListener("click", () => {
-        stopActiveTimer();
-        if(remaining <= 0) remaining = ex.seconds;
-        updateBox();
-        beep(520,70);
-
-        activeTimer = {
-          interval: setInterval(() => {
-            remaining -= 1;
-            if(remaining <= 0){
-              remaining = 0;
-              updateBox();
-              clearInterval(activeTimer.interval);
-              activeTimer = null;
-
-              // auto-check
-              if(!cb.checked){
-                cb.checked = true;
-                setCheck(workout.id, idx, true);
-              }
-
-              successChime();
-              if(navigator.vibrate) navigator.vibrate([200,100,200]);
-
-              const nextIdx = findFirstUncheckedIndex(workout);
-              setActiveIndex(workout.id, nextIdx);
-
-              renderWorkout();
-              updateProgressAndComplete(workout);
-
-              setTimeout(() => {
-                const newActive = list.children[nextIdx];
-                if(newActive) scrollToItem(newActive);
-              }, 50);
-
-            } else {
-              if(remaining <= 5) beep(950,35);
-              updateBox();
-            }
-          }, 1000)
-        };
-      });
-
-      resetBtn.addEventListener("click", () => { remaining = ex.seconds; updateBox(); });
-      stopBtn.addEventListener("click", () => { stopActiveTimer(); });
-
-      timerRow.appendChild(timeBox);
-      timerRow.appendChild(startBtn);
-      timerRow.appendChild(resetBtn);
-      timerRow.appendChild(stopBtn);
-      item.appendChild(timerRow);
-    }
-
     list.appendChild(item);
   });
 
-  // Ensure rack upper days: separate checkbox entries for video #2 and #4
-  // (already in data, this just prevents accidental merging later)
   updateProgressAndComplete(workout);
+
+  // global timer setup based on active exercise
+  const activeIdx = getActiveIndex(workout);
+  setGlobalTimerForActive(workout, activeIdx);
 
   // scroll active into view
   setTimeout(() => {
-    const activeIdx = getActiveIndex(workout);
     const el = $("exerciseList").children[activeIdx];
     if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, 60);
+  }, 40);
 }
 
 /* ===== wiring ===== */
@@ -864,23 +1010,35 @@ document.querySelectorAll(".tab").forEach(t=>{
 });
 
 $("prevBtn").addEventListener("click", ()=>{
+  pauseTimer();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
   renderWorkout();
 });
 $("nextBtn").addEventListener("click", ()=>{
+  pauseTimer();
   currentIndex = (currentIndex + 1) % WORKOUTS.length;
   renderWorkout();
 });
 
 $("stopTimer").addEventListener("click", ()=>{
-  stopActiveTimer();
+  stopTimerHard();
   toast("Timer stopped");
+  renderWorkout();
 });
 
-$("toggleSound").addEventListener("click", ()=>{
+$("soundChip").addEventListener("click", ()=>{
   setSoundEnabled(!soundEnabled);
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
+
+// Global timer controls
+$("timerStartPause").addEventListener("click", ()=>{
+  if(state.timer.running) pauseTimer();
+  else startTimer();
+  renderWorkout();
+});
+$("timerReset").addEventListener("click", ()=>{ resetTimer(); renderWorkout(); });
+$("timerStop").addEventListener("click", ()=>{ stopTimer(); stopTimerHard(); renderWorkout(); });
 
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
@@ -889,9 +1047,16 @@ $("markCompleteBtn").addEventListener("click", ()=>{
     toast("Complete all exercises first");
     return;
   }
+
   addHistoryEntry(w.title);
-  toast("Workout logged ✅");
-  successChime();
+  showCelebration();
+
+  // move to next workout after celebration
+  setTimeout(()=>{
+    pauseTimer();
+    currentIndex = (currentIndex + 1) % WORKOUTS.length;
+    renderWorkout();
+  }, 950);
 });
 
 $("clearHistory").addEventListener("click", ()=>{
@@ -900,18 +1065,6 @@ $("clearHistory").addEventListener("click", ()=>{
   saveJSON(STORAGE_KEY, state);
   renderHistory();
   toast("History cleared");
-});
-
-$("loadDefault").addEventListener("click", ()=>{
-  $("builderText").value = JSON.stringify(DEFAULT_WORKOUTS, null, 2);
-});
-$("loadCurrent").addEventListener("click", ()=>{
-  $("builderText").value = JSON.stringify(WORKOUTS, null, 2);
-});
-$("saveBuilder").addEventListener("click", saveBuilder);
-$("exportMonth").addEventListener("click", ()=>{
-  navigator.clipboard?.writeText(JSON.stringify(WORKOUTS, null, 2));
-  toast("Copied JSON to clipboard");
 });
 
 // initial
