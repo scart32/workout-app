@@ -45,7 +45,6 @@
       user-select:none;
     }
     .chip strong{color:var(--text);font-weight:600;}
-
     .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
     .tab{
       padding:10px 12px;border-radius:999px;
@@ -58,7 +57,6 @@
       box-shadow: 0 0 0 3px rgba(124,92,255,.15);
       background: rgba(124,92,255,.18);
     }
-
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid rgba(255,255,255,.10);
@@ -66,10 +64,8 @@
       box-shadow: var(--shadow);
       padding:14px;
     }
-
     .row{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;}
     .titleBlock{display:flex;flex-direction:column;gap:6px;min-width: 260px;}
-
     #workoutTitle{
       margin:0;
       font-size: 22px;
@@ -77,9 +73,7 @@
       letter-spacing: .2px;
       line-height: 1.15;
     }
-
     .small{font-size:12px;color:var(--muted);}
-
     button{
       appearance:none;
       border:1px solid rgba(255,255,255,.14);
@@ -101,6 +95,7 @@
     }
     .btnGhost{background: transparent;border-color: rgba(255,255,255,.14);}
     .btnDanger{border-color: rgba(251,113,133,.55);background: rgba(251,113,133,.15);}
+    .btnGood{border-color: rgba(45,212,191,.6);background: rgba(45,212,191,.14);}
 
     .progressWrap{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
     .progressMeta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;}
@@ -119,7 +114,7 @@
     .timerTop{display:flex;flex-direction:column;gap:10px;width:100%;}
     .timerBig{
       font-variant-numeric: tabular-nums;
-      font-size: 52px;
+      font-size: 56px;
       font-weight: 950;
       width: 100%;
       text-align:center;
@@ -127,7 +122,9 @@
       border-radius: 14px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
+      transition: transform .12s ease;
     }
+    .timerBig.bump{ transform: scale(1.02); }
     .timerMeta{display:flex;flex-direction:column;gap:3px;width:100%;}
     .timerMeta .k{color:var(--muted); font-size: 12px;}
     .timerMeta .v{color:var(--text); font-size: 14px; font-weight: 800;}
@@ -183,13 +180,10 @@
     .topline input{transform: scale(1.35);margin-top:2px;accent-color: var(--accent2);}
     .name{font-size:13.5px;line-height:1.25;flex:1;}
     .done .name{text-decoration: line-through;color: rgba(168,176,198,.75);}
-
     .collapsed .meta, .collapsed .iframeBox { display:none; }
     .collapsed{opacity:.72;}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color: var(--muted);font-size: 12px;}
-
     .divider{height:1px;background: rgba(255,255,255,.10);margin: 14px 0;}
-
     .toast{
       position: fixed;left: 50%;transform: translateX(-50%);
       bottom: 18px;background: rgba(0,0,0,.55);
@@ -299,6 +293,16 @@
       border-color: rgba(45,212,191,.85);
       box-shadow: 0 0 0 3px rgba(45,212,191,.15);
     }
+
+    .inlineRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .dateInput{
+      padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -376,7 +380,7 @@
   <div class="row">
     <div class="titleBlock">
       <h2 style="margin:0;font-size:18px;font-weight:900;">Completion Calendar</h2>
-      <div class="small">Tap a day with a dot to see what you completed.</div>
+      <div class="small">Tap a day with a dot to see what you completed. You can edit the completion date.</div>
     </div>
     <div class="row" style="gap:8px;justify-content:flex-end;align-items:center;">
       <button id="calPrev" class="btnGhost">◀</button>
@@ -420,7 +424,7 @@
 </div>
 
 <div class="overlay" id="dayOverlay" style="display:none;">
-  <div class="celebrateCard" style="width:min(720px,92vw);">
+  <div class="celebrateCard" style="width:min(760px,92vw);">
     <h3 class="celebrateTitle" id="dayModalTitle">Completed Workouts</h3>
     <p class="celebrateMsg" id="dayModalSubtitle" style="margin-top:6px;color:rgba(168,176,198,.92);"></p>
 
@@ -438,9 +442,12 @@
 
 <script>
 /* =========================================================
-   FIXES INCLUDED IN THIS VERSION
-   1) Uses America/Chicago LOCAL date key (no more UTC flip)
-   2) Stores and persists state.currentIndex (no auto-jumping)
+   UPDATES IN THIS VERSION
+   ✅ Edit completion date in History (fix missed day)
+   ✅ Timer sound works more reliably (persistent AudioContext unlock)
+   ✅ Custom timer seconds now works + SAVES per exercise
+      (so you can set 45s for one move and it stays)
+   ✅ Keeps America/Chicago day key + currentIndex persistence
    ========================================================= */
 
 /* ===========================
@@ -489,7 +496,7 @@ const toastEl = $("toast");
 function toast(msg){
   toastEl.textContent = msg;
   toastEl.style.display = "block";
-  setTimeout(()=> toastEl.style.display = "none", 1600);
+  setTimeout(()=> toastEl.style.display = "none", 1700);
 }
 function loadJSON(key, fallback){
   try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
@@ -516,9 +523,30 @@ function flashScreen(){
 }
 
 /* ===========================
-   SOUND
+   SOUND (more reliable)
+   - Use a single AudioContext
+   - Unlock/resume on first user interaction
    =========================== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
+let audioCtx = null;
+let audioUnlocked = false;
+
+function ensureAudio(){
+  if(!audioCtx){
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return null;
+    audioCtx = new AudioCtx();
+  }
+  return audioCtx;
+}
+async function unlockAudio(){
+  try{
+    const ctx = ensureAudio();
+    if(!ctx) return;
+    if(ctx.state === "suspended") await ctx.resume();
+    audioUnlocked = true;
+  }catch{}
+}
 function setSoundEnabled(v){
   soundEnabled = v;
   localStorage.setItem(SOUND_KEY, v ? "true" : "false");
@@ -526,19 +554,25 @@ function setSoundEnabled(v){
 }
 function beep(freq=880, ms=120){
   if(!soundEnabled) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  if(ctx.state === "suspended") return; // will work after unlock
   try{
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const ctx = new AudioCtx();
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     o.type = "sine"; o.frequency.value = freq;
     g.gain.value = 0.06;
     o.connect(g); g.connect(ctx.destination);
     o.start();
-    setTimeout(()=>{ o.stop(); ctx.close(); }, ms);
+    setTimeout(()=>{ o.stop(); }, ms);
   }catch{}
 }
 function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
+
+// Unlock audio on first user gesture
+["pointerdown","touchstart","keydown"].forEach(evt=>{
+  window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
+});
 
 /* ===========================
    LOAD WORKOUTS FROM workouts.json
@@ -563,11 +597,12 @@ async function loadWorkoutsFromFile(){
    =========================== */
 const defaultState = {
   lastDate: "",
-  currentIndex: 0,    // ✅ persists where you are in the workout list
-  checks: {},         // keyed by `${date}::${workoutId}`
-  history: [],        // {date, title, workoutId, ts, workoutSnapshot}
-  activeByKey: {},    // active exercise per workout per day
-  timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 }
+  currentIndex: 0,
+  checks: {},          // `${date}::${workoutId}` -> { idx:true }
+  history: [],         // {date, title, workoutId, ts, workoutSnapshot}
+  activeByKey: {},     // `${date}::${workoutId}` -> activeIndex
+  timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 },
+  timerOverrides: {}   // `${workoutId}::${exerciseIndex}` -> seconds (persists custom timer)
 };
 
 let state = loadJSON(STORAGE_KEY, defaultState);
@@ -641,6 +676,7 @@ function updateProgressAndComplete(workout){
   $("markCompleteBtn").disabled = !allDone;
 }
 function scrollToItem(el){ el.scrollIntoView({ behavior: "smooth", block: "center" }); }
+
 function renderVideos(workout){
   const sec = $("videosSection");
   sec.innerHTML = "";
@@ -780,6 +816,25 @@ function showCelebration(){
 $("overlay").addEventListener("click", hideCelebration);
 
 /* ===========================
+   TIMER OVERRIDES
+   - store per exercise so custom seconds actually sticks
+   =========================== */
+function timerOverrideKey(workoutId, exerciseIndex){
+  return `${workoutId}::${exerciseIndex}`;
+}
+function getOverrideSeconds(workoutId, exerciseIndex){
+  const k = timerOverrideKey(workoutId, exerciseIndex);
+  const v = state.timerOverrides?.[k];
+  return (Number.isFinite(v) && v >= 10 && v <= 600) ? v : null;
+}
+function setOverrideSeconds(workoutId, exerciseIndex, seconds){
+  if(!state.timerOverrides) state.timerOverrides = {};
+  const k = timerOverrideKey(workoutId, exerciseIndex);
+  state.timerOverrides[k] = seconds;
+  saveJSON(STORAGE_KEY, state);
+}
+
+/* ===========================
    TIMER (CUSTOMIZABLE)
    =========================== */
 function readCustomSeconds(){
@@ -793,17 +848,21 @@ function setInputPlaceholder(val){ $("timerSecondsInput").placeholder = String(v
 
 function setGlobalTimerForActive(workout, activeIdx){
   const ex = workout.exercises[activeIdx];
-  const isTimedActive = ex && isTimed(ex);
   const rack = isRackDay(workout);
   const globalTimerEl = $("globalTimer");
 
-  if(rack || !isTimedActive){
+  const isTimedActive = ex && isTimed(ex) && !rack;
+
+  if(!isTimedActive){
     globalTimerEl.style.display = "none";
     if(state.timer.running) stopTimerHard();
     return;
   }
 
-  const baseSeconds = ex.seconds;
+  const defaultSeconds = ex.seconds;
+  const override = getOverrideSeconds(workout.id, activeIdx);
+  const desired = override ?? defaultSeconds;
+
   const needsReset =
     state.timer.workoutId !== workout.id ||
     state.timer.exerciseIndex !== activeIdx;
@@ -812,40 +871,66 @@ function setGlobalTimerForActive(workout, activeIdx){
     stopTimerHard();
     state.timer = {
       running:false,
-      remaining: baseSeconds,
-      duration: baseSeconds,
+      remaining: desired,
+      duration: desired,
       workoutId: workout.id,
       exerciseIndex: activeIdx
     };
     $("timerSecondsInput").value = "";
-    setInputPlaceholder(baseSeconds);
+    setInputPlaceholder(desired);
     saveJSON(STORAGE_KEY, state);
   } else {
-    setInputPlaceholder(baseSeconds);
+    // keep state.timer.remaining as-is during active tick; but ensure placeholder reflects saved value
+    setInputPlaceholder(desired);
+    if(state.timer.duration !== desired && !state.timer.running){
+      // If override changed while paused, align
+      state.timer.duration = desired;
+      state.timer.remaining = desired;
+      saveJSON(STORAGE_KEY, state);
+    }
   }
 
   globalTimerEl.style.display = "block";
   $("timerBig").textContent = formatTime(state.timer.remaining);
-  $("timerExerciseName").textContent = `${ex.label} • default ${formatTime(baseSeconds)}`;
+  $("timerExerciseName").textContent =
+    `${ex.label} • default ${formatTime(defaultSeconds)}${override ? ` • custom ${formatTime(override)}` : ""}`;
   $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
 }
 
 function applyCustomDurationIfAny(){
   const custom = readCustomSeconds();
-  if(custom == null) return;
+  if(custom == null) return false;
+
+  const w = WORKOUTS[currentIndex];
+  const idx = state.timer.exerciseIndex;
+
   pauseTimer();
   state.timer.duration = custom;
   state.timer.remaining = custom;
+
+  // ✅ persist override for this exercise
+  setOverrideSeconds(w.id, idx, custom);
+
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
+  return true;
+}
+
+function bumpTimerDisplay(){
+  const el = $("timerBig");
+  el.classList.add("bump");
+  setTimeout(()=>el.classList.remove("bump"), 120);
 }
 
 function tickTimer(){
   state.timer.remaining -= 1;
+  if(state.timer.remaining < 0) state.timer.remaining = 0;
 
-  if(state.timer.remaining <= 0){
-    state.timer.remaining = 0;
+  // visual pulse
+  bumpTimerDisplay();
+
+  if(state.timer.remaining === 0){
     saveJSON(STORAGE_KEY, state);
 
     const workout = WORKOUTS[currentIndex];
@@ -854,7 +939,8 @@ function tickTimer(){
     stopTimerHard();
     flashScreen();
     toast("Timer finished ✅");
-    beep(950,60);
+    beep(950,100);
+    setTimeout(()=>beep(760,120), 140);
 
     const checks = getChecksFor(workout.id);
     if(!checks[idx]) setCheck(workout.id, idx, true);
@@ -873,7 +959,8 @@ function tickTimer(){
     return;
   }
 
-  if(state.timer.remaining <= 5) beep(950,35);
+  // last 5 seconds beep
+  if(state.timer.remaining <= 5) beep(950,40);
 
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
@@ -881,6 +968,9 @@ function tickTimer(){
 
 function startTimer(){
   if(timerInterval) return;
+  // if user typed a value, apply it before starting
+  applyCustomDurationIfAny();
+
   state.timer.running = true;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Pause";
@@ -896,22 +986,35 @@ function pauseTimer(){
 }
 function resetTimer(){
   pauseTimer();
-  state.timer.remaining = state.timer.duration;
+
+  // reset should respect stored override (if any)
+  const w = WORKOUTS[currentIndex];
+  const idx = state.timer.exerciseIndex;
+  const workout = w;
+  const ex = workout.exercises[idx];
+  const defaultSeconds = (ex && isTimed(ex)) ? ex.seconds : 60;
+  const override = getOverrideSeconds(workout.id, idx);
+  const desired = override ?? defaultSeconds;
+
+  state.timer.duration = desired;
+  state.timer.remaining = desired;
+
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
 }
-function stopTimer(){ pauseTimer(); toast("Timer stopped"); }
+function stopTimer(){
+  pauseTimer();
+  toast("Timer stopped");
+}
 
 /* ===========================
    RENDER WORKOUT
    =========================== */
 function renderWorkout(){
-  // Refresh todayKey on every render to prevent midnight weirdness
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
 
-  // If app is open across midnight, merge in new date (do NOT jump workouts)
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
     saveJSON(STORAGE_KEY, state);
@@ -986,7 +1089,10 @@ function renderWorkout(){
     meta.className = "meta";
     if(ex.type === "videoRef") meta.innerHTML = `<span>Video</span>`;
     else if(ex.type === "note") meta.innerHTML = `<span>Note</span>`;
-    else if(isTimed(ex)) meta.innerHTML = `<span>Timed</span><span>•</span><span>${formatTime(ex.seconds)}</span>`;
+    else if(isTimed(ex)) {
+      const override = getOverrideSeconds(workout.id, idx);
+      meta.innerHTML = `<span>Timed</span><span>•</span><span>${formatTime(override ?? ex.seconds)}</span>${override?`<span>•</span><span style="color:rgba(45,226,230,.95)">custom</span>`:""}`;
+    }
     else meta.innerHTML = `<span>Exercise</span>`;
     item.appendChild(meta);
 
@@ -1005,7 +1111,6 @@ function renderWorkout(){
     }
 
     cb.addEventListener("change", () => {
-      // if the user unchecks the currently completed item, stop timer to avoid weird auto-advance
       if(!cb.checked) stopTimerHard();
 
       setCheck(workout.id, idx, cb.checked);
@@ -1040,7 +1145,7 @@ function renderWorkout(){
 }
 
 /* ===========================
-   CALENDAR HISTORY
+   CALENDAR HISTORY + EDIT COMPLETION DATE
    =========================== */
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
@@ -1118,6 +1223,16 @@ function renderHistory(){
   }
 }
 
+function updateHistoryEntryDate(entryTs, newDate){
+  const idx = state.history.findIndex(h => h.ts === entryTs);
+  if(idx === -1) return false;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)) return false;
+
+  state.history[idx].date = newDate;
+  saveJSON(STORAGE_KEY, state);
+  return true;
+}
+
 function openDayModal(dateKey, entries){
   const overlay = $("dayOverlay");
   $("dayModalTitle").textContent = `Completed on ${dateKey}`;
@@ -1139,6 +1254,42 @@ function openDayModal(dateKey, entries){
         <div class="name" style="font-style: italic; font-weight: 900;">${entry.title}</div>
       `;
 
+      // --- Edit completion date UI ---
+      const editRow = document.createElement("div");
+      editRow.className = "inlineRow";
+
+      const dateInput = document.createElement("input");
+      dateInput.type = "date";
+      dateInput.className = "dateInput";
+      dateInput.value = entry.date; // YYYY-MM-DD
+
+      const saveBtn = document.createElement("button");
+      saveBtn.className = "btnGood";
+      saveBtn.textContent = "Save date";
+
+      saveBtn.addEventListener("click", ()=>{
+        const newDate = dateInput.value;
+        const ok = updateHistoryEntryDate(entry.ts, newDate);
+        if(ok){
+          toast(`Moved to ${newDate}`);
+          // rerender calendar and reopen modal on new date
+          renderHistory();
+          const byDate = historyByDate();
+          const newEntries = byDate[newDate] || [];
+          openDayModal(newDate, newEntries);
+        } else {
+          toast("Could not update date");
+        }
+      });
+
+      editRow.appendChild(dateInput);
+      editRow.appendChild(saveBtn);
+
+      const hint = document.createElement("div");
+      hint.className = "small";
+      hint.textContent = "Forgot to mark it? Change the date here.";
+
+      // --- View workout snapshot ---
       const btn = document.createElement("button");
       btn.className = "btnGhost";
       btn.textContent = "View workout";
@@ -1196,6 +1347,8 @@ function openDayModal(dateKey, entries){
         });
       });
 
+      it.appendChild(editRow);
+      it.appendChild(hint);
       it.appendChild(btn);
       list.appendChild(it);
     });
@@ -1216,22 +1369,16 @@ document.querySelectorAll(".tab").forEach(t=>{
 $("prevBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
-
-  // ✅ persist where you are
   state.currentIndex = currentIndex;
   saveJSON(STORAGE_KEY, state);
-
   renderWorkout();
 });
 
 $("nextBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex + 1) % WORKOUTS.length;
-
-  // ✅ persist where you are
   state.currentIndex = currentIndex;
   saveJSON(STORAGE_KEY, state);
-
   renderWorkout();
 });
 
@@ -1241,26 +1388,33 @@ $("stopTimer").addEventListener("click", ()=>{
   renderWorkout();
 });
 
-$("soundChip").addEventListener("click", ()=>{
+$("soundChip").addEventListener("click", async ()=>{
+  await unlockAudio(); // ensure it can play on iOS
   setSoundEnabled(!soundEnabled);
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
 
-$("timerStartPause").addEventListener("click", ()=>{
-  if(!state.timer.running) applyCustomDurationIfAny();
+$("timerStartPause").addEventListener("click", async ()=>{
+  await unlockAudio();
   if(state.timer.running) pauseTimer();
   else startTimer();
   renderWorkout();
 });
+
 $("timerStop").addEventListener("click", ()=>{
   stopTimer();
   stopTimerHard();
   renderWorkout();
 });
+
 $("timerReset").addEventListener("click", ()=>{
+  // If user typed a value, treat Reset as "save + reset to that"
   const custom = readCustomSeconds();
   if(custom != null){
+    const w = WORKOUTS[currentIndex];
+    const idx = state.timer.exerciseIndex;
     pauseTimer();
+    setOverrideSeconds(w.id, idx, custom);
     state.timer.duration = custom;
     state.timer.remaining = custom;
     saveJSON(STORAGE_KEY, state);
@@ -1272,10 +1426,28 @@ $("timerReset").addEventListener("click", ()=>{
   renderWorkout();
 });
 
+// Save custom timer seconds when pressing Enter or leaving the field
 $("timerSecondsInput").addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
     applyCustomDurationIfAny();
     $("timerSecondsInput").blur();
+    renderWorkout();
+  }
+});
+$("timerSecondsInput").addEventListener("blur", ()=>{
+  // If they typed something valid, save it even if they didn't start
+  const custom = readCustomSeconds();
+  if(custom != null){
+    const w = WORKOUTS[currentIndex];
+    const idx = state.timer.exerciseIndex;
+    setOverrideSeconds(w.id, idx, custom);
+    if(!state.timer.running){
+      state.timer.duration = custom;
+      state.timer.remaining = custom;
+      saveJSON(STORAGE_KEY, state);
+      $("timerBig").textContent = formatTime(state.timer.remaining);
+    }
+    toast("Custom timer saved");
   }
 });
 
@@ -1293,11 +1465,8 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   setTimeout(()=>{
     pauseTimer();
     currentIndex = (currentIndex + 1) % WORKOUTS.length;
-
-    // ✅ persist the new index after completion
     state.currentIndex = currentIndex;
     saveJSON(STORAGE_KEY, state);
-
     renderWorkout();
   }, 950);
 });
@@ -1327,23 +1496,20 @@ $("calNext").addEventListener("click", ()=>{
 (async function init(){
   await loadWorkoutsFromFile();
 
-  // ✅ merge any missing fields so upgrades don't break old users
+  // merge fields for upgrades
   state = { ...defaultState, ...state };
+  if(!state.timerOverrides) state.timerOverrides = {};
 
-  // ✅ refresh todayKey and store lastDate WITHOUT auto-moving workouts
   todayKey = getLocalDateKey();
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
     saveJSON(STORAGE_KEY, state);
   }
 
-  // ✅ clamp in case workouts.json length changed
   if (typeof state.currentIndex !== "number") state.currentIndex = 0;
   if (state.currentIndex < 0 || state.currentIndex >= WORKOUTS.length) state.currentIndex = 0;
-
   currentIndex = state.currentIndex;
 
-  // Calendar defaults to current month
   const now = new Date();
   calYear = now.getFullYear();
   calMonth = now.getMonth();
