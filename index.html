@@ -19,6 +19,8 @@
 
       --accent:#7c5cff;
       --accent2:#2de2e6;
+      --good:#2dd4bf;
+      --bad:#fb7185;
 
       --stroke: rgba(255,255,255,.10);
       --stroke2: rgba(255,255,255,.14);
@@ -119,6 +121,7 @@
       white-space:nowrap;
     }
     .chip strong{ color:var(--text); font-weight:950; }
+    .chipBtn{ cursor:pointer; }
 
     .main{
       height: calc(100dvh - var(--safeTop) - var(--safeBottom) - 16px - 40px);
@@ -169,13 +172,12 @@
       background: rgba(251,113,133,.14);
     }
 
+    /* ===== Views ===== */
+    .view{ height: 100%; display:none; }
+    .view.active{ display:flex; flex-direction:column; gap: var(--gap); }
+
     /* ===== Workout view (NO SCROLL) ===== */
-    #view-workout{
-      height: 100%;
-      display:flex;
-      flex-direction:column;
-      gap: var(--gap);
-    }
+    #view-workout{ height:100%; }
 
     .workoutHeader{
       display:flex;
@@ -292,7 +294,6 @@
       overflow:hidden; /* no scroll */
     }
 
-    /* ===== 1-line title + buttons ALWAYS ===== */
     .activeLine{
       display:flex;
       align-items:center;
@@ -303,7 +304,7 @@
     }
     #activeTitle{
       margin:0;
-      font-size:13px;         /* shrink */
+      font-size:13px;
       font-weight:950;
       line-height:1.1;
       overflow:hidden;
@@ -445,7 +446,6 @@
       font-size:12px;
     }
 
-    /* Next + workout nav in ONE line */
     .nextPane{
       flex:0 0 auto;
       border-radius: var(--r2);
@@ -471,7 +471,7 @@
     }
     #nextTitle{
       margin:0;
-      font-size:12px; /* smaller */
+      font-size:12px;
       font-weight:950;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -502,7 +502,6 @@
       text-overflow:ellipsis;
     }
 
-    /* Footer button */
     #markCompleteBtn{
       width:100%;
       padding:12px 10px;
@@ -510,6 +509,81 @@
       font-weight:950;
     }
 
+    /* ===== History view ===== */
+    #view-history{
+      height:100%;
+    }
+    .historyHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .historyHeader h2{
+      margin:0;
+      font-size:14px;
+      font-weight:950;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .historyControls{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
+    .historyControls button{
+      padding:10px 12px;
+    }
+
+    .calWeekdays{
+      display:grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap:8px;
+      margin-top:6px;
+      margin-bottom:8px;
+      color: var(--muted);
+      font-size:11px;
+      text-align:center;
+      font-weight:850;
+      letter-spacing:.2px;
+    }
+    .calGrid{
+      display:grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap:8px;
+      flex:1 1 auto;
+      min-height:0;
+    }
+    .calDay{
+      position:relative;
+      min-height: 48px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.22);
+      padding:8px;
+      cursor:pointer;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      overflow:hidden;
+    }
+    .calDay:hover{ background: rgba(255,255,255,.06); }
+    .calDay:active{ transform: translateY(1px); }
+    .calDay.muted{ opacity:.35; cursor:default; }
+    .calNum{ font-weight:950; font-size:12px; }
+    .calDot{
+      position:absolute; right:8px; bottom:8px;
+      width:10px; height:10px; border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 3px rgba(124,92,255,.14);
+    }
+    .calSelected{
+      border-color: rgba(45,212,191,.85);
+      box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+    }
+
+    /* Toast + overlays */
     .toast{
       position: fixed;
       left: 50%;
@@ -568,6 +642,78 @@
     }
     @keyframes fall{ to{ transform: translateY(110vh) rotate(360deg); opacity: 1; } }
 
+    .modalOverlay{
+      position: fixed;
+      inset: 0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 1100;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+      padding:16px;
+    }
+    .modalCard{
+      width: min(780px, 92vw);
+      max-height: 80dvh;
+      border-radius: 18px;
+      padding: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      white-space:nowrap;
+    }
+    .modalTop h3{
+      margin:0;
+      font-size:14px;
+      font-weight:950;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .modalList{
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-right:2px;
+    }
+    .modalItem{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding:10px;
+    }
+    .modalItemTitle{
+      font-weight:950;
+      font-size:13px;
+      margin:0;
+    }
+    .modalItemSmall{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:850;
+    }
+    .modalItemExercises{
+      margin-top:8px;
+      font-size:11px;
+      color:rgba(242,244,255,.92);
+      line-height:1.35;
+      font-weight:800;
+    }
+
     .flash{
       position: fixed;
       inset: 0;
@@ -589,13 +735,13 @@
   </div>
   <div class="chips">
     <div class="chip">Workout <strong id="cycleLabel"></strong></div>
-    <div class="chip" id="soundChip" style="cursor:pointer;">Sound: <strong id="soundLabel"></strong></div>
+    <div class="chip chipBtn" id="historyChip">History</div>
   </div>
 </header>
 
 <div class="main">
-  <section class="card" id="view-workout">
-
+  <!-- WORKOUT VIEW -->
+  <section class="card view active" id="view-workout">
     <div class="workoutHeader">
       <div class="left">
         <div class="labelTop">WORKOUT OF THE DAY</div>
@@ -616,7 +762,6 @@
     </div>
 
     <div class="stack">
-
       <div class="activePane">
         <div class="paneHeader">
           <b>Active</b>
@@ -646,7 +791,6 @@
                     allowfullscreen></iframe>
           </div>
 
-          <!-- Timer (hidden on rack video exercises) -->
           <div class="timerCard" id="timerCard">
             <div id="timerBig">60s</div>
             <div class="timerInner">
@@ -682,13 +826,28 @@
       </div>
 
       <button id="markCompleteBtn" class="btnPrimary" disabled>Mark Workout Complete</button>
-
     </div>
+  </section>
+
+  <!-- HISTORY VIEW -->
+  <section class="card view" id="view-history">
+    <div class="historyHeader">
+      <h2 id="calMonthLabel">History</h2>
+      <div class="historyControls">
+        <button id="calPrev" class="btnGhost">◀</button>
+        <button id="calNext" class="btnGhost">▶</button>
+        <button id="historyBack" class="btnPrimary">Back</button>
+      </div>
+    </div>
+
+    <div class="calWeekdays" id="calWeekdays"></div>
+    <div class="calGrid" id="calGrid"></div>
   </section>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- Celebration -->
 <div class="overlay" id="overlay">
   <div class="celebrateCard">
     <div class="sparkles"></div>
@@ -696,6 +855,17 @@
     <h3 class="celebrateTitle">Workout Complete ✅</h3>
     <p class="celebrateMsg" id="celebrateMsg"></p>
     <div class="small" style="margin-top:10px;color:rgba(168,176,198,.9);">Tap anywhere to dismiss.</div>
+  </div>
+</div>
+
+<!-- Day details modal -->
+<div class="modalOverlay" id="dayModal">
+  <div class="modalCard">
+    <div class="modalTop">
+      <h3 id="dayModalTitle">Completed</h3>
+      <button id="dayModalClose" class="btnPrimary">Close</button>
+    </div>
+    <div class="modalList" id="dayModalList"></div>
   </div>
 </div>
 
@@ -762,7 +932,7 @@ function flashScreen(){
   setTimeout(()=>f.classList.remove("on"), 340);
 }
 
-/* ===== SOUND ===== */
+/* ===== SOUND (no UI toggle now; always enabled by default) ===== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
 let audioCtx = null;
 let audioUnlocked = false;
@@ -782,11 +952,6 @@ async function unlockAudio(){
     audioUnlocked = true;
   }catch{}
 }
-function setSoundEnabled(v){
-  soundEnabled = v;
-  localStorage.setItem(SOUND_KEY, v ? "true" : "false");
-  $("soundLabel").textContent = v ? "On" : "Off";
-}
 function beep(freq=880, ms=120){
   if(!soundEnabled) return;
   const ctx = ensureAudio();
@@ -804,11 +969,6 @@ function beep(freq=880, ms=120){
 function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
 ["pointerdown","touchstart","keydown"].forEach(evt=>{
   window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
-});
-$("soundChip").addEventListener("click", async ()=>{
-  await unlockAudio();
-  setSoundEnabled(!soundEnabled);
-  toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
 
 /* ===== LOAD workouts.json ===== */
@@ -834,11 +994,18 @@ const defaultState = {
   checks: {},
   activeByKey: {},
   timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 },
-  timerOverrides: {}
+  timerOverrides: {},
+  history: [] // [{date, title, workoutId, ts, workoutSnapshot}]
 };
 let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
 let timerInterval = null;
+
+/* ===== VIEW SWITCH ===== */
+function setView(which){
+  $("view-workout").classList.toggle("active", which==="workout");
+  $("view-history").classList.toggle("active", which==="history");
+}
 
 /* ===== HELPERS ===== */
 function stopTimerHard(){
@@ -885,13 +1052,13 @@ function findFirstUncheckedIndex(workout){
 }
 function computeCompletion(workout){
   const checks = getChecksFor(workout.id);
-  const checkableIdx = workout.exercises
+  const idxs = workout.exercises
     .map((ex,i)=>({ex,i}))
     .filter(({ex})=>isCheckable(ex))
     .map(({i})=>i);
 
-  const done = checkableIdx.filter(i => !!checks[i]).length;
-  const total = checkableIdx.length;
+  const done = idxs.filter(i => !!checks[i]).length;
+  const total = idxs.length;
   const pct = total ? Math.round((done/total)*100) : 0;
   return { done, total, pct, allDone: total>0 && done===total };
 }
@@ -985,6 +1152,109 @@ function startTimer(){
   timerInterval = setInterval(tick, 1000);
 }
 
+/* ===== HISTORY ===== */
+function addHistoryEntry(workout){
+  const entry = {
+    date: todayKey,
+    title: workout.title,
+    workoutId: workout.id,
+    ts: Date.now(),
+    workoutSnapshot: JSON.parse(JSON.stringify(workout))
+  };
+  const exists = state.history.some(h => h.date === entry.date && h.workoutId === entry.workoutId);
+  if(!exists){
+    state.history.unshift(entry);
+    saveJSON(STORAGE_KEY, state);
+  }
+}
+function ymd(y,m,d){
+  const mm = String(m+1).padStart(2,"0");
+  const dd = String(d).padStart(2,"0");
+  return `${y}-${mm}-${dd}`;
+}
+function formatMonthLabel(y,m){
+  const dt = new Date(y, m, 1);
+  return dt.toLocaleString(undefined, { month:"long", year:"numeric" });
+}
+function historyByDate(){
+  const map = {};
+  for(const h of (state.history || [])){
+    if(!map[h.date]) map[h.date] = [];
+    map[h.date].push(h);
+  }
+  return map;
+}
+
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function renderHistoryCalendar(){
+  const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  $("calWeekdays").innerHTML = weekdays.map(w => `<div>${w}</div>`).join("");
+  $("calGrid").innerHTML = "";
+  $("calMonthLabel").textContent = formatMonthLabel(calYear, calMonth);
+
+  const first = new Date(calYear, calMonth, 1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const byDate = historyByDate();
+
+  for(let i=0;i<startDay;i++){
+    const cell = document.createElement("div");
+    cell.className = "calDay muted";
+    cell.innerHTML = `<div class="calNum"></div>`;
+    $("calGrid").appendChild(cell);
+  }
+
+  for(let d=1; d<=daysInMonth; d++){
+    const key = ymd(calYear, calMonth, d);
+    const doneList = byDate[key] || [];
+
+    const cell = document.createElement("div");
+    cell.className = "calDay";
+    if(key === todayKey) cell.classList.add("calSelected");
+    cell.innerHTML = `<div class="calNum">${d}</div>`;
+
+    if(doneList.length){
+      const dot = document.createElement("div");
+      dot.className = "calDot";
+      cell.appendChild(dot);
+    }
+
+    cell.addEventListener("click", ()=>{
+      if(!doneList.length){ toast("No completion that day"); return; }
+      openDayModal(key, doneList);
+    });
+
+    $("calGrid").appendChild(cell);
+  }
+}
+
+function openDayModal(dateKey, entries){
+  $("dayModalTitle").textContent = `Completed on ${dateKey}`;
+  const list = $("dayModalList");
+  list.innerHTML = "";
+
+  entries.slice().sort((a,b)=>a.ts-b.ts).forEach((entry)=>{
+    const item = document.createElement("div");
+    item.className = "modalItem";
+    const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    const snapshot = entry.workoutSnapshot;
+    const exList = snapshot?.exercises?.map(e=>e.label).slice(0, 40) || [];
+
+    item.innerHTML = `
+      <p class="modalItemTitle">${entry.title}</p>
+      <div class="modalItemSmall">${timeStr} • ${exList.length} exercises</div>
+      <div class="modalItemExercises">${exList.map(x=>`• ${x}`).join("<br>")}</div>
+    `;
+    list.appendChild(item);
+  });
+
+  $("dayModal").style.display = "flex";
+}
+$("dayModalClose").addEventListener("click", ()=> $("dayModal").style.display="none");
+$("dayModal").addEventListener("click", (e)=>{ if(e.target.id==="dayModal") $("dayModal").style.display="none"; });
+
 /* ===== CELEBRATION ===== */
 const CELEBRATION_MESSAGES = [
   "Good job not being a total fucking loser today.",
@@ -1022,7 +1292,7 @@ function showCelebration(){
 }
 $("overlay").addEventListener("click", hideCelebration);
 
-/* ===== RENDER ===== */
+/* ===== RENDER WORKOUT ===== */
 function renderWorkout(){
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
@@ -1035,7 +1305,6 @@ function renderWorkout(){
   const w = WORKOUTS[currentIndex];
   $("workoutTitle").textContent = w.title;
   $("cycleLabel").textContent = `${currentIndex+1}/${WORKOUTS.length}`;
-  setSoundEnabled(soundEnabled);
 
   const checks = getChecksFor(w.id);
 
@@ -1135,12 +1404,10 @@ function renderWorkout(){
   // TIMER: hidden for rack video exercises
   const timerCard = $("timerCard");
   if(isRackVideo(ex)){
-    // stop timer and hide
     stopTimerHard();
     timerCard.style.display = "none";
   } else {
     timerCard.style.display = "block";
-
     const hasSeconds = isTimed(ex);
     const defaultSeconds = hasSeconds ? ex.seconds : 60;
     const override = getOverrideSeconds(w.id, activeIdx);
@@ -1166,6 +1433,25 @@ function renderWorkout(){
 }
 
 /* ===== EVENTS ===== */
+$("historyChip").addEventListener("click", ()=>{
+  setView("history");
+  renderHistoryCalendar();
+});
+$("historyBack").addEventListener("click", ()=>{
+  setView("workout");
+});
+
+$("calPrev").addEventListener("click", ()=>{
+  calMonth -= 1;
+  if(calMonth < 0){ calMonth = 11; calYear -= 1; }
+  renderHistoryCalendar();
+});
+$("calNext").addEventListener("click", ()=>{
+  calMonth += 1;
+  if(calMonth > 11){ calMonth = 0; calYear += 1; }
+  renderHistoryCalendar();
+});
+
 $("activePrevBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const idx = getActiveIndex(w);
@@ -1244,6 +1530,8 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const { allDone } = computeCompletion(w);
   if(!allDone){ toast("Finish all exercises"); return; }
+
+  addHistoryEntry(w);
   showCelebration();
 
   setTimeout(()=>{
@@ -1261,8 +1549,11 @@ $("markCompleteBtn").addEventListener("click", ()=>{
 
   state = { ...defaultState, ...state };
   if(!state.timerOverrides) state.timerOverrides = {};
+  if(!Array.isArray(state.history)) state.history = [];
 
   todayKey = getLocalDateKey();
+  $("todayLabel").textContent = `Today: ${todayKey}`;
+
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
     saveJSON(STORAGE_KEY, state);
@@ -1272,7 +1563,6 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   if (state.currentIndex < 0 || state.currentIndex >= WORKOUTS.length) state.currentIndex = 0;
   currentIndex = state.currentIndex;
 
-  setSoundEnabled(soundEnabled);
   renderWorkout();
 })();
 </script>
