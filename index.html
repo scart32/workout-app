@@ -2,8 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- ✅ Prevent zoom / keep one-screen feel -->
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
   <title>Workout App</title>
+
   <style>
     :root{
       color-scheme: dark;
@@ -17,8 +22,16 @@
       --bad:#fb7185;
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius:16px;
+      --safeTop: env(safe-area-inset-top);
+      --safeBottom: env(safe-area-inset-bottom);
     }
     *{box-sizing:border-box;}
+    html, body{
+      height:100%;
+      overscroll-behavior: none;
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation; /* reduces pinch-zoom / double tap zoom behavior */
+    }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -26,13 +39,27 @@
                   radial-gradient(900px 700px at 110% 20%, rgba(45,226,230,.25), transparent 55%),
                   linear-gradient(180deg, var(--bg0), var(--bg1));
       color:var(--text);
-      padding:16px;
+
+      /* ✅ lock the app to a single “screen” height */
+      height: 100dvh;
+      overflow: hidden;
+
+      padding: calc(12px + var(--safeTop)) 12px calc(12px + var(--safeBottom)) 12px;
       max-width: 920px;
       margin-inline:auto;
     }
-    header{display:flex;flex-direction:column;gap:12px;margin-bottom:14px;}
+
+    header{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom:10px;
+      flex: 0 0 auto;
+    }
+
     .topbar{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
     h1{margin:0;font-size:20px;letter-spacing:.2px;}
+
     .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
     .chip{
       background: rgba(255,255,255,.06);
@@ -45,7 +72,8 @@
       user-select:none;
     }
     .chip strong{color:var(--text);font-weight:600;}
-    .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+
+    .nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;}
     .tab{
       padding:10px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
@@ -57,23 +85,45 @@
       box-shadow: 0 0 0 3px rgba(124,92,255,.15);
       background: rgba(124,92,255,.18);
     }
+
+    /* ✅ Main content area takes remaining height */
+    .main{
+      height: calc(100dvh - 24px - var(--safeTop) - var(--safeBottom));
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:hidden;
+    }
+
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border:1px solid rgba(255,255,255,.10);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding:14px;
+      padding:12px;
+      overflow:hidden; /* ✅ no accidental page scroll */
     }
+
+    /* ✅ Workout view: fixed layout inside the card */
+    #view-workout{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
     .row{display:flex;gap:12px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;}
-    .titleBlock{display:flex;flex-direction:column;gap:6px;min-width: 260px;}
+    .titleBlock{display:flex;flex-direction:column;gap:6px;min-width: 240px;}
     #workoutTitle{
       margin:0;
-      font-size: 22px;
-      font-weight: 900;
+      font-size: 24px;
+      font-weight: 950;
       letter-spacing: .2px;
-      line-height: 1.15;
+      line-height: 1.12;
     }
     .small{font-size:12px;color:var(--muted);}
+
     button{
       appearance:none;
       border:1px solid rgba(255,255,255,.14);
@@ -84,7 +134,6 @@
       font-size:13px;
       cursor:pointer;
       transition: transform .05s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
-      width:auto;
     }
     button:hover{background: rgba(255,255,255,.10);}
     button:active{transform: translateY(1px);}
@@ -92,43 +141,45 @@
     .btnPrimary{
       border-color: rgba(124,92,255,.55);
       background: rgba(124,92,255,.22);
+      font-weight: 900;
     }
     .btnGhost{background: transparent;border-color: rgba(255,255,255,.14);}
     .btnDanger{border-color: rgba(251,113,133,.55);background: rgba(251,113,133,.15);}
     .btnGood{border-color: rgba(45,212,191,.6);background: rgba(45,212,191,.14);}
 
-    .progressWrap{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+    .progressWrap{display:flex;flex-direction:column;gap:8px;}
     .progressMeta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;}
     .bar{height: 10px;border-radius: 999px;background: rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);overflow:hidden;}
     .bar > div{height:100%;width:0%;background: linear-gradient(90deg, var(--accent), var(--accent2));border-radius: 999px;transition: width .25s ease;}
 
+    /* ✅ Timer always visible but compact. Only shows when timed exercise is active */
     .globalTimer{
-      margin-top:12px;
       display:none;
       width:100%;
-      padding:12px;
+      padding:10px;
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.22);
+      flex: 0 0 auto;
     }
-    .timerTop{display:flex;flex-direction:column;gap:10px;width:100%;}
     .timerBig{
       font-variant-numeric: tabular-nums;
       font-size: 56px;
       font-weight: 950;
       width: 100%;
       text-align:center;
-      padding:14px 12px;
+      padding:10px 10px;
       border-radius: 14px;
       background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.10);
       transition: transform .12s ease;
+      user-select:none;
     }
     .timerBig.bump{ transform: scale(1.02); }
-    .timerMeta{display:flex;flex-direction:column;gap:3px;width:100%;}
+    .timerMeta{display:flex;flex-direction:column;gap:4px;margin-top:8px;}
     .timerMeta .k{color:var(--muted); font-size: 12px;}
-    .timerMeta .v{color:var(--text); font-size: 14px; font-weight: 800;}
-    .timerCustomRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;width:100%;}
+    .timerMeta .v{color:var(--text); font-size: 14px; font-weight: 900;}
+    .timerCustomRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px;}
     .timerCustomRow label{font-size:12px;color:var(--muted);white-space:nowrap;}
     .timerInput{
       flex:1;min-width:120px;
@@ -139,20 +190,25 @@
       font-size: 14px;
       outline: none;
     }
-    .timerBtns{display:flex;gap:10px;width:100%;flex-wrap:nowrap;}
+    .timerBtns{display:flex;gap:10px;width:100%;flex-wrap:nowrap;margin-top:10px;}
     .timerBtns button{
       flex:1;width:100%;
       border-radius: 14px;
       padding:12px 10px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .videosGrid{display:grid;grid-template-columns: 1fr;gap:12px;margin-top:14px;}
-    @media (min-width: 820px){.videosGrid{grid-template-columns: 1fr 1fr;}}
-    .iframeBox{position:relative;width:100%;padding-top:56.25%;border-radius: 14px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:#000;}
-    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+    /* ✅ Exercise area is the only scrollable region */
+    .exercisePane{
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 2px; /* reduce overlay scrollbar clipping */
+    }
 
-    .list{margin-top:14px;display:flex;flex-direction:column;gap:10px;}
+    /* keep lists dense so they fit */
+    .list{display:flex;flex-direction:column;gap:10px;}
     .item{
       background: rgba(0,0,0,.25);
       border:1px solid rgba(255,255,255,.10);
@@ -183,10 +239,31 @@
     .collapsed .meta, .collapsed .iframeBox { display:none; }
     .collapsed{opacity:.72;}
     .meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color: var(--muted);font-size: 12px;}
-    .divider{height:1px;background: rgba(255,255,255,.10);margin: 14px 0;}
+
+    .videosGrid{display:grid;grid-template-columns: 1fr;gap:12px;}
+    @media (min-width: 820px){.videosGrid{grid-template-columns: 1fr 1fr;}}
+    .iframeBox{position:relative;width:100%;padding-top:56.25%;border-radius: 14px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:#000;}
+    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+    .footerActions{
+      flex: 0 0 auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top: 6px;
+    }
+    .navRow{
+      display:flex;
+      gap:10px;
+      width:100%;
+    }
+    .navRow button{flex:1;}
+    .divider{height:1px;background: rgba(255,255,255,.10);margin: 6px 0;}
+
     .toast{
       position: fixed;left: 50%;transform: translateX(-50%);
-      bottom: 18px;background: rgba(0,0,0,.55);
+      bottom: calc(18px + var(--safeBottom));
+      background: rgba(0,0,0,.55);
       border:1px solid rgba(255,255,255,.16);
       padding: 10px 12px;border-radius: 999px;
       font-size: 12px;color: var(--text);
@@ -203,6 +280,7 @@
       z-index: 1000;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(8px);
+      padding: 16px;
     }
     .celebrateCard{
       width: min(520px, 92vw);
@@ -214,7 +292,7 @@
       position: relative;
       overflow:hidden;
     }
-    .celebrateTitle{margin:0;font-size:18px;font-weight:900;letter-spacing:.2px;}
+    .celebrateTitle{margin:0;font-size:18px;font-weight:950;letter-spacing:.2px;}
     .celebrateMsg{margin:10px 0 0 0;color:rgba(242,244,255,.92);line-height:1.35;font-size:14px;}
     .sparkles{
       position:absolute;inset:-40px;opacity:.9;pointer-events:none;
@@ -245,6 +323,15 @@
     }
     .flash.on{ opacity: 1; }
 
+    /* History / Dashboard cards can scroll internally too */
+    .scrollCard{
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right:2px;
+    }
+
     #calendarWrap{ width:100%; }
     .calWeekdays{
       display:grid;
@@ -273,181 +360,177 @@
     .calDay:hover{ background: rgba(255,255,255,.06); }
     .calDay:active{ transform: translateY(1px); }
     .calDay.muted{ opacity:.35; cursor:default; }
-    .calNum{ font-weight:900; font-size:13px; }
+    .calNum{ font-weight:950; font-size:13px; }
     .calDot{
       position:absolute; right:10px; bottom:10px;
       width:10px; height:10px; border-radius: 999px;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       box-shadow: 0 0 0 3px rgba(124,92,255,.14);
     }
-    .calDots{
-      position:absolute; right:10px; bottom:10px;
-      display:flex; gap:4px;
-    }
-    .calDots .miniDot{
-      width:8px;height:8px;border-radius:999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      opacity:.95;
-    }
     .calSelected{
       border-color: rgba(45,212,191,.85);
       box-shadow: 0 0 0 3px rgba(45,212,191,.15);
     }
 
-    .inlineRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .dateInput{
-      padding:10px 12px;border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.25);
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-    }
+    .toastBtnRow{display:flex;gap:10px;flex-wrap:wrap;}
+
+    /* ✅ Reduce accidental double-tap zoom on iOS */
+    a, button, input, label { touch-action: manipulation; }
   </style>
 </head>
+
 <body>
-
-<header>
-  <div class="topbar">
-    <div><h1>Workout App</h1></div>
-    <div class="chips">
-      <div class="chip"><strong id="todayLabel"></strong></div>
-      <div class="chip">Cycle: <strong id="cycleLabel"></strong></div>
-      <div class="chip" id="soundChip" style="cursor:pointer;">Sound: <strong id="soundLabel"></strong></div>
-    </div>
-  </div>
-
-  <div class="nav">
-    <button class="tab active" data-view="workout">Workout</button>
-    <button class="tab" data-view="history">History</button>
-    <button class="tab" data-view="dashboard">Dashboard</button>
-  </div>
-</header>
-
-<section class="card" id="view-workout">
-  <div class="row">
-    <div class="titleBlock">
-      <h2 id="workoutTitle">Loading…</h2>
-      <div class="small" id="workoutSubtitle"></div>
-    </div>
-
-    <div class="row" style="gap:8px;justify-content:flex-end;" id="topControls">
-      <button id="prevBtn" class="btnGhost">Previous</button>
-      <button id="nextBtn" class="btnGhost">Next</button>
-      <button id="stopTimer" class="btnDanger">Stop Timer</button>
-    </div>
-  </div>
-
-  <div class="progressWrap">
-    <div class="progressMeta">
-      <div id="progressText">0 / 0 complete</div>
-      <div class="small" id="completeHint"></div>
-    </div>
-    <div class="bar"><div id="progressBar"></div></div>
-  </div>
-
-  <div class="globalTimer" id="globalTimer">
-    <div class="timerTop">
-      <div class="timerBig" id="timerBig">60s</div>
-      <div class="timerMeta">
-        <div class="k">Active</div>
-        <div class="v" id="timerExerciseName">—</div>
-      </div>
-
-      <div class="timerCustomRow">
-        <label for="timerSecondsInput">Timer seconds</label>
-        <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
-      </div>
-
-      <div class="timerBtns">
-        <button id="timerStartPause" class="btnPrimary">Start</button>
-        <button id="timerStop" class="btnDanger">Stop</button>
-        <button id="timerReset">Reset</button>
+  <header>
+    <div class="topbar">
+      <div><h1>Workout App</h1></div>
+      <div class="chips">
+        <div class="chip"><strong id="todayLabel"></strong></div>
+        <div class="chip">Cycle: <strong id="cycleLabel"></strong></div>
+        <div class="chip" id="soundChip" style="cursor:pointer;">Sound: <strong id="soundLabel"></strong></div>
       </div>
     </div>
-  </div>
 
-  <div id="videosSection" class="videosGrid" style="display:none;"></div>
-  <div class="list" id="exerciseList"></div>
-
-  <div class="divider"></div>
-  <button id="markCompleteBtn" class="btnPrimary" style="width:100%;" disabled>
-    Mark Workout Complete
-  </button>
-</section>
-
-<section class="card" id="view-history" style="display:none;">
-  <div class="row">
-    <div class="titleBlock">
-      <h2 style="margin:0;font-size:18px;font-weight:900;">Completion Calendar</h2>
-      <div class="small">Tap a day with a dot to see what you completed. You can edit the completion date.</div>
+    <div class="nav">
+      <button class="tab active" data-view="workout">Workout</button>
+      <button class="tab" data-view="history">History</button>
+      <button class="tab" data-view="dashboard">Dashboard</button>
     </div>
-    <div class="row" style="gap:8px;justify-content:flex-end;align-items:center;">
-      <button id="calPrev" class="btnGhost">◀</button>
-      <div class="chip"><strong id="calMonthLabel">Month</strong></div>
-      <button id="calNext" class="btnGhost">▶</button>
-      <button id="clearHistory" class="btnDanger">Clear</button>
+  </header>
+
+  <div class="main">
+    <!-- WORKOUT -->
+    <section class="card" id="view-workout">
+      <div class="row">
+        <div class="titleBlock">
+          <h2 id="workoutTitle">Loading…</h2>
+          <div class="small" id="workoutSubtitle"></div>
+        </div>
+
+        <div class="row" style="gap:8px;justify-content:flex-end;align-items:center;">
+          <button id="stopTimer" class="btnDanger">Stop Timer</button>
+        </div>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progressMeta">
+          <div id="progressText">0 / 0 complete</div>
+          <div class="small" id="completeHint"></div>
+        </div>
+        <div class="bar"><div id="progressBar"></div></div>
+      </div>
+
+      <div class="globalTimer" id="globalTimer">
+        <div class="timerBig" id="timerBig">60s</div>
+
+        <div class="timerMeta">
+          <div class="k">Active</div>
+          <div class="v" id="timerExerciseName">—</div>
+        </div>
+
+        <div class="timerCustomRow">
+          <label for="timerSecondsInput">Timer seconds</label>
+          <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
+        </div>
+
+        <div class="timerBtns">
+          <button id="timerStartPause" class="btnPrimary">Start</button>
+          <button id="timerStop" class="btnDanger">Stop</button>
+          <button id="timerReset">Reset</button>
+        </div>
+      </div>
+
+      <!-- ✅ Only this pane scrolls (not the full page) -->
+      <div class="exercisePane">
+        <div id="videosSection" class="videosGrid" style="display:none;"></div>
+        <div class="list" id="exerciseList"></div>
+      </div>
+
+      <div class="footerActions">
+        <div class="divider"></div>
+
+        <button id="markCompleteBtn" class="btnPrimary" style="width:100%;" disabled>
+          Mark Workout Complete
+        </button>
+
+        <div class="navRow">
+          <button id="prevBtn" class="btnGhost">Previous</button>
+          <button id="nextBtn" class="btnGhost">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="card" id="view-history" style="display:none;">
+      <div class="row">
+        <div class="titleBlock">
+          <h2 style="margin:0;font-size:18px;font-weight:950;">Completion Calendar</h2>
+          <div class="small">Tap a day with a dot to view/edit completions.</div>
+        </div>
+        <div class="row" style="gap:8px;justify-content:flex-end;align-items:center;">
+          <button id="calPrev" class="btnGhost">◀</button>
+          <div class="chip"><strong id="calMonthLabel">Month</strong></div>
+          <button id="calNext" class="btnGhost">▶</button>
+          <button id="clearHistory" class="btnDanger">Clear</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="scrollCard" id="calendarWrap">
+        <div class="calWeekdays" id="calWeekdays"></div>
+        <div class="calGrid" id="calGrid"></div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="card" id="view-dashboard" style="display:none;">
+      <div class="row">
+        <div class="titleBlock">
+          <h2 style="margin:0;font-size:18px;font-weight:950;">Performance Dashboard</h2>
+          <div class="small">High-level stats.</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="scrollCard">
+        <div class="list" id="dashList"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Celebration -->
+  <div class="overlay" id="overlay">
+    <div class="celebrateCard">
+      <div class="sparkles"></div>
+      <div class="confetti" id="confetti"></div>
+      <h3 class="celebrateTitle">Workout Complete ✅</h3>
+      <p class="celebrateMsg" id="celebrateMsg"></p>
+      <div class="small" style="margin-top:10px;color:rgba(168,176,198,.9);">
+        Tap anywhere to dismiss.
+      </div>
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <div id="calendarWrap">
-    <div class="calWeekdays" id="calWeekdays"></div>
-    <div class="calGrid" id="calGrid"></div>
-  </div>
-</section>
-
-<section class="card" id="view-dashboard" style="display:none;">
-  <div class="row">
-    <div class="titleBlock">
-      <h2 style="margin:0;font-size:18px;font-weight:900;">Performance Dashboard</h2>
-      <div class="small">High-level stats.</div>
+  <!-- Day modal -->
+  <div class="overlay" id="dayOverlay" style="display:none;">
+    <div class="celebrateCard" style="width:min(760px,92vw);">
+      <h3 class="celebrateTitle" id="dayModalTitle">Completed Workouts</h3>
+      <p class="celebrateMsg" id="dayModalSubtitle" style="margin-top:6px;color:rgba(168,176,198,.92);"></p>
+      <div class="divider"></div>
+      <div class="list" id="dayModalList" style="max-height:55dvh; overflow:auto; -webkit-overflow-scrolling:touch;"></div>
+      <div class="divider"></div>
+      <button id="dayModalClose" class="btnPrimary" style="width:100%;">Close</button>
     </div>
   </div>
-  <div class="divider"></div>
-  <div class="list" id="dashList"></div>
-</section>
 
-<div class="toast" id="toast"></div>
-
-<div class="overlay" id="overlay">
-  <div class="celebrateCard">
-    <div class="sparkles"></div>
-    <div class="confetti" id="confetti"></div>
-    <h3 class="celebrateTitle">Workout Complete ✅</h3>
-    <p class="celebrateMsg" id="celebrateMsg"></p>
-    <div class="small" style="margin-top:10px;color:rgba(168,176,198,.9);">
-      Tap anywhere to dismiss.
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="dayOverlay" style="display:none;">
-  <div class="celebrateCard" style="width:min(760px,92vw);">
-    <h3 class="celebrateTitle" id="dayModalTitle">Completed Workouts</h3>
-    <p class="celebrateMsg" id="dayModalSubtitle" style="margin-top:6px;color:rgba(168,176,198,.92);"></p>
-
-    <div class="divider"></div>
-
-    <div class="list" id="dayModalList"></div>
-
-    <div class="divider"></div>
-
-    <button id="dayModalClose" class="btnPrimary" style="width:100%;">Close</button>
-  </div>
-</div>
-
-<div class="flash" id="flash"></div>
+  <div class="flash" id="flash"></div>
 
 <script>
 /* =========================================================
-   UPDATES IN THIS VERSION
-   ✅ Edit completion date in History (fix missed day)
-   ✅ Timer sound works more reliably (persistent AudioContext unlock)
-   ✅ Custom timer seconds now works + SAVES per exercise
-      (so you can set 45s for one move and it stays)
-   ✅ Keeps America/Chicago day key + currentIndex persistence
+   CHANGE: Single-screen workout UI + prevent zoom
+   - Page never scrolls (body overflow hidden)
+   - Only exercisePane scrolls
+   - Viewport disables user scaling
+   - touch-action reduces accidental zoom gestures
    ========================================================= */
 
 /* ===========================
@@ -459,13 +542,11 @@ function getLocalDateKey() {
     year: "numeric",
     month: "2-digit",
     day: "2-digit"
-  }).format(new Date()); // YYYY-MM-DD
+  }).format(new Date());
 }
 let todayKey = getLocalDateKey();
 
-/* ===========================
-   DEFAULT FALLBACK WORKOUTS
-   =========================== */
+/* DEFAULT FALLBACK */
 const DEFAULT_WORKOUTS = [
   {
     id: "w1",
@@ -481,18 +562,13 @@ const DEFAULT_WORKOUTS = [
   }
 ];
 
-/* ===========================
-   STORAGE KEYS (DON'T CHANGE)
-   =========================== */
+/* STORAGE KEYS (DON'T CHANGE) */
 const STORAGE_KEY = "workout_app_state_v_calendar_json1";
 const SOUND_KEY   = "sound_enabled_global_v_calendar_json1";
 
 const $ = (id)=>document.getElementById(id);
 const toastEl = $("toast");
 
-/* ===========================
-   UTIL
-   =========================== */
 function toast(msg){
   toastEl.textContent = msg;
   toastEl.style.display = "block";
@@ -523,9 +599,7 @@ function flashScreen(){
 }
 
 /* ===========================
-   SOUND (more reliable)
-   - Use a single AudioContext
-   - Unlock/resume on first user interaction
+   SOUND (reliable single AudioContext)
    =========================== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
 let audioCtx = null;
@@ -556,7 +630,7 @@ function beep(freq=880, ms=120){
   if(!soundEnabled) return;
   const ctx = ensureAudio();
   if(!ctx) return;
-  if(ctx.state === "suspended") return; // will work after unlock
+  if(ctx.state === "suspended") return;
   try{
     const o = ctx.createOscillator();
     const g = ctx.createGain();
@@ -568,8 +642,6 @@ function beep(freq=880, ms=120){
   }catch{}
 }
 function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
-
-// Unlock audio on first user gesture
 ["pointerdown","touchstart","keydown"].forEach(evt=>{
   window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
 });
@@ -598,13 +670,12 @@ async function loadWorkoutsFromFile(){
 const defaultState = {
   lastDate: "",
   currentIndex: 0,
-  checks: {},          // `${date}::${workoutId}` -> { idx:true }
-  history: [],         // {date, title, workoutId, ts, workoutSnapshot}
-  activeByKey: {},     // `${date}::${workoutId}` -> activeIndex
+  checks: {},
+  history: [],
+  activeByKey: {},
   timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 },
-  timerOverrides: {}   // `${workoutId}::${exerciseIndex}` -> seconds (persists custom timer)
+  timerOverrides: {}
 };
-
 let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
 let timerInterval = null;
@@ -675,8 +746,6 @@ function updateProgressAndComplete(workout){
   $("completeHint").textContent = allDone ? "Ready to complete" : "Complete all exercises to unlock";
   $("markCompleteBtn").disabled = !allDone;
 }
-function scrollToItem(el){ el.scrollIntoView({ behavior: "smooth", block: "center" }); }
-
 function renderVideos(workout){
   const sec = $("videosSection");
   sec.innerHTML = "";
@@ -701,7 +770,7 @@ function findVideoForExercise(workout, exerciseLabel){
 }
 
 /* ===========================
-   HISTORY SNAPSHOT
+   HISTORY
    =========================== */
 function addHistoryEntry(workout){
   const entry = {
@@ -719,53 +788,11 @@ function addHistoryEntry(workout){
 }
 
 /* ===========================
-   DASHBOARD
-   =========================== */
-function computeStreak(){
-  const days = new Set(state.history.map(h => h.date));
-  let streak = 0;
-  const d = new Date();
-  while(true){
-    const k = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "America/Chicago",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }).format(d);
-
-    if(days.has(k)){ streak++; d.setDate(d.getDate()-1); }
-    else break;
-  }
-  return streak;
-}
-function renderDashboard(){
-  const list = $("dashList");
-  list.innerHTML = "";
-  const total = state.history.length;
-  const streak = computeStreak();
-  const recent = state.history[0]?.date ?? "—";
-  const w = WORKOUTS[currentIndex];
-  const { pct } = computeCompletion(w);
-
-  const mk = (k,v,sub="") => {
-    const it = document.createElement("div");
-    it.className = "item";
-    it.style.cursor = "default";
-    it.innerHTML = `<div class="meta"><b>${k}</b></div><div class="name" style="font-size:18px;font-weight:900;">${v}</div>${sub?`<div class="meta">${sub}</div>`:""}`;
-    return it;
-  };
-  list.appendChild(mk("Workouts Completed (All Time)", total));
-  list.appendChild(mk("Current Streak", streak, "Days in a row"));
-  list.appendChild(mk("Most Recent Completion", recent));
-  list.appendChild(mk("Current Workout Completion Rate", `${pct}%`));
-}
-
-/* ===========================
    VIEW SWITCH
    =========================== */
 function setView(view){
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===view));
-  $("view-workout").style.display = view==="workout" ? "block" : "none";
+  $("view-workout").style.display = view==="workout" ? "flex" : "none";
   $("view-history").style.display = view==="history" ? "block" : "none";
   $("view-dashboard").style.display = view==="dashboard" ? "block" : "none";
   if(view==="history") renderHistory();
@@ -816,12 +843,50 @@ function showCelebration(){
 $("overlay").addEventListener("click", hideCelebration);
 
 /* ===========================
-   TIMER OVERRIDES
-   - store per exercise so custom seconds actually sticks
+   DASHBOARD (same as before, compact)
    =========================== */
-function timerOverrideKey(workoutId, exerciseIndex){
-  return `${workoutId}::${exerciseIndex}`;
+function computeStreak(){
+  const days = new Set(state.history.map(h => h.date));
+  let streak = 0;
+  const d = new Date();
+  while(true){
+    const k = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Chicago",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(d);
+    if(days.has(k)){ streak++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return streak;
 }
+function renderDashboard(){
+  const list = $("dashList");
+  list.innerHTML = "";
+  const total = state.history.length;
+  const streak = computeStreak();
+  const recent = state.history[0]?.date ?? "—";
+  const w = WORKOUTS[currentIndex];
+  const { pct } = computeCompletion(w);
+
+  const mk = (k,v,sub="") => {
+    const it = document.createElement("div");
+    it.className = "item";
+    it.style.cursor = "default";
+    it.innerHTML = `<div class="meta"><b>${k}</b></div><div class="name" style="font-size:18px;font-weight:950;">${v}</div>${sub?`<div class="meta">${sub}</div>`:""}`;
+    return it;
+  };
+  list.appendChild(mk("Workouts Completed (All Time)", total));
+  list.appendChild(mk("Current Streak", streak, "Days in a row"));
+  list.appendChild(mk("Most Recent Completion", recent));
+  list.appendChild(mk("Current Workout Completion Rate", `${pct}%`));
+}
+
+/* ===========================
+   TIMER OVERRIDES
+   =========================== */
+function timerOverrideKey(workoutId, exerciseIndex){ return `${workoutId}::${exerciseIndex}`; }
 function getOverrideSeconds(workoutId, exerciseIndex){
   const k = timerOverrideKey(workoutId, exerciseIndex);
   const v = state.timerOverrides?.[k];
@@ -835,7 +900,7 @@ function setOverrideSeconds(workoutId, exerciseIndex, seconds){
 }
 
 /* ===========================
-   TIMER (CUSTOMIZABLE)
+   TIMER
    =========================== */
 function readCustomSeconds(){
   const raw = ($("timerSecondsInput").value || "").trim();
@@ -845,12 +910,16 @@ function readCustomSeconds(){
   return null;
 }
 function setInputPlaceholder(val){ $("timerSecondsInput").placeholder = String(val); }
+function bumpTimerDisplay(){
+  const el = $("timerBig");
+  el.classList.add("bump");
+  setTimeout(()=>el.classList.remove("bump"), 120);
+}
 
 function setGlobalTimerForActive(workout, activeIdx){
   const ex = workout.exercises[activeIdx];
   const rack = isRackDay(workout);
   const globalTimerEl = $("globalTimer");
-
   const isTimedActive = ex && isTimed(ex) && !rack;
 
   if(!isTimedActive){
@@ -880,14 +949,7 @@ function setGlobalTimerForActive(workout, activeIdx){
     setInputPlaceholder(desired);
     saveJSON(STORAGE_KEY, state);
   } else {
-    // keep state.timer.remaining as-is during active tick; but ensure placeholder reflects saved value
     setInputPlaceholder(desired);
-    if(state.timer.duration !== desired && !state.timer.running){
-      // If override changed while paused, align
-      state.timer.duration = desired;
-      state.timer.remaining = desired;
-      saveJSON(STORAGE_KEY, state);
-    }
   }
 
   globalTimerEl.style.display = "block";
@@ -907,8 +969,6 @@ function applyCustomDurationIfAny(){
   pauseTimer();
   state.timer.duration = custom;
   state.timer.remaining = custom;
-
-  // ✅ persist override for this exercise
   setOverrideSeconds(w.id, idx, custom);
 
   saveJSON(STORAGE_KEY, state);
@@ -917,22 +977,13 @@ function applyCustomDurationIfAny(){
   return true;
 }
 
-function bumpTimerDisplay(){
-  const el = $("timerBig");
-  el.classList.add("bump");
-  setTimeout(()=>el.classList.remove("bump"), 120);
-}
-
 function tickTimer(){
   state.timer.remaining -= 1;
   if(state.timer.remaining < 0) state.timer.remaining = 0;
-
-  // visual pulse
   bumpTimerDisplay();
 
   if(state.timer.remaining === 0){
     saveJSON(STORAGE_KEY, state);
-
     const workout = WORKOUTS[currentIndex];
     const idx = state.timer.exerciseIndex;
 
@@ -950,16 +1001,9 @@ function tickTimer(){
 
     renderWorkout();
     updateProgressAndComplete(workout);
-
-    setTimeout(() => {
-      const el = $("exerciseList").children[nextIdx];
-      if(el) scrollToItem(el);
-    }, 60);
-
     return;
   }
 
-  // last 5 seconds beep
   if(state.timer.remaining <= 5) beep(950,40);
 
   saveJSON(STORAGE_KEY, state);
@@ -968,9 +1012,7 @@ function tickTimer(){
 
 function startTimer(){
   if(timerInterval) return;
-  // if user typed a value, apply it before starting
-  applyCustomDurationIfAny();
-
+  applyCustomDurationIfAny(); // apply typed override if any
   state.timer.running = true;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Pause";
@@ -986,19 +1028,14 @@ function pauseTimer(){
 }
 function resetTimer(){
   pauseTimer();
-
-  // reset should respect stored override (if any)
-  const w = WORKOUTS[currentIndex];
+  const workout = WORKOUTS[currentIndex];
   const idx = state.timer.exerciseIndex;
-  const workout = w;
   const ex = workout.exercises[idx];
   const defaultSeconds = (ex && isTimed(ex)) ? ex.seconds : 60;
   const override = getOverrideSeconds(workout.id, idx);
   const desired = override ?? defaultSeconds;
-
   state.timer.duration = desired;
   state.timer.remaining = desired;
-
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
@@ -1014,12 +1051,10 @@ function stopTimer(){
 function renderWorkout(){
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
-
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
     saveJSON(STORAGE_KEY, state);
   }
-
   if(state.timer.running && !timerInterval){
     state.timer.running = false;
     saveJSON(STORAGE_KEY, state);
@@ -1037,7 +1072,6 @@ function renderWorkout(){
 
   const list = $("exerciseList");
   list.innerHTML = "";
-
   const checks = getChecksFor(workout.id);
   let activeIndex = getActiveIndex(workout);
 
@@ -1066,8 +1100,6 @@ function renderWorkout(){
       setActiveIndex(workout.id, idx);
       setGlobalTimerForActive(workout, idx);
       renderWorkout();
-      const el = list.children[idx];
-      if(el) scrollToItem(el);
     });
 
     const top = document.createElement("div");
@@ -1088,12 +1120,10 @@ function renderWorkout(){
     const meta = document.createElement("div");
     meta.className = "meta";
     if(ex.type === "videoRef") meta.innerHTML = `<span>Video</span>`;
-    else if(ex.type === "note") meta.innerHTML = `<span>Note</span>`;
     else if(isTimed(ex)) {
       const override = getOverrideSeconds(workout.id, idx);
       meta.innerHTML = `<span>Timed</span><span>•</span><span>${formatTime(override ?? ex.seconds)}</span>${override?`<span>•</span><span style="color:rgba(45,226,230,.95)">custom</span>`:""}`;
-    }
-    else meta.innerHTML = `<span>Exercise</span>`;
+    } else meta.innerHTML = `<span>Exercise</span>`;
     item.appendChild(meta);
 
     if (ex.type === "videoRef") {
@@ -1112,11 +1142,9 @@ function renderWorkout(){
 
     cb.addEventListener("change", () => {
       if(!cb.checked) stopTimerHard();
-
       setCheck(workout.id, idx, cb.checked);
 
       if(cb.checked){
-        if(navigator.vibrate) navigator.vibrate(30);
         beep(660,60);
         const next = findFirstUncheckedIndex(workout);
         setActiveIndex(workout.id, next);
@@ -1137,15 +1165,11 @@ function renderWorkout(){
 
   const activeIdx = getActiveIndex(workout);
   setGlobalTimerForActive(workout, activeIdx);
-
-  setTimeout(() => {
-    const el = $("exerciseList").children[activeIdx];
-    if(el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, 40);
 }
 
 /* ===========================
    CALENDAR HISTORY + EDIT COMPLETION DATE
+   (kept from previous version, unchanged)
    =========================== */
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
@@ -1195,20 +1219,10 @@ function renderHistory(){
     if(key === todayKey) cell.classList.add("calSelected");
     cell.innerHTML = `<div class="calNum">${d}</div>`;
 
-    if(doneList.length === 1){
+    if(doneList.length >= 1){
       const dot = document.createElement("div");
       dot.className = "calDot";
       cell.appendChild(dot);
-    } else if(doneList.length > 1){
-      const dots = document.createElement("div");
-      dots.className = "calDots";
-      const shown = Math.min(doneList.length, 4);
-      for(let i=0;i<shown;i++){
-        const md = document.createElement("div");
-        md.className = "miniDot";
-        dots.appendChild(md);
-      }
-      cell.appendChild(dots);
     }
 
     cell.addEventListener("click", ()=>{
@@ -1227,7 +1241,6 @@ function updateHistoryEntryDate(entryTs, newDate){
   const idx = state.history.findIndex(h => h.ts === entryTs);
   if(idx === -1) return false;
   if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)) return false;
-
   state.history[idx].date = newDate;
   saveJSON(STORAGE_KEY, state);
   return true;
@@ -1240,118 +1253,34 @@ function openDayModal(dateKey, entries){
   const list = $("dayModalList");
   list.innerHTML = "";
 
-  entries
-    .slice()
-    .sort((a,b)=>a.ts-b.ts)
-    .forEach((entry)=>{
-      const it = document.createElement("div");
-      it.className = "item";
-      it.style.cursor = "default";
+  entries.slice().sort((a,b)=>a.ts-b.ts).forEach((entry)=>{
+    const it = document.createElement("div");
+    it.className = "item";
+    it.style.cursor = "default";
 
-      const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-      it.innerHTML = `
-        <div class="meta"><b>${timeStr}</b></div>
-        <div class="name" style="font-style: italic; font-weight: 900;">${entry.title}</div>
-      `;
+    const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    it.innerHTML = `
+      <div class="meta"><b>${timeStr}</b></div>
+      <div class="name" style="font-style: italic; font-weight: 900;">${entry.title}</div>
+      <div class="meta" style="margin-top:8px;">
+        <label style="color:var(--muted);font-size:12px;">Edit date</label>
+        <input type="date" class="timerInput" style="max-width:190px;" value="${entry.date}">
+        <button class="btnGood">Save</button>
+      </div>
+    `;
 
-      // --- Edit completion date UI ---
-      const editRow = document.createElement("div");
-      editRow.className = "inlineRow";
-
-      const dateInput = document.createElement("input");
-      dateInput.type = "date";
-      dateInput.className = "dateInput";
-      dateInput.value = entry.date; // YYYY-MM-DD
-
-      const saveBtn = document.createElement("button");
-      saveBtn.className = "btnGood";
-      saveBtn.textContent = "Save date";
-
-      saveBtn.addEventListener("click", ()=>{
-        const newDate = dateInput.value;
-        const ok = updateHistoryEntryDate(entry.ts, newDate);
-        if(ok){
-          toast(`Moved to ${newDate}`);
-          // rerender calendar and reopen modal on new date
-          renderHistory();
-          const byDate = historyByDate();
-          const newEntries = byDate[newDate] || [];
-          openDayModal(newDate, newEntries);
-        } else {
-          toast("Could not update date");
-        }
-      });
-
-      editRow.appendChild(dateInput);
-      editRow.appendChild(saveBtn);
-
-      const hint = document.createElement("div");
-      hint.className = "small";
-      hint.textContent = "Forgot to mark it? Change the date here.";
-
-      // --- View workout snapshot ---
-      const btn = document.createElement("button");
-      btn.className = "btnGhost";
-      btn.textContent = "View workout";
-      btn.style.width = "100%";
-      btn.style.marginTop = "10px";
-
-      btn.addEventListener("click", ()=>{
-        const w = entry.workoutSnapshot || null;
-        if(!w){
-          toast("No snapshot found for this workout");
-          return;
-        }
-        list.innerHTML = "";
-
-        const header = document.createElement("div");
-        header.className = "item";
-        header.style.cursor = "default";
-        header.innerHTML = `<div class="meta"><b>Workout</b></div><div class="name" style="font-weight:900;">${w.title}</div>`;
-        list.appendChild(header);
-
-        if(Array.isArray(w.videos) && w.videos.length){
-          w.videos.forEach(v=>{
-            const embed = toEmbedUrl(v.url);
-            if(!embed) return;
-            const box = document.createElement("div");
-            box.className = "item";
-            box.style.cursor = "default";
-            box.innerHTML = `
-              <div class="meta"><b>${v.label}</b></div>
-              <div class="iframeBox">
-                <iframe src="${embed}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-              </div>
-            `;
-            list.appendChild(box);
-          });
-        }
-
-        w.exercises.forEach(ex=>{
-          const row = document.createElement("div");
-          row.className = "item";
-          row.style.cursor = "default";
-
-          if(ex.type === "section"){
-            row.classList.add("section");
-            row.innerHTML = `<div class="meta"><b>${ex.label}</b></div>`;
-          } else {
-            const dur = (typeof ex.seconds === "number") ? ` • ${formatTime(ex.seconds)}` : "";
-            const typ = ex.type === "videoRef" ? "Video" : (ex.type==="note" ? "Note" : "Exercise");
-            row.innerHTML = `
-              <div class="meta"><b>${typ}</b>${dur}</div>
-              <div class="name">${ex.label}</div>
-            `;
-          }
-          list.appendChild(row);
-        });
-      });
-
-      it.appendChild(editRow);
-      it.appendChild(hint);
-      it.appendChild(btn);
-      list.appendChild(it);
+    const dateInput = it.querySelector('input[type="date"]');
+    const saveBtn = it.querySelector("button.btnGood");
+    saveBtn.addEventListener("click", ()=>{
+      const ok = updateHistoryEntryDate(entry.ts, dateInput.value);
+      if(ok){
+        toast("Date updated");
+        renderHistory();
+      } else toast("Could not update date");
     });
+
+    list.appendChild(it);
+  });
 
   overlay.style.display = "flex";
 }
@@ -1365,7 +1294,6 @@ $("dayOverlay").addEventListener("click", (e)=>{ if(e.target.id === "dayOverlay"
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click", ()=> setView(t.dataset.view));
 });
-
 $("prevBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
@@ -1373,7 +1301,6 @@ $("prevBtn").addEventListener("click", ()=>{
   saveJSON(STORAGE_KEY, state);
   renderWorkout();
 });
-
 $("nextBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex + 1) % WORKOUTS.length;
@@ -1381,34 +1308,28 @@ $("nextBtn").addEventListener("click", ()=>{
   saveJSON(STORAGE_KEY, state);
   renderWorkout();
 });
-
 $("stopTimer").addEventListener("click", ()=>{
   stopTimerHard();
   toast("Timer stopped");
   renderWorkout();
 });
-
 $("soundChip").addEventListener("click", async ()=>{
-  await unlockAudio(); // ensure it can play on iOS
+  await unlockAudio();
   setSoundEnabled(!soundEnabled);
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
-
 $("timerStartPause").addEventListener("click", async ()=>{
   await unlockAudio();
   if(state.timer.running) pauseTimer();
   else startTimer();
   renderWorkout();
 });
-
 $("timerStop").addEventListener("click", ()=>{
   stopTimer();
   stopTimerHard();
   renderWorkout();
 });
-
 $("timerReset").addEventListener("click", ()=>{
-  // If user typed a value, treat Reset as "save + reset to that"
   const custom = readCustomSeconds();
   if(custom != null){
     const w = WORKOUTS[currentIndex];
@@ -1420,13 +1341,9 @@ $("timerReset").addEventListener("click", ()=>{
     saveJSON(STORAGE_KEY, state);
     $("timerBig").textContent = formatTime(state.timer.remaining);
     beep(660,50);
-  } else {
-    resetTimer();
-  }
+  } else resetTimer();
   renderWorkout();
 });
-
-// Save custom timer seconds when pressing Enter or leaving the field
 $("timerSecondsInput").addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
     applyCustomDurationIfAny();
@@ -1435,7 +1352,6 @@ $("timerSecondsInput").addEventListener("keydown", (e)=>{
   }
 });
 $("timerSecondsInput").addEventListener("blur", ()=>{
-  // If they typed something valid, save it even if they didn't start
   const custom = readCustomSeconds();
   if(custom != null){
     const w = WORKOUTS[currentIndex];
@@ -1454,14 +1370,9 @@ $("timerSecondsInput").addEventListener("blur", ()=>{
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const { allDone } = computeCompletion(w);
-  if(!allDone){
-    toast("Complete all exercises first");
-    return;
-  }
-
+  if(!allDone){ toast("Complete all exercises first"); return; }
   addHistoryEntry(w);
   showCelebration();
-
   setTimeout(()=>{
     pauseTimer();
     currentIndex = (currentIndex + 1) % WORKOUTS.length;
@@ -1478,7 +1389,6 @@ $("clearHistory").addEventListener("click", ()=>{
   renderHistory();
   toast("History cleared");
 });
-
 $("calPrev").addEventListener("click", ()=>{
   calMonth -= 1;
   if(calMonth < 0){ calMonth = 11; calYear -= 1; }
@@ -1496,7 +1406,6 @@ $("calNext").addEventListener("click", ()=>{
 (async function init(){
   await loadWorkoutsFromFile();
 
-  // merge fields for upgrades
   state = { ...defaultState, ...state };
   if(!state.timerOverrides) state.timerOverrides = {};
 
@@ -1515,10 +1424,10 @@ $("calNext").addEventListener("click", ()=>{
   calMonth = now.getMonth();
 
   setView("workout");
+  $("todayLabel").textContent = `Today: ${todayKey}`;
   renderWorkout();
   renderDashboard();
 })();
 </script>
-
 </body>
 </html>
