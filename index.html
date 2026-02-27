@@ -79,7 +79,7 @@
 
     h1{
       margin:0;
-      font-size:18px;
+      font-size:16px;
       letter-spacing:.25px;
       font-weight:900;
       opacity:.95;
@@ -122,7 +122,6 @@
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      margin-top:2px;
     }
 
     .tab{
@@ -157,10 +156,6 @@
       padding:12px;
       overflow:hidden;
     }
-
-    .divider{height:1px;background: rgba(255,255,255,.10);margin: 10px 0;}
-    .small{font-size:12px;color:var(--muted);}
-    .subtle{font-size:12px;color:var(--muted2);}
 
     button{
       appearance:none;
@@ -199,7 +194,11 @@
       box-shadow: 0 0 0 3px rgba(45,212,191,.10);
     }
 
-    /* ===== Progress ===== */
+    .divider{height:1px;background: rgba(255,255,255,.10);margin: 10px 0;}
+    .small{font-size:12px;color:var(--muted);}
+    .subtle{font-size:12px;color:var(--muted2);}
+
+    /* Progress */
     .progressWrap{display:flex;flex-direction:column;gap:8px;}
     .progressMeta{
       display:flex;
@@ -226,13 +225,14 @@
       box-shadow: 0 0 16px rgba(45,226,230,.25);
     }
 
-    /* ===== Workout View ===== */
+    /* ===== WORKOUT SCREEN LAYOUT (wireframe-like) ===== */
     #view-workout{
       display:flex;
       flex-direction:column;
       gap:10px;
       flex:1 1 auto;
       min-height:0;
+      padding:12px;
     }
 
     .workoutHeaderRow{
@@ -241,27 +241,39 @@
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
+      flex:0 0 auto;
     }
 
+    /* Smaller workout header */
     #workoutTitle{
       margin:0;
-      font-size: 26px;
+      font-size:18px; /* reduced */
       font-weight: 950;
-      letter-spacing:.25px;
-      line-height:1.12;
-      text-shadow: 0 6px 22px rgba(0,0,0,.35);
+      letter-spacing:.2px;
+      line-height:1.15;
+      text-shadow: 0 6px 18px rgba(0,0,0,.30);
     }
 
-    /* ACTIVE box dominates screen */
+    /* Main stack area inside workout screen */
+    .workoutStack{
+      flex: 1 1 auto;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:hidden;
+    }
+
+    /* ACTIVE pane: big */
     .activePane{
       flex: 1 1 auto;
-      min-height: 0;
+      min-height:0;
       border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.20);
-      overflow:hidden;
       box-shadow: var(--glow);
       border-color: rgba(124,92,255,.38);
+      overflow:hidden;
       display:flex;
       flex-direction:column;
     }
@@ -288,6 +300,7 @@
       color:rgba(168,176,198,.82);
     }
 
+    /* Scroll lives here so timer never gets cut off */
     .activeBody{
       flex:1 1 auto;
       min-height:0;
@@ -346,7 +359,20 @@
       letter-spacing:.15px;
     }
 
-    /* Timer (always visible on non-rack days) */
+    /* Video */
+    .iframeBox{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      border-radius: 18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:#000;
+      box-shadow: 0 0 0 3px rgba(45,226,230,.08);
+    }
+    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+    /* Timer */
     .timerCard{
       border-radius: 18px;
       border:1px solid rgba(255,255,255,.10);
@@ -376,7 +402,6 @@
       flex-direction:column;
       gap:10px;
     }
-
     .timerCustomRow{
       display:flex;
       gap:10px;
@@ -401,7 +426,6 @@
       font-size: 14px;
       outline: none;
     }
-
     .timerBtns{
       display:flex;
       gap:10px;
@@ -417,7 +441,6 @@
       text-transform: uppercase;
       border-radius: 16px;
     }
-
     .timerDisabled{
       display:none;
       padding:10px 12px;
@@ -428,26 +451,43 @@
       font-weight:800;
     }
 
-    /* Active video */
-    .iframeBox{
-      position:relative;
-      width:100%;
-      padding-top:56.25%;
-      border-radius: 18px;
-      overflow:hidden;
+    /* Next exercise small pane (wireframe) */
+    .nextPane{
+      flex: 0 0 auto;
+      border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
-      background:#000;
-      box-shadow: 0 0 0 3px rgba(45,226,230,.08);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
     }
-    iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
-
-    /* Footer actions */
-    .footerActions{
-      flex:0 0 auto;
+    .nextBody{
+      padding:12px;
       display:flex;
       flex-direction:column;
+      gap:6px;
+    }
+    .nextTitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing:.2px;
+    }
+    .nextMeta{
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
       gap:10px;
-      margin-top: 4px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    /* Sticky footer inside workout card */
+    .footerActions{
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(7,8,18,0), rgba(7,8,18,.65) 30%, rgba(7,8,18,.92));
+      padding-top:10px;
+      margin-top:6px;
+      flex:0 0 auto;
     }
     .navRow{display:flex;gap:10px;width:100%;}
     .navRow button{flex:1;}
@@ -585,7 +625,7 @@
 
     <div class="chips">
       <div class="chip"><strong id="todayLabel"></strong></div>
-      <div class="chip">Cycle: <strong id="cycleLabel"></strong></div>
+      <div class="chip">Workout: <strong id="cycleLabel"></strong></div>
       <div class="chip" id="soundChip" style="cursor:pointer;">Sound: <strong id="soundLabel"></strong></div>
     </div>
   </div>
@@ -608,10 +648,6 @@
         <h2 id="workoutTitle">Loading…</h2>
         <div class="subtle" id="workoutSubtitle"></div>
       </div>
-
-      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-        <button id="stopTimer" class="btnDanger">Stop Timer</button>
-      </div>
     </div>
 
     <div class="progressWrap">
@@ -622,65 +658,79 @@
       <div class="bar"><div id="progressBar"></div></div>
     </div>
 
-    <!-- ACTIVE DOMINATES -->
-    <div class="activePane">
-      <div class="paneHeader">
-        <b>Active</b>
-        <div class="count" id="activeCount">—</div>
+    <div class="workoutStack">
+      <!-- ACTIVE BIG -->
+      <div class="activePane">
+        <div class="paneHeader">
+          <b>Active Exercise</b>
+          <div class="count" id="activeCount">—</div>
+        </div>
+
+        <div class="activeBody">
+          <div class="activeTitleRow">
+            <div>
+              <p class="activeTitle" id="activeTitle">—</p>
+              <div class="activeMeta" id="activeMeta"></div>
+            </div>
+
+            <div class="activeControls">
+              <button id="activePrevBtn" class="btnGhost">Prev</button>
+              <button id="activeNextBtn" class="btnGhost">Next</button>
+            </div>
+          </div>
+
+          <div class="checkRow" id="activeCheckRow">
+            <input id="activeCheckbox" type="checkbox" />
+            <div class="label" id="activeLabel">—</div>
+          </div>
+
+          <!-- Video (for rack video exercises) -->
+          <div class="iframeBox" id="activeVideoBox" style="display:none;">
+            <iframe id="activeVideoFrame"
+                    src=""
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+          </div>
+
+          <!-- Timer (always visible; defaults to 60 unless exercise has seconds) -->
+          <div class="timerCard" id="timerCard">
+            <div class="timerBig" id="timerBig">60s</div>
+            <div class="timerInner">
+              <div class="subtle" id="timerExerciseName">—</div>
+
+              <div class="timerDisabled" id="timerDisabled">
+                This exercise has no built-in time. Use the default 60s or set custom.
+              </div>
+
+              <div class="timerCustomRow">
+                <label for="timerSecondsInput">Custom seconds</label>
+                <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
+              </div>
+
+              <div class="timerBtns">
+                <button id="timerStartPause" class="btnPrimary">Start</button>
+                <button id="timerStop" class="btnDanger">Stop</button>
+                <button id="timerReset">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="activeBody">
-        <div class="activeTitleRow">
-          <div>
-            <p class="activeTitle" id="activeTitle">—</p>
-            <div class="activeMeta" id="activeMeta"></div>
-          </div>
-
-          <div class="activeControls">
-            <button id="activePrevBtn" class="btnGhost">Prev</button>
-            <button id="activeNextBtn" class="btnGhost">Next</button>
-          </div>
+      <!-- NEXT SMALL (wireframe) -->
+      <div class="nextPane">
+        <div class="paneHeader">
+          <b>Next Exercise</b>
+          <div class="count" id="nextCount">—</div>
         </div>
-
-        <div class="checkRow" id="activeCheckRow">
-          <input id="activeCheckbox" type="checkbox" />
-          <div class="label" id="activeLabel">—</div>
+        <div class="nextBody">
+          <p class="nextTitle" id="nextTitle">—</p>
+          <div class="nextMeta" id="nextMeta"></div>
         </div>
-
-        <!-- Active video -->
-        <div class="iframeBox" id="activeVideoBox" style="display:none;">
-          <iframe id="activeVideoFrame"
-                  src=""
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen></iframe>
-        </div>
-
-        <!-- Timer ALWAYS PRESENT ON NON-RACK DAYS -->
-        <div class="timerCard" id="timerCard">
-          <div class="timerBig" id="timerBig">60s</div>
-          <div class="timerInner">
-            <div class="subtle" id="timerExerciseName">—</div>
-
-            <div class="timerDisabled" id="timerDisabled">
-              No timer for this exercise. Move on, or set a custom timer anyway.
-            </div>
-
-            <div class="timerCustomRow">
-              <label for="timerSecondsInput">Custom seconds</label>
-              <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
-            </div>
-
-            <div class="timerBtns">
-              <button id="timerStartPause" class="btnPrimary">Start</button>
-              <button id="timerStop" class="btnDanger">Stop</button>
-              <button id="timerReset">Reset</button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
+    <!-- Sticky footer -->
     <div class="footerActions">
       <div class="divider"></div>
 
@@ -927,11 +977,6 @@ function setCheck(workoutId, itemIndex, value){
 }
 function isCheckable(ex){ return ex.type !== "section"; }
 function isTimed(ex){ return typeof ex.seconds === "number" && ex.seconds > 0; }
-function isRackDay(workout){
-  const checkable = workout.exercises.filter(isCheckable);
-  if(checkable.length === 0) return false;
-  return checkable.every(ex => ex.type === "videoRef");
-}
 function findFirstUncheckedIndex(workout){
   const checks = getChecksFor(workout.id);
   for(let i=0;i<workout.exercises.length;i++){
@@ -1037,7 +1082,7 @@ const CELEBRATION_MESSAGES = [
   "Another workout completed. Shocking behavior."
 ];
 function spawnConfetti(){
-  const box = $("confetti");
+  const box = document.getElementById("confetti");
   box.innerHTML = "";
   const n = 26;
   for(let i=0;i<n;i++){
@@ -1053,21 +1098,21 @@ function spawnConfetti(){
 }
 let celebrationTimeout = null;
 function hideCelebration(){
-  $("overlay").style.display = "none";
+  document.getElementById("overlay").style.display = "none";
   if(celebrationTimeout) clearTimeout(celebrationTimeout);
   celebrationTimeout = null;
 }
 function showCelebration(){
   const msg = CELEBRATION_MESSAGES[Math.floor(Math.random()*CELEBRATION_MESSAGES.length)];
-  $("celebrateMsg").textContent = msg;
+  document.getElementById("celebrateMsg").textContent = msg;
   spawnConfetti();
-  $("overlay").style.display = "flex";
+  document.getElementById("overlay").style.display = "flex";
   successChime();
   if(navigator.vibrate) navigator.vibrate([80,40,80]);
   if(celebrationTimeout) clearTimeout(celebrationTimeout);
   celebrationTimeout = setTimeout(hideCelebration, 10000);
 }
-$("overlay").addEventListener("click", hideCelebration);
+document.getElementById("overlay").addEventListener("click", hideCelebration);
 
 /* ===========================
    DASHBOARD
@@ -1089,7 +1134,7 @@ function computeStreak(){
   return streak;
 }
 function renderDashboard(){
-  const list = $("dashList");
+  const list = document.getElementById("dashList");
   list.innerHTML = "";
   const total = state.history.length;
   const streak = computeStreak();
@@ -1130,15 +1175,15 @@ function setOverrideSeconds(workoutId, exerciseIndex, seconds){
    TIMER
    =========================== */
 function readCustomSeconds(){
-  const raw = ($("timerSecondsInput").value || "").trim();
+  const raw = (document.getElementById("timerSecondsInput").value || "").trim();
   if(raw === "") return null;
   const n = parseInt(raw, 10);
   if(Number.isFinite(n) && n >= 10 && n <= 600) return n;
   return null;
 }
-function setInputPlaceholder(val){ $("timerSecondsInput").placeholder = String(val); }
+function setInputPlaceholder(val){ document.getElementById("timerSecondsInput").placeholder = String(val); }
 function bumpTimerDisplay(){
-  const el = $("timerBig");
+  const el = document.getElementById("timerBig");
   el.classList.add("bump");
   setTimeout(()=>el.classList.remove("bump"), 120);
 }
@@ -1155,7 +1200,7 @@ function applyCustomDurationIfAny(){
   setOverrideSeconds(w.id, idx, custom);
 
   saveJSON(STORAGE_KEY, state);
-  $("timerBig").textContent = formatTime(state.timer.remaining);
+  document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
   return true;
 }
@@ -1189,14 +1234,14 @@ function tickTimer(){
   if(state.timer.remaining <= 5) beep(950,40);
 
   saveJSON(STORAGE_KEY, state);
-  $("timerBig").textContent = formatTime(state.timer.remaining);
+  document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
 }
 function startTimer(){
   if(timerInterval) return;
   applyCustomDurationIfAny();
   state.timer.running = true;
   saveJSON(STORAGE_KEY, state);
-  $("timerStartPause").textContent = "Pause";
+  document.getElementById("timerStartPause").textContent = "Pause";
   beep(520,70);
   timerInterval = setInterval(tickTimer, 1000);
 }
@@ -1205,7 +1250,7 @@ function pauseTimer(){
   timerInterval = null;
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
-  $("timerStartPause").textContent = "Start";
+  document.getElementById("timerStartPause").textContent = "Start";
 }
 function resetTimer(){
   pauseTimer();
@@ -1220,12 +1265,8 @@ function resetTimer(){
   state.timer.duration = desired;
   state.timer.remaining = desired;
   saveJSON(STORAGE_KEY, state);
-  $("timerBig").textContent = formatTime(state.timer.remaining);
+  document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
   beep(660,50);
-}
-function stopTimer(){
-  pauseTimer();
-  toast("Timer stopped");
 }
 
 /* ===========================
@@ -1233,7 +1274,7 @@ function stopTimer(){
    =========================== */
 function renderWorkout(){
   todayKey = getLocalDateKey();
-  $("todayLabel").textContent = `Today: ${todayKey}`;
+  document.getElementById("todayLabel").textContent = `Today: ${todayKey}`;
 
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
@@ -1245,28 +1286,23 @@ function renderWorkout(){
   }
 
   const workout = WORKOUTS[currentIndex];
-  $("workoutTitle").textContent = workout.title;
-  $("cycleLabel").textContent = `${currentIndex + 1} / ${WORKOUTS.length}`;
+  document.getElementById("workoutTitle").textContent = workout.title;
+  document.getElementById("cycleLabel").textContent = `${currentIndex + 1} / ${WORKOUTS.length}`;
   setSoundEnabled(soundEnabled);
-
-  const rack = isRackDay(workout);
-  $("stopTimer").style.display = rack ? "none" : "inline-block";
 
   const checks = getChecksFor(workout.id);
 
+  // Active index: keep saved value, don't auto-jump unless it points to a non-checkable
   let activeIdx = getActiveIndex(workout);
-  if(isCheckable(workout.exercises[activeIdx]) && checks[activeIdx]){
-    activeIdx = findFirstUncheckedIndex(workout);
-    setActiveIndex(workout.id, activeIdx);
-  }
+  if(!isCheckable(workout.exercises[activeIdx])) activeIdx = findFirstUncheckedIndex(workout);
 
   const activeEx = workout.exercises[activeIdx];
 
-  $("activeCount").textContent = `${activeIdx+1} / ${workout.exercises.length}`;
-  $("activeTitle").textContent = activeEx?.label ?? "—";
-  $("activeLabel").textContent = activeEx?.label ?? "—";
+  document.getElementById("activeCount").textContent = `${activeIdx+1} / ${workout.exercises.length}`;
+  document.getElementById("activeTitle").textContent = activeEx?.label ?? "—";
+  document.getElementById("activeLabel").textContent = activeEx?.label ?? "—";
 
-  const meta = $("activeMeta");
+  const meta = document.getElementById("activeMeta");
   meta.innerHTML = "";
   const bits = displayTypeMeta(activeEx);
   bits.forEach((m, k)=>{
@@ -1281,18 +1317,21 @@ function renderWorkout(){
     }
   });
 
-  $("activeCheckbox").checked = !!checks[activeIdx];
+  const cb = document.getElementById("activeCheckbox");
+  cb.checked = !!checks[activeIdx];
 
-  $("activeCheckRow").onclick = (e)=>{
+  document.getElementById("activeCheckRow").onclick = (e)=>{
     if(e.target && e.target.id === "activeCheckbox") return;
-    $("activeCheckbox").checked = !$("activeCheckbox").checked;
-    $("activeCheckbox").dispatchEvent(new Event("change"));
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event("change"));
   };
-  $("activeCheckbox").onchange = ()=>{
-    const checked = $("activeCheckbox").checked;
+
+  cb.onchange = ()=>{
+    const checked = cb.checked;
     if(!checked) stopTimerHard();
     setCheck(workout.id, activeIdx, checked);
 
+    // If checked, auto-advance to next unchecked checkable
     if(checked){
       beep(660,60);
       const nextUnchecked = findFirstUncheckedIndex(workout);
@@ -1306,15 +1345,17 @@ function renderWorkout(){
     updateProgressAndComplete(workout);
   };
 
-  // Prev/Next within workout
+  // Exercise prev/next
   const prevIdx = findPrevCheckableIndex(workout, activeIdx);
   const nextIdx = findNextCheckableIndex(workout, activeIdx);
-  $("activePrevBtn").disabled = prevIdx === null;
-  $("activeNextBtn").disabled = nextIdx === null;
+  const prevBtn = document.getElementById("activePrevBtn");
+  const nextBtn = document.getElementById("activeNextBtn");
+  prevBtn.disabled = prevIdx === null;
+  nextBtn.disabled = nextIdx === null;
 
   // Video
-  const videoBox = $("activeVideoBox");
-  const videoFrame = $("activeVideoFrame");
+  const videoBox = document.getElementById("activeVideoBox");
+  const videoFrame = document.getElementById("activeVideoFrame");
   if(activeEx?.type === "videoRef"){
     const vid = findVideoForExercise(workout, activeEx.label);
     const embed = toEmbedUrl(vid?.url || "");
@@ -1330,43 +1371,58 @@ function renderWorkout(){
     videoBox.style.display = "none";
   }
 
-  // Timer logic:
-  // - Rack day: show timer card but disable (so you still SEE it and can optionally use custom)
-  // - Non-rack day: always show timer card; if exercise has seconds -> uses that; else uses 60
-  const timerDisabled = $("timerDisabled");
-  const hasSeconds = (!rack && activeEx && isTimed(activeEx));
+  // NEXT small box
+  const nextTitle = document.getElementById("nextTitle");
+  const nextMeta = document.getElementById("nextMeta");
+  const nextCount = document.getElementById("nextCount");
 
-  let defaultSeconds = 60;
-  if(!rack && activeEx && isTimed(activeEx)) defaultSeconds = activeEx.seconds;
+  if(nextIdx === null){
+    nextTitle.textContent = "No next exercise";
+    nextMeta.textContent = "Finish this one and complete the workout.";
+    nextCount.textContent = "—";
+  } else {
+    const nx = workout.exercises[nextIdx];
+    nextTitle.textContent = nx.label;
+    nextCount.textContent = `${nextIdx+1} / ${workout.exercises.length}`;
+    nextMeta.innerHTML = "";
+    displayTypeMeta(nx).forEach((m, k)=>{
+      const s = document.createElement("span");
+      s.textContent = m;
+      nextMeta.appendChild(s);
+      if(k < displayTypeMeta(nx).length-1){
+        const dot = document.createElement("span");
+        dot.textContent = "•";
+        dot.style.opacity = ".6";
+        nextMeta.appendChild(dot);
+      }
+    });
+  }
 
-  // Keep timer bound to current workout+exercise so it resets on exercise change
+  // Timer always visible. Default 60 unless exercise has seconds; can override per exercise
+  const hasSeconds = (activeEx && isTimed(activeEx));
+  const defaultSeconds = hasSeconds ? activeEx.seconds : 60;
+  const override = getOverrideSeconds(workout.id, activeIdx);
+  const desired = override ?? defaultSeconds;
+
   const needsReset =
     state.timer.workoutId !== workout.id ||
     state.timer.exerciseIndex !== activeIdx;
 
-  const override = getOverrideSeconds(workout.id, activeIdx);
-  const desired = override ?? defaultSeconds;
-
   if(needsReset){
     stopTimerHard();
     state.timer = { running:false, remaining: desired, duration: desired, workoutId: workout.id, exerciseIndex: activeIdx };
-    $("timerSecondsInput").value = "";
+    document.getElementById("timerSecondsInput").value = "";
     setInputPlaceholder(desired);
     saveJSON(STORAGE_KEY, state);
   } else {
     setInputPlaceholder(desired);
   }
 
-  $("timerBig").textContent = formatTime(state.timer.remaining);
-  $("timerExerciseName").textContent =
-    rack ? "Rack day timer (optional)" :
-    (hasSeconds ? `Default ${formatTime(defaultSeconds)}${override ? " • Custom " + formatTime(override) : ""}` :
-                 `Default ${formatTime(defaultSeconds)} (no timed value in JSON)${override ? " • Custom " + formatTime(override) : ""}`);
-
-  // On rack days OR non-timed exercises, show the “disabled” callout (but timer still usable if you want)
-  timerDisabled.style.display = (rack || !hasSeconds) ? "block" : "none";
-
-  $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
+  document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
+  document.getElementById("timerExerciseName").textContent =
+    `Default ${formatTime(defaultSeconds)}${override ? " • Custom " + formatTime(override) : ""}`;
+  document.getElementById("timerDisabled").style.display = hasSeconds ? "none" : "block";
+  document.getElementById("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
 
   updateProgressAndComplete(workout);
 }
@@ -1396,9 +1452,9 @@ function historyByDate(){
 }
 function renderHistory(){
   const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  $("calWeekdays").innerHTML = weekdays.map(w => `<div>${w}</div>`).join("");
-  $("calGrid").innerHTML = "";
-  $("calMonthLabel").textContent = formatMonthLabel(calYear, calMonth);
+  document.getElementById("calWeekdays").innerHTML = weekdays.map(w => `<div>${w}</div>`).join("");
+  document.getElementById("calGrid").innerHTML = "";
+  document.getElementById("calMonthLabel").textContent = formatMonthLabel(calYear, calMonth);
 
   const first = new Date(calYear, calMonth, 1);
   const startDay = first.getDay();
@@ -1409,7 +1465,7 @@ function renderHistory(){
     const cell = document.createElement("div");
     cell.className = "calDay muted";
     cell.innerHTML = `<div class="calNum"> </div>`;
-    $("calGrid").appendChild(cell);
+    document.getElementById("calGrid").appendChild(cell);
   }
 
   for(let d=1; d<=daysInMonth; d++){
@@ -1435,7 +1491,7 @@ function renderHistory(){
       openDayModal(key, doneList);
     });
 
-    $("calGrid").appendChild(cell);
+    document.getElementById("calGrid").appendChild(cell);
   }
 }
 function updateHistoryEntryDate(entryTs, newDate){
@@ -1447,10 +1503,10 @@ function updateHistoryEntryDate(entryTs, newDate){
   return true;
 }
 function openDayModal(dateKey, entries){
-  const overlay = $("dayOverlay");
-  $("dayModalTitle").textContent = `Completed on ${dateKey}`;
-  $("dayModalSubtitle").textContent = `${entries.length} workout${entries.length===1?"":"s"} completed`;
-  const list = $("dayModalList");
+  const overlay = document.getElementById("dayOverlay");
+  document.getElementById("dayModalTitle").textContent = `Completed on ${dateKey}`;
+  document.getElementById("dayModalSubtitle").textContent = `${entries.length} workout${entries.length===1?"":"s"} completed`;
+  const list = document.getElementById("dayModalList");
   list.innerHTML = "";
 
   entries.slice().sort((a,b)=>a.ts-b.ts).forEach((entry)=>{
@@ -1481,20 +1537,20 @@ function openDayModal(dateKey, entries){
 
   overlay.style.display = "flex";
 }
-$("dayModalClose").addEventListener("click", ()=>{ $("dayOverlay").style.display = "none"; });
-$("dayOverlay").addEventListener("click", (e)=>{ if(e.target.id === "dayOverlay") $("dayOverlay").style.display = "none"; });
+document.getElementById("dayModalClose").addEventListener("click", ()=>{ document.getElementById("dayOverlay").style.display = "none"; });
+document.getElementById("dayOverlay").addEventListener("click", (e)=>{ if(e.target.id === "dayOverlay") document.getElementById("dayOverlay").style.display = "none"; });
 
 /* ===========================
    TIMER INPUT EVENTS
    =========================== */
-$("timerSecondsInput").addEventListener("keydown", (e)=>{
+document.getElementById("timerSecondsInput").addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
     applyCustomDurationIfAny();
-    $("timerSecondsInput").blur();
+    document.getElementById("timerSecondsInput").blur();
     renderWorkout();
   }
 });
-$("timerSecondsInput").addEventListener("blur", ()=>{
+document.getElementById("timerSecondsInput").addEventListener("blur", ()=>{
   const custom = readCustomSeconds();
   if(custom != null){
     const w = WORKOUTS[currentIndex];
@@ -1504,34 +1560,34 @@ $("timerSecondsInput").addEventListener("blur", ()=>{
       state.timer.duration = custom;
       state.timer.remaining = custom;
       saveJSON(STORAGE_KEY, state);
-      $("timerBig").textContent = formatTime(state.timer.remaining);
+      document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
     }
     toast("Custom timer saved");
   }
 });
 
 /* ===========================
-   VIEW TABS
+   WIRING
    =========================== */
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click", ()=> setView(t.dataset.view));
 });
 
-$("soundChip").addEventListener("click", async ()=>{
+document.getElementById("soundChip").addEventListener("click", async ()=>{
   await unlockAudio();
   setSoundEnabled(!soundEnabled);
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
 
 /* Workout navigation */
-$("prevBtn").addEventListener("click", ()=>{
+document.getElementById("prevBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
   state.currentIndex = currentIndex;
   saveJSON(STORAGE_KEY, state);
   renderWorkout();
 });
-$("nextBtn").addEventListener("click", ()=>{
+document.getElementById("nextBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex + 1) % WORKOUTS.length;
   state.currentIndex = currentIndex;
@@ -1540,7 +1596,7 @@ $("nextBtn").addEventListener("click", ()=>{
 });
 
 /* Active exercise prev/next */
-$("activePrevBtn").addEventListener("click", ()=>{
+document.getElementById("activePrevBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const activeIdx = getActiveIndex(w);
   const prev = findPrevCheckableIndex(w, activeIdx);
@@ -1549,7 +1605,7 @@ $("activePrevBtn").addEventListener("click", ()=>{
   setActiveIndex(w.id, prev);
   renderWorkout();
 });
-$("activeNextBtn").addEventListener("click", ()=>{
+document.getElementById("activeNextBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const activeIdx = getActiveIndex(w);
   const next = findNextCheckableIndex(w, activeIdx);
@@ -1560,23 +1616,19 @@ $("activeNextBtn").addEventListener("click", ()=>{
 });
 
 /* Timer buttons */
-$("stopTimer").addEventListener("click", ()=>{
-  stopTimerHard();
-  toast("Timer stopped");
-  renderWorkout();
-});
-$("timerStartPause").addEventListener("click", async ()=>{
+document.getElementById("timerStartPause").addEventListener("click", async ()=>{
   await unlockAudio();
   if(state.timer.running) pauseTimer();
   else startTimer();
   renderWorkout();
 });
-$("timerStop").addEventListener("click", ()=>{
-  stopTimer();
+document.getElementById("timerStop").addEventListener("click", ()=>{
+  pauseTimer();
   stopTimerHard();
+  toast("Timer stopped");
   renderWorkout();
 });
-$("timerReset").addEventListener("click", ()=>{
+document.getElementById("timerReset").addEventListener("click", ()=>{
   const custom = readCustomSeconds();
   if(custom != null){
     const w = WORKOUTS[currentIndex];
@@ -1586,14 +1638,14 @@ $("timerReset").addEventListener("click", ()=>{
     state.timer.duration = custom;
     state.timer.remaining = custom;
     saveJSON(STORAGE_KEY, state);
-    $("timerBig").textContent = formatTime(state.timer.remaining);
+    document.getElementById("timerBig").textContent = formatTime(state.timer.remaining);
     beep(660,50);
   } else resetTimer();
   renderWorkout();
 });
 
 /* Mark workout complete */
-$("markCompleteBtn").addEventListener("click", ()=>{
+document.getElementById("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const { allDone } = computeCompletion(w);
   if(!allDone){ toast("Complete all exercises first"); return; }
@@ -1609,19 +1661,19 @@ $("markCompleteBtn").addEventListener("click", ()=>{
 });
 
 /* Calendar controls */
-$("clearHistory").addEventListener("click", ()=>{
+document.getElementById("clearHistory").addEventListener("click", ()=>{
   if(!confirm("Clear all workout history?")) return;
   state.history = [];
   saveJSON(STORAGE_KEY, state);
   renderHistory();
   toast("History cleared");
 });
-$("calPrev").addEventListener("click", ()=>{
+document.getElementById("calPrev").addEventListener("click", ()=>{
   calMonth -= 1;
   if(calMonth < 0){ calMonth = 11; calYear -= 1; }
   renderHistory();
 });
-$("calNext").addEventListener("click", ()=>{
+document.getElementById("calNext").addEventListener("click", ()=>{
   calMonth += 1;
   if(calMonth > 11){ calMonth = 0; calYear += 1; }
   renderHistory();
@@ -1651,7 +1703,7 @@ $("calNext").addEventListener("click", ()=>{
   calMonth = now.getMonth();
 
   setView("workout");
-  $("todayLabel").textContent = `Today: ${todayKey}`;
+  document.getElementById("todayLabel").textContent = `Today: ${todayKey}`;
   renderWorkout();
   renderDashboard();
 })();
