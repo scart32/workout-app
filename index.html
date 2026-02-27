@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-
-  <!-- Prevent zoom + keep app “single screen” -->
+  <!-- Prevent zoom -->
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-
   <title>Workout App</title>
 
   <style>
@@ -16,8 +14,6 @@
       /* Elite performance lab palette */
       --bg0:#070812;
       --bg1:#0b0f22;
-      --panel:#0b0f1f;
-      --panel2:#0a0d18;
 
       --text:#f3f6ff;
       --muted:#a8b0c6;
@@ -33,7 +29,6 @@
 
       --shadow: 0 18px 50px rgba(0,0,0,.45);
       --glow: 0 0 0 3px rgba(124,92,255,.15), 0 18px 40px rgba(0,0,0,.35);
-      --glow2: 0 0 0 3px rgba(45,226,230,.12), 0 18px 40px rgba(0,0,0,.35);
 
       --radius:18px;
       --radius2:22px;
@@ -66,7 +61,6 @@
       margin-inline:auto;
     }
 
-    /* ===== Header / Nav ===== */
     header{
       display:flex;
       flex-direction:column;
@@ -147,7 +141,6 @@
       box-shadow: 0 0 0 3px rgba(124,92,255,.15);
     }
 
-    /* ===== Main ===== */
     .main{
       height: calc(100dvh - 24px - var(--safeTop) - var(--safeBottom));
       display:flex;
@@ -164,6 +157,10 @@
       padding:12px;
       overflow:hidden;
     }
+
+    .divider{height:1px;background: rgba(255,255,255,.10);margin: 10px 0;}
+    .small{font-size:12px;color:var(--muted);}
+    .subtle{font-size:12px;color:var(--muted2);}
 
     button{
       appearance:none;
@@ -202,10 +199,6 @@
       box-shadow: 0 0 0 3px rgba(45,212,191,.10);
     }
 
-    .divider{height:1px;background: rgba(255,255,255,.10);margin: 10px 0;}
-    .small{font-size:12px;color:var(--muted);}
-    .subtle{font-size:12px;color:var(--muted2);}
-
     /* ===== Progress ===== */
     .progressWrap{display:flex;flex-direction:column;gap:8px;}
     .progressMeta{
@@ -233,7 +226,7 @@
       box-shadow: 0 0 16px rgba(45,226,230,.25);
     }
 
-    /* ===== Workout View (Elite Lab) ===== */
+    /* ===== Workout View ===== */
     #view-workout{
       display:flex;
       flex-direction:column;
@@ -250,13 +243,6 @@
       flex-wrap:wrap;
     }
 
-    .titleBlock{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:240px;
-    }
-
     #workoutTitle{
       margin:0;
       font-size: 26px;
@@ -266,28 +252,18 @@
       text-shadow: 0 6px 22px rgba(0,0,0,.35);
     }
 
-    .kpiRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
-    /* 3-panel stack */
-    .stack{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      flex:1 1 auto;
-      min-height:0;
-      overflow:hidden;
-    }
-
-    .pane{
+    /* ACTIVE box dominates screen */
+    .activePane{
+      flex: 1 1 auto;
+      min-height: 0;
       border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.20);
       overflow:hidden;
+      box-shadow: var(--glow);
+      border-color: rgba(124,92,255,.38);
+      display:flex;
+      flex-direction:column;
     }
 
     .paneHeader{
@@ -298,6 +274,7 @@
       padding:10px 12px;
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       border-bottom:1px solid rgba(255,255,255,.08);
+      flex:0 0 auto;
     }
     .paneHeader b{
       font-size:12px;
@@ -311,44 +288,9 @@
       color:rgba(168,176,198,.82);
     }
 
-    /* DONE pane */
-    .donePane{
-      flex: 0 0 138px;
-      min-height: 120px;
-      box-shadow: var(--glow2);
-    }
-    .doneList{
-      height:100%;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-      padding:10px 12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .doneItem{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      color: rgba(168,176,198,.72);
-      font-size: 14px;
-      text-decoration: line-through;
-    }
-
-    /* ACTIVE pane */
-    .activePane{
-      flex: 1 1 auto;
-      min-height: 0;
-      box-shadow: var(--glow);
-      border-color: rgba(124,92,255,.38);
-    }
     .activeBody{
-      height:100%;
+      flex:1 1 auto;
+      min-height:0;
       overflow:auto;
       -webkit-overflow-scrolling: touch;
       padding:12px;
@@ -365,7 +307,7 @@
       flex-wrap:wrap;
     }
     .activeTitle{
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 950;
       line-height: 1.15;
       margin:0;
@@ -379,6 +321,7 @@
       color: var(--muted);
       font-size: 12px;
     }
+
     .activeControls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 
     .checkRow{
@@ -403,9 +346,8 @@
       letter-spacing:.15px;
     }
 
-    /* Timer */
+    /* Timer (always visible on non-rack days) */
     .timerCard{
-      display:none;
       border-radius: 18px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
@@ -413,7 +355,7 @@
     }
     .timerBig{
       font-variant-numeric: tabular-nums;
-      font-size: 74px;
+      font-size: clamp(56px, 9vw, 84px);
       font-weight: 950;
       width: 100%;
       text-align:center;
@@ -476,6 +418,16 @@
       border-radius: 16px;
     }
 
+    .timerDisabled{
+      display:none;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px dashed rgba(255,255,255,.16);
+      color: rgba(168,176,198,.82);
+      background: rgba(255,255,255,.03);
+      font-weight:800;
+    }
+
     /* Active video */
     .iframeBox{
       position:relative;
@@ -488,35 +440,6 @@
       box-shadow: 0 0 0 3px rgba(45,226,230,.08);
     }
     iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
-
-    /* NEXT pane */
-    .nextPane{
-      flex: 0 0 112px;
-      min-height: 102px;
-      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
-    }
-    .nextBody{
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .nextTitle{
-      font-size: 15px;
-      font-weight: 950;
-      margin:0;
-      line-height:1.2;
-      color: var(--text);
-      letter-spacing:.2px;
-    }
-    .nextMeta{
-      font-size:12px;
-      color:var(--muted);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
 
     /* Footer actions */
     .footerActions{
@@ -680,13 +603,13 @@
   <section class="card" id="view-workout">
 
     <div class="workoutHeaderRow">
-      <div class="titleBlock">
+      <div>
         <div class="small">WORKOUT OF THE DAY</div>
         <h2 id="workoutTitle">Loading…</h2>
         <div class="subtle" id="workoutSubtitle"></div>
       </div>
 
-      <div class="kpiRow">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
         <button id="stopTimer" class="btnDanger">Stop Timer</button>
       </div>
     </div>
@@ -699,84 +622,63 @@
       <div class="bar"><div id="progressBar"></div></div>
     </div>
 
-    <!-- 3 BOX STACK -->
-    <div class="stack">
-
-      <!-- DONE -->
-      <div class="pane donePane">
-        <div class="paneHeader">
-          <b>Completed</b>
-          <div class="count" id="doneCount">0</div>
-        </div>
-        <div class="doneList" id="doneList"></div>
+    <!-- ACTIVE DOMINATES -->
+    <div class="activePane">
+      <div class="paneHeader">
+        <b>Active</b>
+        <div class="count" id="activeCount">—</div>
       </div>
 
-      <!-- ACTIVE -->
-      <div class="pane activePane">
-        <div class="paneHeader">
-          <b>Active</b>
-          <div class="count" id="activeCount">—</div>
+      <div class="activeBody">
+        <div class="activeTitleRow">
+          <div>
+            <p class="activeTitle" id="activeTitle">—</p>
+            <div class="activeMeta" id="activeMeta"></div>
+          </div>
+
+          <div class="activeControls">
+            <button id="activePrevBtn" class="btnGhost">Prev</button>
+            <button id="activeNextBtn" class="btnGhost">Next</button>
+          </div>
         </div>
 
-        <div class="activeBody">
-          <div class="activeTitleRow">
-            <div>
-              <p class="activeTitle" id="activeTitle">—</p>
-              <div class="activeMeta" id="activeMeta"></div>
-            </div>
-            <div class="activeControls">
-              <button id="activePrevBtn" class="btnGhost">Prev</button>
-              <button id="activeNextBtn" class="btnGhost">Next</button>
-            </div>
-          </div>
-
-          <div class="checkRow" id="activeCheckRow">
-            <input id="activeCheckbox" type="checkbox" />
-            <div class="label" id="activeLabel">—</div>
-          </div>
-
-          <!-- Active video -->
-          <div class="iframeBox" id="activeVideoBox" style="display:none;">
-            <iframe id="activeVideoFrame"
-                    src=""
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen></iframe>
-          </div>
-
-          <!-- Timer -->
-          <div class="timerCard" id="timerCard">
-            <div class="timerBig" id="timerBig">60s</div>
-            <div class="timerInner">
-              <div class="subtle" id="timerExerciseName">—</div>
-
-              <div class="timerCustomRow">
-                <label for="timerSecondsInput">Custom seconds</label>
-                <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
-              </div>
-
-              <div class="timerBtns">
-                <button id="timerStartPause" class="btnPrimary">Start</button>
-                <button id="timerStop" class="btnDanger">Stop</button>
-                <button id="timerReset">Reset</button>
-              </div>
-            </div>
-          </div>
-
+        <div class="checkRow" id="activeCheckRow">
+          <input id="activeCheckbox" type="checkbox" />
+          <div class="label" id="activeLabel">—</div>
         </div>
+
+        <!-- Active video -->
+        <div class="iframeBox" id="activeVideoBox" style="display:none;">
+          <iframe id="activeVideoFrame"
+                  src=""
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen></iframe>
+        </div>
+
+        <!-- Timer ALWAYS PRESENT ON NON-RACK DAYS -->
+        <div class="timerCard" id="timerCard">
+          <div class="timerBig" id="timerBig">60s</div>
+          <div class="timerInner">
+            <div class="subtle" id="timerExerciseName">—</div>
+
+            <div class="timerDisabled" id="timerDisabled">
+              No timer for this exercise. Move on, or set a custom timer anyway.
+            </div>
+
+            <div class="timerCustomRow">
+              <label for="timerSecondsInput">Custom seconds</label>
+              <input id="timerSecondsInput" class="timerInput" inputmode="numeric" pattern="[0-9]*" placeholder="60" />
+            </div>
+
+            <div class="timerBtns">
+              <button id="timerStartPause" class="btnPrimary">Start</button>
+              <button id="timerStop" class="btnDanger">Stop</button>
+              <button id="timerReset">Reset</button>
+            </div>
+          </div>
+        </div>
+
       </div>
-
-      <!-- NEXT -->
-      <div class="pane nextPane">
-        <div class="paneHeader">
-          <b>Next</b>
-          <div class="count" id="nextCount">—</div>
-        </div>
-        <div class="nextBody">
-          <p class="nextTitle" id="nextTitle">—</p>
-          <div class="nextMeta" id="nextMeta"></div>
-        </div>
-      </div>
-
     </div>
 
     <div class="footerActions">
@@ -796,11 +698,11 @@
   <!-- HISTORY -->
   <section class="card" id="view-history" style="display:none;">
     <div class="workoutHeaderRow">
-      <div class="titleBlock">
+      <div>
         <h2 style="margin:0;font-size:18px;font-weight:950;">Completion Calendar</h2>
         <div class="small">Tap a day with a dot to view/edit completions.</div>
       </div>
-      <div class="kpiRow" style="justify-content:flex-end;">
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
         <button id="calPrev" class="btnGhost">◀</button>
         <div class="chip"><strong id="calMonthLabel">Month</strong></div>
         <button id="calNext" class="btnGhost">▶</button>
@@ -817,7 +719,7 @@
   <!-- DASHBOARD -->
   <section class="card" id="view-dashboard" style="display:none;">
     <div class="workoutHeaderRow">
-      <div class="titleBlock">
+      <div>
         <h2 style="margin:0;font-size:18px;font-weight:950;">Performance Dashboard</h2>
         <div class="small">High-level stats.</div>
       </div>
@@ -925,7 +827,7 @@ function flashScreen(){
 }
 
 /* ===========================
-   SOUND (single AudioContext)
+   SOUND
    =========================== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
 let audioCtx = null;
@@ -996,11 +898,11 @@ async function loadWorkoutsFromFile(){
 const defaultState = {
   lastDate: "",
   currentIndex: 0,
-  checks: {},          // `${date}::${workoutId}` -> { idx:true }
-  history: [],         // {date, title, workoutId, ts, workoutSnapshot}
-  activeByKey: {},     // `${date}::${workoutId}` -> activeIndex
+  checks: {},
+  history: [],
+  activeByKey: {},
   timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 },
-  timerOverrides: {}   // `${workoutId}::${exerciseIndex}` -> seconds
+  timerOverrides: {}
 };
 let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
@@ -1309,10 +1211,12 @@ function resetTimer(){
   pauseTimer();
   const workout = WORKOUTS[currentIndex];
   const idx = state.timer.exerciseIndex;
+
   const ex = workout.exercises[idx];
   const defaultSeconds = (ex && isTimed(ex)) ? ex.seconds : 60;
   const override = getOverrideSeconds(workout.id, idx);
   const desired = override ?? defaultSeconds;
+
   state.timer.duration = desired;
   state.timer.remaining = desired;
   saveJSON(STORAGE_KEY, state);
@@ -1325,7 +1229,7 @@ function stopTimer(){
 }
 
 /* ===========================
-   RENDER WORKOUT (Elite Lab)
+   RENDER WORKOUT
    =========================== */
 function renderWorkout(){
   todayKey = getLocalDateKey();
@@ -1348,7 +1252,6 @@ function renderWorkout(){
   const rack = isRackDay(workout);
   $("stopTimer").style.display = rack ? "none" : "inline-block";
 
-  const { checkableIdx } = computeCompletion(workout);
   const checks = getChecksFor(workout.id);
 
   let activeIdx = getActiveIndex(workout);
@@ -1357,51 +1260,20 @@ function renderWorkout(){
     setActiveIndex(workout.id, activeIdx);
   }
 
-  // DONE list
-  const doneListEl = $("doneList");
-  doneListEl.innerHTML = "";
-  const doneItems = [];
-  checkableIdx.forEach(i=>{
-    if(checks[i]) doneItems.push({ idx:i, ex: workout.exercises[i] });
-  });
-  $("doneCount").textContent = `${doneItems.length}`;
-
-  if(doneItems.length === 0){
-    const empty = document.createElement("div");
-    empty.className = "subtle";
-    empty.textContent = "Nothing completed yet. Start moving.";
-    empty.style.padding = "6px 2px";
-    doneListEl.appendChild(empty);
-  } else {
-    doneItems.slice(-12).reverse().forEach(({idx, ex})=>{
-      const row = document.createElement("div");
-      row.className = "doneItem";
-      row.textContent = ex.label;
-      row.title = "Tap to jump back to this exercise";
-      row.style.cursor = "pointer";
-      row.addEventListener("click", ()=>{
-        setActiveIndex(workout.id, idx);
-        stopTimerHard();
-        renderWorkout();
-      });
-      doneListEl.appendChild(row);
-    });
-  }
-
-  // ACTIVE
   const activeEx = workout.exercises[activeIdx];
+
   $("activeCount").textContent = `${activeIdx+1} / ${workout.exercises.length}`;
   $("activeTitle").textContent = activeEx?.label ?? "—";
   $("activeLabel").textContent = activeEx?.label ?? "—";
-  $("activeCheckbox").checked = !!checks[activeIdx];
 
   const meta = $("activeMeta");
   meta.innerHTML = "";
-  (displayTypeMeta(activeEx) || []).forEach((m, k)=>{
+  const bits = displayTypeMeta(activeEx);
+  bits.forEach((m, k)=>{
     const s = document.createElement("span");
     s.textContent = m;
     meta.appendChild(s);
-    if(k < displayTypeMeta(activeEx).length-1){
+    if(k < bits.length-1){
       const dot = document.createElement("span");
       dot.textContent = "•";
       dot.style.opacity = ".6";
@@ -1409,12 +1281,13 @@ function renderWorkout(){
     }
   });
 
+  $("activeCheckbox").checked = !!checks[activeIdx];
+
   $("activeCheckRow").onclick = (e)=>{
     if(e.target && e.target.id === "activeCheckbox") return;
     $("activeCheckbox").checked = !$("activeCheckbox").checked;
     $("activeCheckbox").dispatchEvent(new Event("change"));
   };
-
   $("activeCheckbox").onchange = ()=>{
     const checked = $("activeCheckbox").checked;
     if(!checked) stopTimerHard();
@@ -1433,84 +1306,67 @@ function renderWorkout(){
     updateProgressAndComplete(workout);
   };
 
-  // VIDEO
-  const activeVideoBox = $("activeVideoBox");
-  const activeVideoFrame = $("activeVideoFrame");
+  // Prev/Next within workout
+  const prevIdx = findPrevCheckableIndex(workout, activeIdx);
+  const nextIdx = findNextCheckableIndex(workout, activeIdx);
+  $("activePrevBtn").disabled = prevIdx === null;
+  $("activeNextBtn").disabled = nextIdx === null;
+
+  // Video
+  const videoBox = $("activeVideoBox");
+  const videoFrame = $("activeVideoFrame");
   if(activeEx?.type === "videoRef"){
     const vid = findVideoForExercise(workout, activeEx.label);
     const embed = toEmbedUrl(vid?.url || "");
     if(embed){
-      activeVideoFrame.src = embed;
-      activeVideoBox.style.display = "block";
+      videoFrame.src = embed;
+      videoBox.style.display = "block";
     } else {
-      activeVideoFrame.src = "";
-      activeVideoBox.style.display = "none";
+      videoFrame.src = "";
+      videoBox.style.display = "none";
     }
   } else {
-    activeVideoFrame.src = "";
-    activeVideoBox.style.display = "none";
+    videoFrame.src = "";
+    videoBox.style.display = "none";
   }
 
-  // TIMER
-  const timerCard = $("timerCard");
-  if(!rack && activeEx && isTimed(activeEx)){
-    timerCard.style.display = "block";
+  // Timer logic:
+  // - Rack day: show timer card but disable (so you still SEE it and can optionally use custom)
+  // - Non-rack day: always show timer card; if exercise has seconds -> uses that; else uses 60
+  const timerDisabled = $("timerDisabled");
+  const hasSeconds = (!rack && activeEx && isTimed(activeEx));
 
-    const defaultSeconds = activeEx.seconds;
-    const override = getOverrideSeconds(workout.id, activeIdx);
-    const desired = override ?? defaultSeconds;
+  let defaultSeconds = 60;
+  if(!rack && activeEx && isTimed(activeEx)) defaultSeconds = activeEx.seconds;
 
-    const needsReset =
-      state.timer.workoutId !== workout.id ||
-      state.timer.exerciseIndex !== activeIdx;
+  // Keep timer bound to current workout+exercise so it resets on exercise change
+  const needsReset =
+    state.timer.workoutId !== workout.id ||
+    state.timer.exerciseIndex !== activeIdx;
 
-    if(needsReset){
-      stopTimerHard();
-      state.timer = { running:false, remaining: desired, duration: desired, workoutId: workout.id, exerciseIndex: activeIdx };
-      $("timerSecondsInput").value = "";
-      setInputPlaceholder(desired);
-      saveJSON(STORAGE_KEY, state);
-    } else {
-      setInputPlaceholder(desired);
-    }
+  const override = getOverrideSeconds(workout.id, activeIdx);
+  const desired = override ?? defaultSeconds;
 
-    $("timerBig").textContent = formatTime(state.timer.remaining);
-    $("timerExerciseName").textContent =
-      `Default ${formatTime(defaultSeconds)}${override ? " • Custom " + formatTime(override) : ""}`;
-    $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
+  if(needsReset){
+    stopTimerHard();
+    state.timer = { running:false, remaining: desired, duration: desired, workoutId: workout.id, exerciseIndex: activeIdx };
+    $("timerSecondsInput").value = "";
+    setInputPlaceholder(desired);
+    saveJSON(STORAGE_KEY, state);
   } else {
-    timerCard.style.display = "none";
-    if(state.timer.running) stopTimerHard();
+    setInputPlaceholder(desired);
   }
 
-  // NEXT
-  const nextIdx = findNextCheckableIndex(workout, activeIdx);
-  if(nextIdx === null){
-    $("nextTitle").textContent = "No next exercise 🎯";
-    $("nextMeta").textContent = "Finish this one, then complete the workout.";
-    $("nextCount").textContent = "—";
-  } else {
-    const nextEx = workout.exercises[nextIdx];
-    $("nextTitle").textContent = nextEx.label;
-    $("nextCount").textContent = `${nextIdx+1} / ${workout.exercises.length}`;
-    const nm = $("nextMeta");
-    nm.innerHTML = "";
-    (displayTypeMeta(nextEx) || []).forEach((m, k)=>{
-      const s = document.createElement("span");
-      s.textContent = m;
-      nm.appendChild(s);
-      if(k < displayTypeMeta(nextEx).length-1){
-        const dot = document.createElement("span");
-        dot.textContent = "•";
-        dot.style.opacity = ".6";
-        nm.appendChild(dot);
-      }
-    });
-  }
+  $("timerBig").textContent = formatTime(state.timer.remaining);
+  $("timerExerciseName").textContent =
+    rack ? "Rack day timer (optional)" :
+    (hasSeconds ? `Default ${formatTime(defaultSeconds)}${override ? " • Custom " + formatTime(override) : ""}` :
+                 `Default ${formatTime(defaultSeconds)} (no timed value in JSON)${override ? " • Custom " + formatTime(override) : ""}`);
 
-  // Active prev/next
-  $("activePrevBtn").disabled = findPrevCheckableIndex(workout, activeIdx) === null;
-  $("activeNextBtn").disabled = findNextCheckableIndex(workout, activeIdx) === null;
+  // On rack days OR non-timed exercises, show the “disabled” callout (but timer still usable if you want)
+  timerDisabled.style.display = (rack || !hasSeconds) ? "block" : "none";
+
+  $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
 
   updateProgressAndComplete(workout);
 }
@@ -1655,7 +1511,7 @@ $("timerSecondsInput").addEventListener("blur", ()=>{
 });
 
 /* ===========================
-   WIRING
+   VIEW TABS
    =========================== */
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click", ()=> setView(t.dataset.view));
@@ -1667,6 +1523,7 @@ $("soundChip").addEventListener("click", async ()=>{
   toast(soundEnabled ? "Sound ON" : "Sound OFF");
 });
 
+/* Workout navigation */
 $("prevBtn").addEventListener("click", ()=>{
   pauseTimer();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
@@ -1682,6 +1539,7 @@ $("nextBtn").addEventListener("click", ()=>{
   renderWorkout();
 });
 
+/* Active exercise prev/next */
 $("activePrevBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const activeIdx = getActiveIndex(w);
@@ -1701,12 +1559,12 @@ $("activeNextBtn").addEventListener("click", ()=>{
   renderWorkout();
 });
 
+/* Timer buttons */
 $("stopTimer").addEventListener("click", ()=>{
   stopTimerHard();
   toast("Timer stopped");
   renderWorkout();
 });
-
 $("timerStartPause").addEventListener("click", async ()=>{
   await unlockAudio();
   if(state.timer.running) pauseTimer();
@@ -1734,6 +1592,7 @@ $("timerReset").addEventListener("click", ()=>{
   renderWorkout();
 });
 
+/* Mark workout complete */
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const { allDone } = computeCompletion(w);
@@ -1749,6 +1608,7 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   }, 950);
 });
 
+/* Calendar controls */
 $("clearHistory").addEventListener("click", ()=>{
   if(!confirm("Clear all workout history?")) return;
   state.history = [];
