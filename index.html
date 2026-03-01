@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Workout App</title>
+  <title>Workout Tracker</title>
 
   <style>
     :root{
@@ -39,8 +39,8 @@
       --gap:8px;
 
       /* Fixed button sizing so nothing wraps */
-      --btnW: 56px;     /* exercise prev/next */
-      --btnWorkW: 148px;/* prev/next workout */
+      --btnW: 56px;      /* exercise prev/next */
+      --btnWorkW: 148px; /* prev/next workout */
     }
 
     *{box-sizing:border-box;}
@@ -171,6 +171,25 @@
       border-color: rgba(251,113,133,.55);
       background: rgba(251,113,133,.14);
     }
+
+    /* Inputs */
+    input, textarea{
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding:10px 12px;
+      font-size: 12px;
+      outline:none;
+      width:100%;
+    }
+    textarea{
+      resize:none;
+      min-height: 80px;
+      line-height: 1.35;
+    }
+    input::placeholder, textarea::placeholder{ color: rgba(168,176,198,.62); font-weight:700; }
 
     /* ===== Views ===== */
     .view{ height: 100%; display:none; }
@@ -364,6 +383,53 @@
       flex:1 1 auto;
     }
 
+    /* Bench sets row */
+    .benchSets{
+      display:none;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding:10px;
+      gap:8px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .benchSets.show{ display:flex; }
+    .benchSets .left{
+      font-size:11px;
+      color: rgba(168,176,198,.9);
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .benchPills{
+      display:flex;
+      gap:6px;
+      align-items:center;
+      flex-wrap:nowrap;
+    }
+    .benchPill{
+      width:30px;
+      height:30px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      font-weight:950;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: rgba(243,246,255,.92);
+      user-select:none;
+      cursor:pointer;
+      flex: 0 0 auto;
+    }
+    .benchPill.done{
+      border-color: rgba(45,212,191,.55);
+      background: rgba(45,212,191,.16);
+      color: rgba(243,246,255,.98);
+      box-shadow: 0 0 0 3px rgba(45,212,191,.12);
+    }
+
     /* Video for rack exercises */
     .iframeBox{
       display:none;
@@ -378,7 +444,7 @@
     .iframeBox.show{ display:block; }
     iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
 
-    /* Timer (hidden for rack video exercises) */
+    /* Timer (hidden for rack video / bench sets exercises) */
     .timerCard{
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.10);
@@ -463,7 +529,7 @@
 
     .nextLine{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       gap:8px;
       width:100%;
       min-width:0;
@@ -522,9 +588,8 @@
     }
 
     /* ===== History view ===== */
-    #view-history{
-      height:100%;
-    }
+    #view-history{ height:100%; }
+
     .historyHeader{
       display:flex;
       align-items:center;
@@ -546,9 +611,7 @@
       align-items:center;
       flex-wrap:nowrap;
     }
-    .historyControls button{
-      padding:10px 12px;
-    }
+    .historyControls button{ padding:10px 12px; }
 
     .calWeekdays{
       display:grid;
@@ -666,8 +729,8 @@
       padding:16px;
     }
     .modalCard{
-      width: min(780px, 92vw);
-      max-height: 80dvh;
+      width: min(820px, 92vw);
+      max-height: 82dvh;
       border-radius: 18px;
       padding: 14px;
       border:1px solid rgba(255,255,255,.14);
@@ -711,9 +774,33 @@
       font-weight:950;
       font-size:13px;
       margin:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      white-space:nowrap;
     }
+    .pill{
+      font-size:10px;
+      font-weight:950;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(243,246,255,.92);
+      flex:0 0 auto;
+    }
+    .pill.manual{
+      border-color: rgba(45,212,191,.45);
+      background: rgba(45,212,191,.10);
+    }
+    .pill.workout{
+      border-color: rgba(124,92,255,.55);
+      background: rgba(124,92,255,.14);
+    }
+
     .modalItemSmall{
-      margin-top:4px;
+      margin-top:6px;
       font-size:11px;
       color:var(--muted);
       font-weight:850;
@@ -725,17 +812,69 @@
       line-height:1.35;
       font-weight:800;
     }
+    .modalActions{
+      margin-top:10px;
+      display:flex;
+      justify-content:flex-end;
+    }
 
+    .manualForm{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      border-radius: 14px;
+      padding:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .formRow{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .formRow .col{ flex:1; min-width:0; }
+    .formRow .colSmall{ width: 120px; min-width:120px; max-width:120px; }
+    .formLabel{
+      font-size:11px;
+      color: rgba(168,176,198,.82);
+      font-weight:900;
+      margin-bottom:6px;
+      display:block;
+    }
+
+    /* ===== Persistent timer-finished flash overlay ===== */
     .flash{
       position: fixed;
       inset: 0;
       z-index: 1500;
       pointer-events: none;
-      background: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.92);
       opacity: 0;
-      transition: opacity .12s ease;
+      transition: opacity .10s ease;
     }
-    .flash.on{ opacity: 1; }
+    .flash.on{
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .flashHoldHint{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      z-index: 1501;
+      display:none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+      color: rgba(243,246,255,.96);
+      font-weight: 950;
+      font-size: 12px;
+      white-space:nowrap;
+      pointer-events:none;
+    }
+    .flashHoldHint.show{ display:block; }
   </style>
 </head>
 
@@ -796,6 +935,12 @@
             <div class="label" id="activeLabel">—</div>
           </div>
 
+          <!-- Bench sets (only shown for bench set exercises) -->
+          <div class="benchSets" id="benchSets">
+            <div class="left" id="benchSetsLabel">Bench Sets</div>
+            <div class="benchPills" id="benchPills"></div>
+          </div>
+
           <div class="iframeBox" id="activeVideoBox">
             <iframe id="activeVideoFrame"
                     src=""
@@ -829,7 +974,6 @@
           <div class="nextLine">
             <p id="nextTitle">—</p>
 
-            <!-- UPDATED: columns with labels under each button -->
             <div class="workNav">
               <div class="workNavCol">
                 <button id="prevWorkoutBtn" class="btnGhost">Prev Workout</button>
@@ -881,14 +1025,45 @@
 <div class="modalOverlay" id="dayModal">
   <div class="modalCard">
     <div class="modalTop">
-      <h3 id="dayModalTitle">Completed</h3>
+      <h3 id="dayModalTitle">Day</h3>
       <button id="dayModalClose" class="btnPrimary">Close</button>
     </div>
+
     <div class="modalList" id="dayModalList"></div>
+
+    <!-- Manual add form -->
+    <div class="manualForm">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div style="font-weight:950; font-size:12px;">Add Activity</div>
+        <div style="font-size:11px; color: rgba(168,176,198,.78); font-weight:850;">Multiple per day supported</div>
+      </div>
+
+      <div class="formRow">
+        <div class="col">
+          <label class="formLabel" for="manualTitle">Title</label>
+          <input id="manualTitle" placeholder="e.g. 30 min run, basketball, hiking..." />
+        </div>
+        <div class="colSmall">
+          <label class="formLabel" for="manualMinutes">Minutes</label>
+          <input id="manualMinutes" inputmode="numeric" pattern="[0-9]*" placeholder="30" />
+        </div>
+      </div>
+
+      <div>
+        <label class="formLabel" for="manualNotes">Notes (optional)</label>
+        <textarea id="manualNotes" placeholder="Anything you want to remember…"></textarea>
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button id="manualSaveBtn" class="btnPrimary">Save Activity</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="flash" id="flash"></div>
+<!-- Persistent timer-finished flash -->
+<div class="flash" id="flashHold"></div>
+<div class="flashHoldHint" id="flashHoldHint">Timer done — tap to advance</div>
 
 <script>
 /* ===== DATE KEY (America/Chicago) ===== */
@@ -942,13 +1117,6 @@ function formatTime(sec){
   const m = Math.floor(sec/60);
   const s = sec % 60;
   return m>0 ? `${m}:${String(s).padStart(2,"0")}` : `${sec}s`;
-}
-function flashScreen(){
-  const f = $("flash");
-  f.classList.add("on");
-  setTimeout(()=>f.classList.remove("on"), 110);
-  setTimeout(()=>f.classList.add("on"), 230);
-  setTimeout(()=>f.classList.remove("on"), 340);
 }
 
 /* ===== SOUND (no UI toggle) ===== */
@@ -1012,9 +1180,10 @@ const defaultState = {
   currentIndex: 0,
   checks: {},
   activeByKey: {},
-  timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1 },
+  timer: { running:false, remaining:0, duration:0, workoutId:"", exerciseIndex:-1, finished:false },
   timerOverrides: {},
-  history: [] // [{date, title, workoutId, ts, workoutSnapshot}]
+  setChecks: {},   // NEW: bench sets { "YYYY-MM-DD::workoutId::exerciseIndex": [true,false,...] }
+  history: []      // {type:"workout"|"manual", date, title, workoutId?, minutes?, notes?, ts, workoutSnapshot?}
 };
 let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
@@ -1044,6 +1213,33 @@ function setCheck(workoutId, idx, v){
 function isCheckable(ex){ return ex.type !== "section"; }
 function isTimed(ex){ return typeof ex.seconds === "number" && ex.seconds > 0; }
 function isRackVideo(ex){ return ex?.type === "videoRef"; }
+
+/* Bench detection: label contains "bench" and "set" */
+function isBenchSetsExercise(ex){
+  const t = (ex?.label || "").toLowerCase();
+  return t.includes("bench") && (t.includes("set") || t.includes("sets"));
+}
+function benchKey(workoutId, exerciseIndex){
+  return `${todayKey}::${workoutId}::${exerciseIndex}`;
+}
+function getBenchArray(workoutId, exerciseIndex, size=5){
+  if(!state.setChecks) state.setChecks = {};
+  const k = benchKey(workoutId, exerciseIndex);
+  let arr = state.setChecks[k];
+  if(!Array.isArray(arr) || arr.length !== size){
+    arr = new Array(size).fill(false);
+    state.setChecks[k] = arr;
+    saveJSON(STORAGE_KEY, state);
+  }
+  return arr;
+}
+function setBenchValue(workoutId, exerciseIndex, setIdx, val){
+  const arr = getBenchArray(workoutId, exerciseIndex, 5);
+  arr[setIdx] = !!val;
+  state.setChecks[benchKey(workoutId, exerciseIndex)] = arr;
+  saveJSON(STORAGE_KEY, state);
+  return arr;
+}
 
 function setActiveIndex(workoutId, idx){
   state.activeByKey[workoutDayKey(workoutId)] = idx;
@@ -1092,6 +1288,7 @@ function updateProgress(workout){
 
 function toMeta(ex){
   if(isRackVideo(ex)) return ["Video"];
+  if(isBenchSetsExercise(ex)) return ["Bench Sets"];
   if(ex && isTimed(ex)) return ["Timed", formatTime(ex.seconds)];
   return ["Exercise"];
 }
@@ -1141,17 +1338,39 @@ function resetTimerTo(seconds){
   pauseTimer();
   state.timer.duration = seconds;
   state.timer.remaining = seconds;
+  state.timer.finished = false;
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
 }
+
+/* ===== Persistent flash hold (timer finished) ===== */
+function showFlashHold(){
+  $("flashHold").classList.add("on");
+  $("flashHoldHint").classList.add("show");
+}
+function hideFlashHold(){
+  $("flashHold").classList.remove("on");
+  $("flashHoldHint").classList.remove("show");
+}
+
+/* On timer finish: keep screen white until tap; tap advances to next exercise */
+function onTimerFinishedAdvance(){
+  state.timer.finished = true;
+  saveJSON(STORAGE_KEY, state);
+  showFlashHold();
+  beep(950,110); setTimeout(()=>beep(760,130), 140);
+}
+
+/* tick */
 function tick(){
   state.timer.remaining -= 1;
   if(state.timer.remaining < 0) state.timer.remaining = 0;
+
   if(state.timer.remaining === 0){
-    stopTimerHard();
-    flashScreen();
-    beep(950,110); setTimeout(()=>beep(760,130), 140);
+    stopTimerHard();            // stop counting
+    onTimerFinishedAdvance();   // KEEP FLASH until user taps
   }
+
   saveJSON(STORAGE_KEY, state);
   $("timerBig").textContent = formatTime(state.timer.remaining);
 }
@@ -1165,6 +1384,7 @@ function startTimer(){
     state.timer.remaining = custom;
   }
   state.timer.running = true;
+  state.timer.finished = false;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Pause";
   beep(520,70);
@@ -1172,20 +1392,50 @@ function startTimer(){
 }
 
 /* ===== HISTORY ===== */
-function addHistoryEntry(workout){
+function ensureHistory(){
+  if(!Array.isArray(state.history)) state.history = [];
+}
+
+function addWorkoutHistoryEntry(workout){
+  ensureHistory();
   const entry = {
+    type: "workout",
     date: todayKey,
     title: workout.title,
     workoutId: workout.id,
     ts: Date.now(),
     workoutSnapshot: JSON.parse(JSON.stringify(workout))
   };
-  const exists = state.history.some(h => h.date === entry.date && h.workoutId === entry.workoutId);
+  const exists = state.history.some(h => h.type==="workout" && h.date===entry.date && h.workoutId===entry.workoutId);
   if(!exists){
     state.history.unshift(entry);
     saveJSON(STORAGE_KEY, state);
   }
 }
+
+function addManualHistoryEntry(dateKey, title, minutes, notes){
+  ensureHistory();
+  const entry = {
+    type: "manual",
+    date: dateKey,
+    title: title,
+    minutes: minutes ?? null,
+    notes: notes ?? "",
+    ts: Date.now()
+  };
+  state.history.unshift(entry); // allow multiple per day always
+  saveJSON(STORAGE_KEY, state);
+}
+
+function deleteHistoryEntry(ts){
+  ensureHistory();
+  const before = state.history.length;
+  state.history = state.history.filter(h => h.ts !== ts);
+  if(state.history.length !== before){
+    saveJSON(STORAGE_KEY, state);
+  }
+}
+
 function ymd(y,m,d){
   const mm = String(m+1).padStart(2,"0");
   const dd = String(d).padStart(2,"0");
@@ -1196,8 +1446,9 @@ function formatMonthLabel(y,m){
   return dt.toLocaleString(undefined, { month:"long", year:"numeric" });
 }
 function historyByDate(){
+  ensureHistory();
   const map = {};
-  for(const h of (state.history || [])){
+  for(const h of state.history){
     if(!map[h.date]) map[h.date] = [];
     map[h.date].push(h);
   }
@@ -1227,52 +1478,140 @@ function renderHistoryCalendar(){
 
   for(let d=1; d<=daysInMonth; d++){
     const key = ymd(calYear, calMonth, d);
-    const doneList = byDate[key] || [];
+    const entries = byDate[key] || [];
 
     const cell = document.createElement("div");
     cell.className = "calDay";
     if(key === todayKey) cell.classList.add("calSelected");
     cell.innerHTML = `<div class="calNum">${d}</div>`;
 
-    if(doneList.length){
+    if(entries.length){
       const dot = document.createElement("div");
       dot.className = "calDot";
       cell.appendChild(dot);
     }
 
     cell.addEventListener("click", ()=>{
-      if(!doneList.length){ toast("No completion that day"); return; }
-      openDayModal(key, doneList);
+      openDayModal(key);
     });
 
     $("calGrid").appendChild(cell);
   }
 }
 
-function openDayModal(dateKey, entries){
-  $("dayModalTitle").textContent = `Completed on ${dateKey}`;
-  const list = $("dayModalList");
-  list.innerHTML = "";
+let dayModalDateKey = null;
 
-  entries.slice().sort((a,b)=>a.ts-b.ts).forEach((entry)=>{
-    const item = document.createElement("div");
-    item.className = "modalItem";
-    const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-    const snapshot = entry.workoutSnapshot;
-    const exList = snapshot?.exercises?.map(e=>e.label).slice(0, 40) || [];
+function openDayModal(dateKey){
+  dayModalDateKey = dateKey;
+  $("dayModalTitle").textContent = `Log for ${dateKey}`;
+  renderDayModalList(dateKey);
 
-    item.innerHTML = `
-      <p class="modalItemTitle">${entry.title}</p>
-      <div class="modalItemSmall">${timeStr} • ${exList.length} exercises</div>
-      <div class="modalItemExercises">${exList.map(x=>`• ${x}`).join("<br>")}</div>
-    `;
-    list.appendChild(item);
-  });
+  $("manualTitle").value = "";
+  $("manualMinutes").value = "";
+  $("manualNotes").value = "";
 
   $("dayModal").style.display = "flex";
 }
+
+function renderDayModalList(dateKey){
+  const list = $("dayModalList");
+  list.innerHTML = "";
+
+  const byDate = historyByDate();
+  const entries = (byDate[dateKey] || []).slice().sort((a,b)=>a.ts-b.ts);
+
+  if(entries.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "modalItem";
+    empty.innerHTML = `
+      <div style="font-weight:950; font-size:13px;">No entries yet</div>
+      <div class="modalItemSmall">Add an activity below to track what you did.</div>
+    `;
+    list.appendChild(empty);
+    return;
+  }
+
+  entries.forEach((entry)=>{
+    const item = document.createElement("div");
+    item.className = "modalItem";
+
+    const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    const pillClass = entry.type === "manual" ? "manual" : "workout";
+    const pillText  = entry.type === "manual" ? "Manual" : "Workout";
+
+    const title = entry.title || "(Untitled)";
+    const extra =
+      entry.type === "manual"
+        ? `${timeStr}${(entry.minutes ? " • " + entry.minutes + " min" : "")}`
+        : `${timeStr} • ${(entry.workoutSnapshot?.exercises?.length ?? 0)} exercises`;
+
+    let detailsHtml = "";
+    if(entry.type === "manual"){
+      const notes = (entry.notes || "").trim();
+      detailsHtml = notes ? `<div class="modalItemExercises">${notes.replaceAll("\n","<br>")}</div>` : "";
+    } else {
+      const snapshot = entry.workoutSnapshot;
+      const exList = snapshot?.exercises?.map(e=>e.label).slice(0, 40) || [];
+      detailsHtml = exList.length
+        ? `<div class="modalItemExercises">${exList.map(x=>`• ${x}`).join("<br>")}</div>`
+        : "";
+    }
+
+    item.innerHTML = `
+      <div class="modalItemTitle">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1;">${title}</span>
+        <span class="pill ${pillClass}">${pillText}</span>
+      </div>
+      <div class="modalItemSmall">${extra}</div>
+      ${detailsHtml}
+      <div class="modalActions">
+        <button class="btnDanger" data-del="${entry.ts}">Delete</button>
+      </div>
+    `;
+
+    item.querySelector("[data-del]").addEventListener("click", ()=>{
+      deleteHistoryEntry(entry.ts);
+      renderDayModalList(dateKey);
+      renderHistoryCalendar();
+      toast("Deleted");
+    });
+
+    list.appendChild(item);
+  });
+}
+
 $("dayModalClose").addEventListener("click", ()=> $("dayModal").style.display="none");
 $("dayModal").addEventListener("click", (e)=>{ if(e.target.id==="dayModal") $("dayModal").style.display="none"; });
+
+$("manualSaveBtn").addEventListener("click", ()=>{
+  if(!dayModalDateKey) return;
+
+  const title = ($("manualTitle").value || "").trim();
+  const minutesRaw = ($("manualMinutes").value || "").trim();
+  const notes = ($("manualNotes").value || "").trim();
+
+  if(!title){
+    toast("Add a title");
+    return;
+  }
+
+  let minutes = null;
+  if(minutesRaw){
+    const n = parseInt(minutesRaw, 10);
+    if(Number.isFinite(n) && n > 0 && n <= 999) minutes = n;
+    else { toast("Minutes must be a number"); return; }
+  }
+
+  addManualHistoryEntry(dayModalDateKey, title, minutes, notes);
+  renderDayModalList(dayModalDateKey);
+  renderHistoryCalendar();
+
+  $("manualTitle").value = "";
+  $("manualMinutes").value = "";
+  $("manualNotes").value = "";
+
+  toast("Saved");
+});
 
 /* ===== CELEBRATION ===== */
 const CELEBRATION_MESSAGES = [
@@ -1311,6 +1650,35 @@ function showCelebration(){
 }
 $("overlay").addEventListener("click", hideCelebration);
 
+/* ===== NAV helper (used for timer-finish auto-advance) ===== */
+function advanceToNextExercise(){
+  const w = WORKOUTS[currentIndex];
+  const idx = getActiveIndex(w);
+  const next = findNextCheckableIndex(w, idx);
+  if(next === null) return;
+  stopTimerHard();
+  state.timer.finished = false;
+  hideFlashHold();
+  saveJSON(STORAGE_KEY, state);
+  setActiveIndex(w.id, next);
+  renderWorkout();
+}
+
+/* ===== Tap-to-dismiss flash-hold and advance ===== */
+function handleGlobalTapForTimerFinish(){
+  const inWorkoutView = $("view-workout").classList.contains("active");
+  if(!inWorkoutView) return;
+
+  if(state.timer && state.timer.finished){
+    // dismiss + advance
+    state.timer.finished = false;
+    hideFlashHold();
+    saveJSON(STORAGE_KEY, state);
+    advanceToNextExercise();
+  }
+}
+document.addEventListener("pointerdown", handleGlobalTapForTimerFinish, { passive:true });
+
 /* ===== RENDER WORKOUT ===== */
 function renderWorkout(){
   todayKey = getLocalDateKey();
@@ -1325,7 +1693,7 @@ function renderWorkout(){
   $("workoutTitle").textContent = w.title;
   $("cycleLabel").textContent = `${currentIndex+1}/${WORKOUTS.length}`;
 
-  // NEW: Prev/Next workout titles under buttons
+  // Prev/Next workout titles under buttons
   const prevWorkout = WORKOUTS[(currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length];
   const nextWorkout = WORKOUTS[(currentIndex + 1) % WORKOUTS.length];
   $("prevWorkoutLabel").textContent = prevWorkout?.title || "—";
@@ -1362,25 +1730,73 @@ function renderWorkout(){
     }
   });
 
+  // Active checkbox state
   $("activeCheckbox").checked = !!checks[activeIdx];
-  $("activeCheckRow").onclick = (e)=>{
-    if(e.target && e.target.id==="activeCheckbox") return;
-    $("activeCheckbox").checked = !$("activeCheckbox").checked;
-    $("activeCheckbox").dispatchEvent(new Event("change"));
-  };
-  $("activeCheckbox").onchange = ()=>{
-    const v = $("activeCheckbox").checked;
-    setCheck(w.id, activeIdx, v);
-    stopTimerHard();
-    if(v){
-      const next = findFirstUncheckedIndex(w);
-      setActiveIndex(w.id, next);
-    }else{
-      setActiveIndex(w.id, activeIdx);
-    }
-    renderWorkout();
-    updateProgress(w);
-  };
+
+  // Bench sets UI
+  const benchWrap = $("benchSets");
+  const benchPills = $("benchPills");
+  const isBench = isBenchSetsExercise(ex);
+  if(isBench){
+    benchWrap.classList.add("show");
+    $("benchSetsLabel").textContent = "Bench — 5 Sets";
+
+    benchPills.innerHTML = "";
+    const arr = getBenchArray(w.id, activeIdx, 5);
+
+    arr.forEach((done, i)=>{
+      const pill = document.createElement("div");
+      pill.className = "benchPill" + (done ? " done" : "");
+      pill.textContent = String(i+1);
+      pill.addEventListener("click", ()=>{
+        const updated = setBenchValue(w.id, activeIdx, i, !arr[i]);
+        // If all 5 sets done, mark exercise complete checkbox automatically
+        const all = updated.every(Boolean);
+        setCheck(w.id, activeIdx, all);
+        renderWorkout();
+        updateProgress(w);
+      });
+      benchPills.appendChild(pill);
+    });
+
+    // Sync main checkbox to bench sets (checkbox toggles all sets)
+    $("activeCheckRow").onclick = (e)=>{
+      // clicking row toggles "all sets" instead of a single checkbox
+      const currentArr = getBenchArray(w.id, activeIdx, 5);
+      const allDone = currentArr.every(Boolean);
+      const newVal = !allDone;
+      for(let i=0;i<5;i++) setBenchValue(w.id, activeIdx, i, newVal);
+      setCheck(w.id, activeIdx, newVal);
+      stopTimerHard();
+      renderWorkout();
+      updateProgress(w);
+    };
+    $("activeCheckbox").onchange = ()=>{}; // ignore direct toggle (row handles it)
+    $("activeCheckbox").checked = getBenchArray(w.id, activeIdx, 5).every(Boolean);
+  } else {
+    benchWrap.classList.remove("show");
+    benchPills.innerHTML = "";
+
+    // Normal checkbox behavior
+    $("activeCheckRow").onclick = (e)=>{
+      if(e.target && e.target.id==="activeCheckbox") return;
+      $("activeCheckbox").checked = !$("activeCheckbox").checked;
+      $("activeCheckbox").dispatchEvent(new Event("change"));
+    };
+    $("activeCheckbox").onchange = ()=>{
+      const v = $("activeCheckbox").checked;
+      setCheck(w.id, activeIdx, v);
+      stopTimerHard();
+      if(v){
+        const next = findFirstUncheckedIndex(w);
+        setActiveIndex(w.id, next);
+      }else{
+        setActiveIndex(w.id, activeIdx);
+      }
+      renderWorkout();
+      updateProgress(w);
+    };
+  }
 
   const prevIdx = findPrevCheckableIndex(w, activeIdx);
   const nextIdx = findNextCheckableIndex(w, activeIdx);
@@ -1405,7 +1821,7 @@ function renderWorkout(){
     vbox.classList.remove("show");
   }
 
-  // Next exercise title only (no meta text here anymore)
+  // Next exercise title only
   if(nextIdx === null){
     $("nextTitle").textContent = "No next exercise";
   } else {
@@ -1413,11 +1829,17 @@ function renderWorkout(){
     $("nextTitle").textContent = nx.label;
   }
 
-  // TIMER: hidden for rack video exercises
+  // TIMER: hidden for rack video + bench sets exercises
   const timerCard = $("timerCard");
-  if(isRackVideo(ex)){
+  if(isRackVideo(ex) || isBench){
     stopTimerHard();
     timerCard.style.display = "none";
+    // also ensure flash-hold isn't lingering incorrectly
+    if(state.timer.finished && (isRackVideo(ex) || isBench)){
+      state.timer.finished = false;
+      hideFlashHold();
+      saveJSON(STORAGE_KEY, state);
+    }
   } else {
     timerCard.style.display = "block";
     const hasSeconds = isTimed(ex);
@@ -1428,9 +1850,10 @@ function renderWorkout(){
     const needsReset = state.timer.workoutId !== w.id || state.timer.exerciseIndex !== activeIdx;
     if(needsReset){
       stopTimerHard();
-      state.timer = { running:false, remaining:desired, duration:desired, workoutId:w.id, exerciseIndex:activeIdx };
+      state.timer = { running:false, remaining:desired, duration:desired, workoutId:w.id, exerciseIndex:activeIdx, finished:false };
       $("timerSecondsInput").value="";
       $("timerSecondsInput").placeholder=String(desired);
+      hideFlashHold();
       saveJSON(STORAGE_KEY, state);
     } else {
       $("timerSecondsInput").placeholder=String(desired);
@@ -1470,6 +1893,9 @@ $("activePrevBtn").addEventListener("click", ()=>{
   const prev = findPrevCheckableIndex(w, idx);
   if(prev===null) return;
   stopTimerHard();
+  state.timer.finished = false;
+  hideFlashHold();
+  saveJSON(STORAGE_KEY, state);
   setActiveIndex(w.id, prev);
   renderWorkout();
 });
@@ -1479,12 +1905,17 @@ $("activeNextBtn").addEventListener("click", ()=>{
   const next = findNextCheckableIndex(w, idx);
   if(next===null) return;
   stopTimerHard();
+  state.timer.finished = false;
+  hideFlashHold();
+  saveJSON(STORAGE_KEY, state);
   setActiveIndex(w.id, next);
   renderWorkout();
 });
 
 $("prevWorkoutBtn").addEventListener("click", ()=>{
   pauseTimer();
+  state.timer.finished = false;
+  hideFlashHold();
   currentIndex = (currentIndex - 1 + WORKOUTS.length) % WORKOUTS.length;
   state.currentIndex = currentIndex;
   saveJSON(STORAGE_KEY, state);
@@ -1492,6 +1923,8 @@ $("prevWorkoutBtn").addEventListener("click", ()=>{
 });
 $("nextWorkoutBtn").addEventListener("click", ()=>{
   pauseTimer();
+  state.timer.finished = false;
+  hideFlashHold();
   currentIndex = (currentIndex + 1) % WORKOUTS.length;
   state.currentIndex = currentIndex;
   saveJSON(STORAGE_KEY, state);
@@ -1508,6 +1941,8 @@ $("timerStartPause").addEventListener("click", async ()=>{
 $("timerStop").addEventListener("click", ()=>{
   pauseTimer();
   stopTimerHard();
+  state.timer.finished = false;
+  hideFlashHold();
   toast("Timer stopped");
   renderWorkout();
 });
@@ -1525,6 +1960,7 @@ $("timerReset").addEventListener("click", ()=>{
     const ov = getOverrideSeconds(w.id, idx);
     resetTimerTo(ov ?? def);
   }
+  hideFlashHold();
   renderWorkout();
 });
 $("timerSecondsInput").addEventListener("blur", ()=>{
@@ -1543,11 +1979,13 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   const { allDone } = computeCompletion(w);
   if(!allDone){ toast("Finish all exercises"); return; }
 
-  addHistoryEntry(w);
+  addWorkoutHistoryEntry(w);
   showCelebration();
 
   setTimeout(()=>{
     pauseTimer();
+    state.timer.finished = false;
+    hideFlashHold();
     currentIndex = (currentIndex + 1) % WORKOUTS.length;
     state.currentIndex = currentIndex;
     saveJSON(STORAGE_KEY, state);
@@ -1555,13 +1993,14 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   }, 950);
 });
 
-/* INIT */
+/* ===== INIT ===== */
 (async function init(){
   await loadWorkoutsFromFile();
 
   state = { ...defaultState, ...state };
   if(!state.timerOverrides) state.timerOverrides = {};
-  if(!Array.isArray(state.history)) state.history = [];
+  if(!state.setChecks) state.setChecks = {};
+  ensureHistory();
 
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
@@ -1574,6 +2013,13 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   if (typeof state.currentIndex !== "number") state.currentIndex = 0;
   if (state.currentIndex < 0 || state.currentIndex >= WORKOUTS.length) state.currentIndex = 0;
   currentIndex = state.currentIndex;
+
+  // If app reloads while flash-hold was on, don't trap the UI
+  hideFlashHold();
+  if(state.timer && state.timer.finished){
+    // allow one tap to advance (we show flash again to match your rule)
+    showFlashHold();
+  }
 
   renderWorkout();
 })();
