@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Workout Tracker</title>
+  <title>Workout Tracker X SC</title>
 
   <style>
     :root{
@@ -32,13 +32,11 @@
       --safeTop: env(safe-area-inset-top);
       --safeBottom: env(safe-area-inset-bottom);
 
-      /* iPhone 12 compact tuning */
       --pad:10px;
       --gap:8px;
 
-      /* Fixed button sizing so nothing wraps */
-      --btnW: 56px;      /* exercise prev/next */
-      --btnWorkW: 148px; /* prev/next workout */
+      --btnW: 56px;
+      --btnWorkW: 148px;
     }
 
     *{box-sizing:border-box;}
@@ -349,13 +347,11 @@
       text-overflow:ellipsis;
     }
 
-    /* ✅ FIX: checkbox was getting clipped on iPhone.
-       Remove scale-transform and give it a fixed size + extra left padding. */
     .checkRow{
       display:flex;
       align-items:center;
       gap:12px;
-      padding:10px 12px;              /* slightly more left padding */
+      padding:10px 12px;
       border-radius: 16px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
@@ -363,14 +359,14 @@
       cursor:pointer;
       min-width:0;
       white-space:nowrap;
-      overflow:hidden;                 /* keep clean */
+      overflow:hidden;
     }
     .checkRow input{
       -webkit-appearance: checkbox;
       appearance: checkbox;
-      width: 20px;                     /* fixed size so it won't clip */
+      width: 20px;
       height: 20px;
-      margin: 0 0 0 2px;               /* nudge off the edge */
+      margin: 0 0 0 2px;
       padding: 0;
       accent-color: var(--accent2);
       flex:0 0 auto;
@@ -1055,7 +1051,6 @@
 <div class="flashHoldHint" id="flashHoldHint">Timer done — tap to advance</div>
 
 <script>
-/* ===== DATE KEY (America/Chicago) ===== */
 function getLocalDateKey() {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
@@ -1066,7 +1061,6 @@ function getLocalDateKey() {
 }
 let todayKey = getLocalDateKey();
 
-/* ===== FALLBACK ===== */
 const DEFAULT_WORKOUTS = [
   {
     id: "w1",
@@ -1108,7 +1102,6 @@ function formatTime(sec){
   return m>0 ? `${m}:${String(s).padStart(2,"0")}` : `${sec}s`;
 }
 
-/* ===== SOUND (no UI toggle) ===== */
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
 let audioCtx = null;
 let audioUnlocked = false;
@@ -1147,7 +1140,6 @@ function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
   window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
 });
 
-/* ===== LOAD workouts.json ===== */
 let WORKOUTS = [];
 async function loadWorkoutsFromFile(){
   try{
@@ -1163,7 +1155,6 @@ async function loadWorkoutsFromFile(){
   }
 }
 
-/* ===== STATE ===== */
 const defaultState = {
   lastDate: "",
   currentIndex: 0,
@@ -1178,13 +1169,11 @@ let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
 let timerInterval = null;
 
-/* ===== VIEW SWITCH ===== */
 function setView(which){
   $("view-workout").classList.toggle("active", which==="workout");
   $("view-history").classList.toggle("active", which==="history");
 }
 
-/* ===== HELPERS ===== */
 function stopTimerHard(){
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
@@ -1202,8 +1191,6 @@ function setCheck(workoutId, idx, v){
 function isCheckable(ex){ return ex.type !== "section"; }
 function isTimed(ex){ return typeof ex.seconds === "number" && ex.seconds > 0; }
 function isRackVideo(ex){ return ex?.type === "videoRef"; }
-
-/* Bench detection */
 function isBenchSetsExercise(ex){
   const t = (ex?.label || "").toLowerCase();
   return t.includes("bench") && (t.includes("set") || t.includes("sets"));
@@ -1238,7 +1225,6 @@ function getActiveIndex(workout){
   const k = workoutDayKey(workout.id);
   const saved = state.activeByKey[k];
   if(typeof saved === "number") return saved;
-  // default: first unchecked if possible
   const checks = getChecksFor(workout.id);
   for(let i=0;i<workout.exercises.length;i++){
     if(isCheckable(workout.exercises[i]) && !checks[i]) { setActiveIndex(workout.id, i); return i; }
@@ -1300,7 +1286,6 @@ function findVideoForExercise(workout, label){
   return vids.find(v => v.label === label) || vids.find(v => label.includes(v.label));
 }
 
-/* ===== TIMER OVERRIDES ===== */
 function ovKey(workoutId, exIdx){ return `${workoutId}::${exIdx}`; }
 function getOverrideSeconds(workoutId, exIdx){
   const v = state.timerOverrides?.[ovKey(workoutId, exIdx)];
@@ -1334,7 +1319,6 @@ function resetTimerTo(seconds){
   $("timerBig").textContent = formatTime(state.timer.remaining);
 }
 
-/* Flash hold */
 function showFlashHold(){
   $("flashHold").classList.add("on");
   $("flashHoldHint").classList.add("show");
@@ -1350,7 +1334,6 @@ function onTimerFinishedAdvance(){
   beep(950,110); setTimeout(()=>beep(760,130), 140);
 }
 
-/* tick */
 function tick(){
   state.timer.remaining -= 1;
   if(state.timer.remaining < 0) state.timer.remaining = 0;
@@ -1380,7 +1363,6 @@ function startTimer(){
   timerInterval = setInterval(tick, 1000);
 }
 
-/* ===== HISTORY ===== */
 function ensureHistory(){
   if(!Array.isArray(state.history)) state.history = [];
 }
@@ -1573,7 +1555,6 @@ $("manualSaveBtn").addEventListener("click", ()=>{
   toast("Saved");
 });
 
-/* ===== CELEBRATION ===== */
 const CELEBRATION_MESSAGES = [
   "Good job not being a total fucking loser today.",
   "Congrats. You moved your body. The bar is low, but you cleared it.",
@@ -1610,32 +1591,41 @@ function showCelebration(){
 }
 $("overlay").addEventListener("click", hideCelebration);
 
-/* ===== Advance helper for timer-finish tap ===== */
+/* FIXED: marks timed exercise complete before advancing */
 function advanceToNextExercise(){
   const w = WORKOUTS[currentIndex];
   const idx = getActiveIndex(w);
+  const ex = w.exercises[idx];
+
+  if (ex && isCheckable(ex) && !isRackVideo(ex) && !isBenchSetsExercise(ex)) {
+    setCheck(w.id, idx, true);
+  }
+
   const next = findNextCheckableIndex(w, idx);
-  if(next === null) return;
+
   stopTimerHard();
   state.timer.finished = false;
   hideFlashHold();
   saveJSON(STORAGE_KEY, state);
-  setActiveIndex(w.id, next);
+
+  if(next !== null){
+    setActiveIndex(w.id, next);
+  } else {
+    setActiveIndex(w.id, idx);
+  }
+
   renderWorkout();
 }
+
 function handleGlobalTapForTimerFinish(){
   const inWorkoutView = $("view-workout").classList.contains("active");
   if(!inWorkoutView) return;
   if(state.timer && state.timer.finished){
-    state.timer.finished = false;
-    hideFlashHold();
-    saveJSON(STORAGE_KEY, state);
     advanceToNextExercise();
   }
 }
 document.addEventListener("pointerdown", handleGlobalTapForTimerFinish, { passive:true });
 
-/* ===== RENDER WORKOUT ===== */
 function renderWorkout(){
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
@@ -1659,8 +1649,6 @@ function renderWorkout(){
   let activeIdx = getActiveIndex(w);
   if(activeIdx < 0 || activeIdx >= w.exercises.length) activeIdx = 0;
 
-  /* ✅ CHANGE: DO NOT auto-jump away from checked exercises anymore.
-     You can go back and view completed ones as checked. */
   const ex = w.exercises[activeIdx];
 
   $("activeCount").textContent = `${activeIdx+1}/${w.exercises.length}`;
@@ -1735,7 +1723,6 @@ function renderWorkout(){
       setCheck(w.id, activeIdx, v);
       stopTimerHard();
 
-      // keep "auto-advance" only when you check something ON
       if(v){
         const nextUn = findFirstUncheckedIndex(w);
         if(nextUn !== null) setActiveIndex(w.id, nextUn);
@@ -1808,7 +1795,6 @@ function renderWorkout(){
   updateProgress(w);
 }
 
-/* ===== EVENTS ===== */
 $("historyChip").addEventListener("click", ()=>{
   setView("history");
   renderHistoryCalendar();
@@ -1870,7 +1856,6 @@ $("nextWorkoutBtn").addEventListener("click", ()=>{
   renderWorkout();
 });
 
-/* Timer controls */
 $("timerStartPause").addEventListener("click", async ()=>{
   await unlockAudio();
   if(state.timer.running) pauseTimer();
@@ -1912,7 +1897,6 @@ $("timerSecondsInput").addEventListener("blur", ()=>{
   }
 });
 
-/* Mark complete */
 $("markCompleteBtn").addEventListener("click", ()=>{
   const w = WORKOUTS[currentIndex];
   const { allDone } = computeCompletion(w);
@@ -1932,7 +1916,6 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   }, 950);
 });
 
-/* INIT */
 (async function init(){
   await loadWorkoutsFromFile();
 
