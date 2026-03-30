@@ -6,25 +6,29 @@
         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Workout Tracker X SC</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root{
       color-scheme: dark;
 
-      --bg0:#070812;
-      --bg1:#0b0f22;
+      --bg0:#06080F;
+      --bg1:#090D1B;
 
-      --text:#f3f6ff;
-      --muted:#a8b0c6;
-      --muted2: rgba(168,176,198,.72);
+      --text:#F8FAFF;
+      --muted:#8892A4;
+      --muted2: rgba(136,146,164,.72);
 
-      --accent:#7c5cff;
-      --accent2:#2de2e6;
+      --accent:#FF4D00;
+      --accent2:#FFB800;
 
-      --stroke: rgba(255,255,255,.10);
-      --stroke2: rgba(255,255,255,.14);
+      --stroke: rgba(255,255,255,.13);
+      --stroke2: rgba(255,255,255,.20);
 
-      --shadow: 0 18px 50px rgba(0,0,0,.45);
-      --glow: 0 0 0 3px rgba(124,92,255,.12);
+      --shadow: 0 20px 60px rgba(0,0,0,.60);
+      --glow: 0 0 0 3px rgba(255,77,0,.16);
 
       --r:16px;
       --r2:18px;
@@ -50,12 +54,11 @@
 
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
       background:
-        radial-gradient(1200px 900px at 15% -10%, rgba(124,92,255,.42), transparent 60%),
-        radial-gradient(900px 700px at 110% 20%, rgba(45,226,230,.30), transparent 55%),
-        radial-gradient(700px 600px at 50% 110%, rgba(45,212,191,.15), transparent 55%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+        radial-gradient(900px 700px at -5% -5%, rgba(255,77,0,.22), transparent 55%),
+        radial-gradient(600px 500px at 108% 108%, rgba(255,184,0,.13), transparent 55%),
+        linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 100%);
       color:var(--text);
       height:100dvh;
       max-width: 980px;
@@ -80,10 +83,12 @@
     }
     .brand h1{
       margin:0;
-      font-size:13px;
-      font-weight:950;
-      letter-spacing:.2px;
-      opacity:.95;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      opacity:.98;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -91,7 +96,7 @@
     .brand .small{
       font-size:11px;
       color:var(--muted);
-      font-weight:800;
+      font-weight:600;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -106,17 +111,18 @@
       min-width:0;
     }
     .chip{
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       border:1px solid var(--stroke);
-      padding:6px 8px;
+      padding:6px 10px;
       border-radius:999px;
       font-size:11px;
+      font-weight:600;
       color:var(--muted);
       backdrop-filter: blur(10px);
       user-select:none;
       white-space:nowrap;
     }
-    .chip strong{ color:var(--text); font-weight:950; }
+    .chip strong{ color:var(--text); font-weight:800; }
     .chipBtn{ cursor:pointer; }
 
     .main{
@@ -139,33 +145,39 @@
     button{
       appearance:none;
       border:1px solid var(--stroke2);
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       color:var(--text);
       border-radius: 14px;
       padding:10px 10px;
+      font-family: 'Inter', sans-serif;
       font-size:12px;
       cursor:pointer;
-      font-weight:950;
-      letter-spacing:.15px;
+      font-weight:700;
+      letter-spacing:.2px;
       line-height:1;
       white-space:nowrap;
       flex:0 0 auto;
+      transition: background .12s ease, border-color .12s ease;
     }
     button:active{transform: translateY(1px);}
-    button:disabled{opacity:.40; cursor:not-allowed;}
+    button:disabled{opacity:.35; cursor:not-allowed;}
 
     .btnPrimary{
-      border-color: rgba(124,92,255,.60);
-      background: rgba(124,92,255,.22);
+      border-color: rgba(255,77,0,.70);
+      background: rgba(255,77,0,.20);
       box-shadow: var(--glow);
+      color: #FFD0B8;
+    }
+    .btnPrimary:not(:disabled):hover{
+      background: rgba(255,77,0,.30);
     }
     .btnGhost{
-      background: rgba(0,0,0,.12);
-      border-color: rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      border-color: rgba(255,255,255,.16);
     }
     .btnDanger{
       border-color: rgba(251,113,133,.55);
-      background: rgba(251,113,133,.14);
+      background: rgba(251,113,133,.13);
     }
 
     input, textarea{
@@ -200,17 +212,21 @@
     }
     .workoutHeader .left{ min-width:0; flex:1; }
     .labelTop{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-      letter-spacing:.4px;
+      font-size:10px;
+      color:var(--accent2);
+      font-weight:700;
+      letter-spacing:.8px;
+      text-transform:uppercase;
       white-space:nowrap;
     }
     #workoutTitle{
       margin:4px 0 0 0;
-      font-size:14px;
-      font-weight:950;
-      line-height:1.15;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.3px;
+      text-transform:uppercase;
+      line-height:1.1;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -219,7 +235,7 @@
       margin-top:4px;
       font-size:11px;
       color:var(--muted2);
-      font-weight:800;
+      font-weight:600;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -237,10 +253,10 @@
       white-space:nowrap;
     }
     .bar{
-      height: 9px;
+      height: 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
       overflow:hidden;
     }
     .bar > div{
@@ -248,7 +264,8 @@
       width:0%;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius:999px;
-      transition: width .25s ease;
+      transition: width .3s ease;
+      box-shadow: 0 0 10px rgba(255,77,0,.40);
     }
 
     .stack{
@@ -264,8 +281,8 @@
       flex: 1 1 auto;
       min-height: 0;
       border-radius: var(--r2);
-      border:1px solid rgba(124,92,255,.38);
-      background: rgba(0,0,0,.20);
+      border:1px solid rgba(255,77,0,.32);
+      background: rgba(0,0,0,.25);
       box-shadow: var(--glow);
       overflow:hidden;
       display:flex;
@@ -277,22 +294,22 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding:8px 10px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:7px 10px;
+      background: linear-gradient(180deg, rgba(255,77,0,.08), rgba(255,77,0,.03));
+      border-bottom:1px solid rgba(255,77,0,.18);
       white-space:nowrap;
     }
     .paneHeader b{
-      font-size:11px;
-      letter-spacing:.55px;
+      font-size:10px;
+      letter-spacing:.8px;
       text-transform:uppercase;
-      color:rgba(168,176,198,.92);
-      font-weight:950;
+      color:var(--accent2);
+      font-weight:700;
     }
     .paneHeader .count{
       font-size:11px;
-      color:rgba(168,176,198,.82);
-      font-weight:850;
+      color:rgba(255,255,255,.55);
+      font-weight:600;
     }
 
     .activeBody{
@@ -315,8 +332,11 @@
     }
     #activeTitle{
       margin:0;
-      font-size:13px;
-      font-weight:950;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size:17px;
+      font-weight:900;
+      letter-spacing:.2px;
+      text-transform:uppercase;
       line-height:1.1;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -353,13 +373,18 @@
       gap:12px;
       padding:10px 12px;
       border-radius: 16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
       user-select:none;
       cursor:pointer;
       min-width:0;
       white-space:nowrap;
       overflow:hidden;
+      transition: background .15s ease, border-color .15s ease;
+    }
+    .checkRow.isChecked{
+      background: rgba(255,184,0,.07);
+      border-color: rgba(255,184,0,.30);
     }
     .checkRow input{
       -webkit-appearance: checkbox;
@@ -374,12 +399,17 @@
     }
     .checkRow .label{
       font-size:12px;
-      font-weight:950;
+      font-weight:700;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
       min-width:0;
       flex:1 1 auto;
+      transition: opacity .15s ease, text-decoration .15s ease;
+    }
+    .checkRow.isChecked .label{
+      opacity:.45;
+      text-decoration: line-through;
     }
 
     .benchSets{
@@ -406,26 +436,27 @@
       flex-wrap:nowrap;
     }
     .benchPill{
-      width:30px;
-      height:30px;
+      width:32px;
+      height:32px;
       border-radius: 999px;
       display:flex;
       align-items:center;
       justify-content:center;
       font-size:11px;
-      font-weight:950;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: rgba(243,246,255,.92);
+      font-weight:700;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      color: rgba(243,246,255,.80);
       user-select:none;
       cursor:pointer;
       flex: 0 0 auto;
+      transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
     }
     .benchPill.done{
-      border-color: rgba(45,212,191,.55);
-      background: rgba(45,212,191,.16);
-      color: rgba(243,246,255,.98);
-      box-shadow: 0 0 0 3px rgba(45,212,191,.12);
+      border-color: rgba(255,184,0,.65);
+      background: rgba(255,184,0,.18);
+      color: #FFE599;
+      box-shadow: 0 0 0 3px rgba(255,184,0,.14);
     }
 
     .iframeBox{
@@ -448,14 +479,22 @@
       overflow:hidden;
     }
     #timerBig{
+      font-family: 'Barlow Condensed', sans-serif;
       font-variant-numeric: tabular-nums;
-      font-size: 44px;
-      font-weight: 950;
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: 2px;
       text-align:center;
-      padding: 10px 10px;
-      background: rgba(255,255,255,.06);
+      padding: 12px 10px;
+      background: rgba(255,255,255,.05);
       border-bottom:1px solid rgba(255,255,255,.08);
       white-space:nowrap;
+      color: var(--text);
+      transition: color .2s ease;
+    }
+    #timerBig.running{
+      color: var(--accent2);
+      text-shadow: 0 0 24px rgba(255,184,0,.35);
     }
     .timerInner{
       padding:10px;
@@ -534,7 +573,8 @@
     #nextTitle{
       margin:0;
       font-size:12px;
-      font-weight:950;
+      font-weight:600;
+      color: var(--muted);
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -577,9 +617,12 @@
 
     #markCompleteBtn{
       width:100%;
-      padding:12px 10px;
-      font-size:13px;
-      font-weight:950;
+      padding:13px 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-transform:uppercase;
     }
 
     #view-history{ height:100%; }
@@ -593,8 +636,11 @@
     }
     .historyHeader h2{
       margin:0;
-      font-size:14px;
-      font-weight:950;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:.4px;
+      text-transform:uppercase;
       overflow:hidden;
       text-overflow:ellipsis;
       white-space:nowrap;
@@ -643,13 +689,13 @@
     .calNum{ font-weight:950; font-size:12px; }
     .calDot{
       position:absolute; right:8px; bottom:8px;
-      width:10px; height:10px; border-radius: 999px;
+      width:8px; height:8px; border-radius: 999px;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 0 3px rgba(124,92,255,.14);
+      box-shadow: 0 0 6px rgba(255,77,0,.50);
     }
     .calSelected{
-      border-color: rgba(45,212,191,.85);
-      box-shadow: 0 0 0 3px rgba(45,212,191,.15);
+      border-color: rgba(255,184,0,.80);
+      box-shadow: 0 0 0 3px rgba(255,184,0,.15);
     }
 
     .toast{
@@ -690,14 +736,14 @@
       position: relative;
       overflow:hidden;
     }
-    .celebrateTitle{margin:0;font-size:18px;font-weight:950;}
+    .celebrateTitle{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;letter-spacing:.4px;text-transform:uppercase;}
     .celebrateMsg{margin:10px 0 0 0;color:rgba(242,244,255,.92);line-height:1.35;font-size:14px;}
     .sparkles{
       position:absolute;inset:-40px;opacity:.9;pointer-events:none;
       background:
-        radial-gradient(circle at 10% 20%, rgba(124,92,255,.55), transparent 35%),
-        radial-gradient(circle at 90% 30%, rgba(45,226,230,.45), transparent 40%),
-        radial-gradient(circle at 50% 90%, rgba(45,212,191,.35), transparent 45%);
+        radial-gradient(circle at 10% 20%, rgba(255,77,0,.55), transparent 35%),
+        radial-gradient(circle at 90% 30%, rgba(255,184,0,.50), transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(255,120,0,.35), transparent 45%);
       filter: blur(2px);
       animation: floaty 1.4s ease-in-out infinite alternate;
     }
@@ -784,12 +830,14 @@
       flex:0 0 auto;
     }
     .pill.manual{
-      border-color: rgba(45,212,191,.45);
-      background: rgba(45,212,191,.10);
+      border-color: rgba(255,184,0,.45);
+      background: rgba(255,184,0,.10);
+      color: #FFE599;
     }
     .pill.workout{
-      border-color: rgba(124,92,255,.55);
-      background: rgba(124,92,255,.14);
+      border-color: rgba(255,77,0,.55);
+      background: rgba(255,77,0,.14);
+      color: #FFD0B8;
     }
 
     .modalItemSmall{
@@ -914,8 +962,8 @@
           <div class="activeLine">
             <p id="activeTitle">—</p>
             <div class="exNav">
-              <button id="activePrevBtn" class="btnGhost">◀</button>
-              <button id="activeNextBtn" class="btnGhost">▶</button>
+              <button id="activePrevBtn" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6.5 1.5L3 5l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="activeNextBtn" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3.5 1.5L7 5l-3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             </div>
           </div>
 
@@ -986,8 +1034,8 @@
     <div class="historyHeader">
       <h2 id="calMonthLabel">History</h2>
       <div class="historyControls">
-        <button id="calPrev" class="btnGhost">◀</button>
-        <button id="calNext" class="btnGhost">▶</button>
+        <button id="calPrev" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6.5 1.5L3 5l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button id="calNext" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3.5 1.5L7 5l-3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button id="historyBack" class="btnPrimary">Back</button>
       </div>
     </div>
@@ -1179,6 +1227,7 @@ function stopTimerHard(){
   timerInterval = null;
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
+  $("timerBig").classList.remove("running");
 }
 function workoutDayKey(workoutId){ return `${todayKey}::${workoutId}`; }
 function getChecksFor(workoutId){ return state.checks[workoutDayKey(workoutId)] || {}; }
@@ -1309,6 +1358,7 @@ function pauseTimer(){
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Start";
+  $("timerBig").classList.remove("running");
 }
 function resetTimerTo(seconds){
   pauseTimer();
@@ -1359,6 +1409,7 @@ function startTimer(){
   state.timer.finished = false;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Pause";
+  $("timerBig").classList.add("running");
   beep(520,70);
   timerInterval = setInterval(tick, 1000);
 }
@@ -1568,7 +1619,7 @@ function spawnConfetti(){
     const p=document.createElement("i");
     p.style.left = Math.random()*100+"%";
     p.style.animationDelay = (Math.random()*0.12)+"s";
-    const colors=["rgba(124,92,255,.9)","rgba(45,226,230,.9)","rgba(45,212,191,.9)","rgba(255,255,255,.85)"];
+    const colors=["rgba(255,77,0,.9)","rgba(255,184,0,.9)","rgba(255,120,0,.9)","rgba(255,255,255,.85)"];
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
     p.style.width = (8+Math.random()*6)+"px";
     p.style.height= (10+Math.random()*8)+"px";
@@ -1671,6 +1722,7 @@ function renderWorkout(){
   });
 
   $("activeCheckbox").checked = !!checks[activeIdx];
+  $("activeCheckRow").classList.toggle("isChecked", !!checks[activeIdx]);
 
   const benchWrap = $("benchSets");
   const benchPills = $("benchPills");
