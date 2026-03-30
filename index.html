@@ -888,13 +888,18 @@
       inset: 0;
       z-index: 1500;
       pointer-events: none;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,77,0,.82);
       opacity: 0;
       transition: opacity .10s ease;
     }
     .flash.on{
       opacity: 1;
       pointer-events: auto;
+      animation: flashPulse 0.7s ease-in-out infinite alternate;
+    }
+    @keyframes flashPulse{
+      from{ opacity: .75; }
+      to{ opacity: 1; }
     }
     .flashHoldHint{
       position: fixed;
@@ -1169,21 +1174,34 @@ async function unlockAudio(){
     audioUnlocked = true;
   }catch{}
 }
-function beep(freq=880, ms=120){
-  if(!soundEnabled) return;
-  const ctx = ensureAudio();
-  if(!ctx || ctx.state === "suspended") return;
+function doBeepNow(ctx, freq, ms, gain){
   try{
     const o = ctx.createOscillator();
     const g = ctx.createGain();
-    o.type = "sine"; o.frequency.value = freq;
-    g.gain.value = 0.06;
+    o.type = "square";
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(gain, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + ms/1000);
     o.connect(g); g.connect(ctx.destination);
     o.start();
-    setTimeout(()=>o.stop(), ms);
+    o.stop(ctx.currentTime + ms/1000 + 0.05);
   }catch{}
 }
-function successChime(){ beep(880,120); setTimeout(()=>beep(1175,140),140); }
+function beep(freq=880, ms=180, gain=0.18){
+  if(!soundEnabled) return;
+  const ctx = ensureAudio();
+  if(!ctx) return;
+  if(ctx.state === "suspended"){
+    ctx.resume().then(()=> doBeepNow(ctx, freq, ms, gain)).catch(()=>{});
+  } else {
+    doBeepNow(ctx, freq, ms, gain);
+  }
+}
+function vibrate(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch{} }
+function successChime(){
+  vibrate([80, 60, 120]);
+  beep(880,180,0.16); setTimeout(()=>beep(1175,200,0.16),200);
+}
 ["pointerdown","touchstart","keydown"].forEach(evt=>{
   window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
 });
@@ -1381,7 +1399,10 @@ function onTimerFinishedAdvance(){
   state.timer.finished = true;
   saveJSON(STORAGE_KEY, state);
   showFlashHold();
-  beep(950,110); setTimeout(()=>beep(760,130), 140);
+  vibrate([200, 80, 200, 80, 400]);
+  beep(1047,200,0.22);
+  setTimeout(()=>beep(880,200,0.22), 230);
+  setTimeout(()=>beep(1047,300,0.22), 460);
 }
 
 function tick(){
@@ -1607,11 +1628,21 @@ $("manualSaveBtn").addEventListener("click", ()=>{
 });
 
 const CELEBRATION_MESSAGES = [
-  "Good job not being a total fucking loser today.",
-  "Congrats. You moved your body. The bar is low, but you cleared it.",
-  "You did the workout. Try not to pass out from the responsibility.",
-  "Look at you, doing hard things on purpose.",
-  "Another workout completed. Shocking behavior."
+  "Workout complete. Bold of you to stop there. Real athletes do two-a-days.",
+  "You finished. Don't act like that was hard. Your grandma moves faster.",
+  "Congrats on doing the absolute bare minimum. The couch missed you.",
+  "One workout. You gonna post about it now? Typical.",
+  "That's it? Cool. Some people do this twice a day and still have a life.",
+  "Finished already? Most people are still going. But sure, you're done.",
+  "You did it. Now go eat a pizza and undo everything. You know you want to.",
+  "Workout logged. Try not to take three rest days after this one.",
+  "Look at you. One workout and you're ready to retire. Legendary effort.",
+  "Done. Was that really your max effort or were you just going through the motions again?",
+  "Completed. Now stop flexing in the mirror and go do something productive.",
+  "You showed up. That part was free. The hard part is not being soft tomorrow too.",
+  "Another one in the books. Your body thanks you. Your excuses are getting weaker though.",
+  "Technically a workout. I've seen more intensity at a school fundraiser.",
+  "That counted. Barely. See you next time — assuming you don't skip it."
 ];
 function spawnConfetti(){
   const box = $("confetti"); box.innerHTML="";
