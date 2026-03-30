@@ -1234,71 +1234,69 @@ function formatTime(sec){
 }
 
 let soundEnabled = (localStorage.getItem(SOUND_KEY) ?? "true") === "true";
-let audioCtx = null;
 let audioUnlocked = false;
-function ensureAudio(){
-  if(!audioCtx){
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if(!AudioCtx) return null;
-    audioCtx = new AudioCtx();
+const SND = {};
+
+// Build a PCM WAV blob URL for a pure tone.
+// Once an HTMLAudioElement is played from a user gesture, iOS allows
+// subsequent .play() calls on that same element from any context.
+function makeToneUrl(freq, dur, vol){
+  const sr = 44100, n = (sr * dur) | 0;
+  const ab = new ArrayBuffer(44 + n * 2);
+  const dv = new DataView(ab);
+  const ws = (o,s) => { for(let i=0;i<s.length;i++) dv.setUint8(o+i,s.charCodeAt(i)); };
+  ws(0,'RIFF'); dv.setUint32(4,36+n*2,true);
+  ws(8,'WAVE'); ws(12,'fmt ');
+  dv.setUint32(16,16,true); dv.setUint16(20,1,true); dv.setUint16(22,1,true);
+  dv.setUint32(24,sr,true); dv.setUint32(28,sr*2,true);
+  dv.setUint16(32,2,true); dv.setUint16(34,16,true);
+  ws(36,'data'); dv.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++){
+    const env = i<n*0.05 ? i/(n*0.05) : Math.max(0, 1-(i-n*0.05)/(n*0.95));
+    dv.setInt16(44+i*2, Math.round(vol*32767*Math.sin(2*Math.PI*freq*i/sr)*env), true);
   }
-  return audioCtx;
+  return URL.createObjectURL(new Blob([ab],{type:'audio/wav'}));
 }
-async function unlockAudio(){
-  try{
-    const ctx = ensureAudio();
-    if(!ctx) return;
-    if(ctx.state === "suspended") await ctx.resume();
-    audioUnlocked = true;
-  }catch{}
+
+function initSounds(){
+  SND.tick     = new Audio(makeToneUrl(440,  0.09, 0.55));
+  SND.lastFive = new Audio(makeToneUrl(1047, 0.13, 0.80));
+  SND.go       = new Audio(makeToneUrl(880,  0.16, 0.70));
+  SND.alarm1   = new Audio(makeToneUrl(1047, 0.24, 0.90));
+  SND.alarm2   = new Audio(makeToneUrl(880,  0.24, 0.90));
+  SND.alarm3   = new Audio(makeToneUrl(1047, 0.32, 0.90));
+  SND.chime1   = new Audio(makeToneUrl(880,  0.20, 0.70));
+  SND.chime2   = new Audio(makeToneUrl(1175, 0.24, 0.70));
+  SND.reset    = new Audio(makeToneUrl(660,  0.08, 0.45));
 }
-function doBeepNow(ctx, freq, ms, gain){
-  try{
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = "square";
-    o.frequency.value = freq;
-    g.gain.setValueAtTime(gain, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + ms/1000);
-    o.connect(g); g.connect(ctx.destination);
-    o.start();
-    o.stop(ctx.currentTime + ms/1000 + 0.05);
-  }catch{}
+
+function playSound(key){
+  if(!soundEnabled || !audioUnlocked) return;
+  const s = SND[key]; if(!s) return;
+  s.currentTime = 0;
+  s.play().catch(()=>{});
 }
-function beep(freq=880, ms=180, gain=0.18){
-  if(!soundEnabled) return;
-  const ctx = ensureAudio();
-  if(!ctx) return;
-  if(ctx.state === "suspended"){
-    ctx.resume().then(()=> doBeepNow(ctx, freq, ms, gain)).catch(()=>{});
-  } else {
-    doBeepNow(ctx, freq, ms, gain);
-  }
-}
+
 function vibrate(pattern){ try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch{} }
+
 function successChime(){
-  vibrate([80, 60, 120]);
-  beep(880,180,0.16); setTimeout(()=>beep(1175,200,0.16),200);
+  vibrate([80,60,120]);
+  playSound('chime1');
+  setTimeout(()=>playSound('chime2'), 220);
+}
+
+async function unlockAudio(){
+  if(audioUnlocked) return;
+  initSounds();
+  audioUnlocked = true;
+  // Prime every element from this user gesture so iOS allows future .play() calls
+  for(const s of Object.values(SND)){
+    try{ await s.play(); s.pause(); s.currentTime = 0; }catch{}
+  }
 }
 ["pointerdown","touchstart","keydown"].forEach(evt=>{
-  window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
+  window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, {once:true, passive:true});
 });
-
-// Keep AudioContext alive — iOS suspends it after ~30s of silence.
-// A silent 1-sample buffer every 15s keeps it in "running" state
-// so timer-end beeps can fire without needing a user gesture.
-function keepAudioAlive(){
-  if(!audioCtx || !audioUnlocked) return;
-  try{
-    if(audioCtx.state === "suspended"){ audioCtx.resume(); return; }
-    const buf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf;
-    src.connect(audioCtx.destination);
-    src.start(0);
-  }catch{}
-}
-setInterval(keepAudioAlive, 15000);
 
 let WORKOUTS = [];
 async function loadWorkoutsFromFile(){
@@ -1500,9 +1498,10 @@ function onTimerFinishedAdvance(){
   saveJSON(STORAGE_KEY, state);
   showFlashHold();
   vibrate([200, 80, 200, 80, 400]);
-  beep(1047,200,0.22);
-  setTimeout(()=>beep(880,200,0.22), 230);
-  setTimeout(()=>beep(1047,300,0.22), 460);
+  vibrate([200,80,200,80,400]);
+  playSound('alarm1');
+  setTimeout(()=>playSound('alarm2'), 260);
+  setTimeout(()=>playSound('alarm3'), 520);
 }
 
 function tick(){
@@ -1520,7 +1519,7 @@ function tick(){
     overlayBig.textContent = t;
     if(state.timer.remaining <= 5){
       overlayBig.className = "timerOverlayBig urgent";
-      beep(1047, 120, 0.25);
+      playSound('lastFive');
       vibrate([60]);
     }
   }
@@ -1560,7 +1559,7 @@ function startCountdown(){
   updateOverlayBig("5");
   showTimerOverlay();
   $("timerStartPause").textContent = "Cancel";
-  beep(440, 80, 0.10);
+  playSound('tick');
 
   countdownInterval = setInterval(()=>{
     countdownPhase--;
@@ -1571,7 +1570,7 @@ function startCountdown(){
       startTimerActual();
     } else {
       updateOverlayBig(String(countdownPhase));
-      beep(440, 80, 0.10);
+      playSound('tick');
     }
   }, 1000);
 }
@@ -1587,7 +1586,7 @@ function startTimerActual(){
   $("timerOverlayHint").textContent = "Tap anywhere to dismiss";
   $("timerOverlayBig").className = "timerOverlayBig go";
   updateOverlayBig(formatTime(state.timer.remaining));
-  beep(880, 180, 0.18);
+  playSound('go');
   timerInterval = setInterval(tick, 1000);
 }
 
@@ -2124,7 +2123,7 @@ $("timerReset").addEventListener("click", ()=>{
   if(custom != null){
     setOverrideSeconds(w.id, idx, custom);
     resetTimerTo(custom);
-    beep(660,50);
+    playSound('reset');
   } else {
     const ex = w.exercises[idx];
     const def = isTimed(ex) ? ex.seconds : 60;
