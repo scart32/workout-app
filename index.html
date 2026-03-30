@@ -920,6 +920,71 @@
       pointer-events:none;
     }
     .flashHoldHint.show{ display:block; }
+
+    .timerOverlay{
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 32px 24px;
+      background: rgba(6,8,15,.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .timerOverlay.show{ display:flex; }
+    .timerOverlayExercise{
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .timerOverlayPhase{
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      text-align: center;
+    }
+    .timerOverlayBig{
+      font-family: 'Barlow Condensed', sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-size: 160px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      line-height: 1;
+      text-align: center;
+      color: var(--text);
+      transition: color .2s ease, text-shadow .2s ease;
+    }
+    .timerOverlayBig.go{
+      color: var(--accent2);
+      text-shadow: 0 0 60px rgba(255,184,0,.40);
+    }
+    .timerOverlayBig.urgent{
+      color: var(--accent);
+      text-shadow: 0 0 60px rgba(255,77,0,.50);
+    }
+    .timerOverlayHint{
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(136,146,164,.55);
+      text-align: center;
+      margin-top: 8px;
+    }
+    .timerOverlayDismiss{
+      margin-top: 20px;
+      padding: 12px 32px;
+      font-size: 12px;
+    }
   </style>
 </head>
 
@@ -1100,6 +1165,14 @@
   </div>
 </div>
 
+<div class="timerOverlay" id="timerOverlay">
+  <div class="timerOverlayExercise" id="timerOverlayExercise"></div>
+  <div class="timerOverlayPhase" id="timerOverlayPhase">GET READY</div>
+  <div class="timerOverlayBig" id="timerOverlayBig">5</div>
+  <div class="timerOverlayHint" id="timerOverlayHint">Tap anywhere to dismiss</div>
+  <button class="btnGhost timerOverlayDismiss" id="timerOverlayDismiss">Dismiss</button>
+</div>
+
 <div class="flash" id="flashHold"></div>
 <div class="flashHoldHint" id="flashHoldHint">Timer done — tap to advance</div>
 
@@ -1234,6 +1307,8 @@ const defaultState = {
 let state = loadJSON(STORAGE_KEY, defaultState);
 let currentIndex = 0;
 let timerInterval = null;
+let countdownPhase = 0;
+let countdownInterval = null;
 
 function setView(which){
   $("view-workout").classList.toggle("active", which==="workout");
@@ -1241,11 +1316,13 @@ function setView(which){
 }
 
 function stopTimerHard(){
+  if(countdownInterval){ clearInterval(countdownInterval); countdownInterval = null; countdownPhase = 0; }
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
   $("timerBig").classList.remove("running");
+  hideTimerOverlay();
 }
 function workoutDayKey(workoutId){ return `${todayKey}::${workoutId}`; }
 function getChecksFor(workoutId){ return state.checks[workoutDayKey(workoutId)] || {}; }
@@ -1371,12 +1448,14 @@ function readCustomSeconds(){
   return null;
 }
 function pauseTimer(){
+  if(countdownInterval){ clearInterval(countdownInterval); countdownInterval = null; countdownPhase = 0; }
   if(timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   state.timer.running = false;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Start";
   $("timerBig").classList.remove("running");
+  hideTimerOverlay();
 }
 function resetTimerTo(seconds){
   pauseTimer();
@@ -1410,29 +1489,88 @@ function tick(){
   if(state.timer.remaining < 0) state.timer.remaining = 0;
 
   if(state.timer.remaining === 0){
+    hideTimerOverlay();
     stopTimerHard();
     onTimerFinishedAdvance();
+  } else {
+    const t = formatTime(state.timer.remaining);
+    $("timerBig").textContent = t;
+    const overlayBig = $("timerOverlayBig");
+    overlayBig.textContent = t;
+    if(state.timer.remaining <= 5){
+      overlayBig.className = "timerOverlayBig urgent";
+    }
   }
 
   saveJSON(STORAGE_KEY, state);
-  $("timerBig").textContent = formatTime(state.timer.remaining);
 }
-function startTimer(){
-  if(timerInterval) return;
+function showTimerOverlay(){
+  const w = WORKOUTS[currentIndex];
+  const idx = state.timer.exerciseIndex >= 0 ? state.timer.exerciseIndex : getActiveIndex(w);
+  const ex = w.exercises[idx];
+  $("timerOverlayExercise").textContent = ex?.label ?? "—";
+  $("timerOverlay").classList.add("show");
+}
+function hideTimerOverlay(){
+  $("timerOverlay").classList.remove("show");
+}
+function updateOverlayBig(text){
+  const el = $("timerOverlayBig");
+  el.textContent = text;
+}
+
+function startCountdown(){
   const custom = readCustomSeconds();
   const w = WORKOUTS[currentIndex];
   if(custom != null){
     setOverrideSeconds(w.id, state.timer.exerciseIndex, custom);
     state.timer.duration = custom;
     state.timer.remaining = custom;
+    saveJSON(STORAGE_KEY, state);
+    $("timerBig").textContent = formatTime(state.timer.remaining);
   }
+
+  countdownPhase = 5;
+  $("timerOverlayPhase").textContent = "GET READY";
+  $("timerOverlayHint").textContent = "Tap anywhere to dismiss";
+  $("timerOverlayBig").className = "timerOverlayBig";
+  updateOverlayBig("5");
+  showTimerOverlay();
+  $("timerStartPause").textContent = "Cancel";
+  beep(440, 80, 0.10);
+
+  countdownInterval = setInterval(()=>{
+    countdownPhase--;
+    if(countdownPhase <= 0){
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+      countdownPhase = 0;
+      startTimerActual();
+    } else {
+      updateOverlayBig(String(countdownPhase));
+      beep(440, 80, 0.10);
+    }
+  }, 1000);
+}
+
+function startTimerActual(){
+  if(timerInterval) return;
   state.timer.running = true;
   state.timer.finished = false;
   saveJSON(STORAGE_KEY, state);
   $("timerStartPause").textContent = "Pause";
   $("timerBig").classList.add("running");
-  beep(520,70);
+  $("timerOverlayPhase").textContent = "GO";
+  $("timerOverlayHint").textContent = "Tap anywhere to dismiss";
+  $("timerOverlayBig").className = "timerOverlayBig go";
+  updateOverlayBig(formatTime(state.timer.remaining));
+  beep(880, 180, 0.18);
   timerInterval = setInterval(tick, 1000);
+}
+
+function startTimer(){
+  if(timerInterval || countdownInterval) return;
+  startCountdown();
 }
 
 function ensureHistory(){
@@ -1673,6 +1811,9 @@ function showCelebration(){
 }
 $("overlay").addEventListener("click", hideCelebration);
 
+$("timerOverlayDismiss").addEventListener("click", (e)=>{ e.stopPropagation(); hideTimerOverlay(); });
+$("timerOverlay").addEventListener("click", ()=> hideTimerOverlay());
+
 /* FIXED: marks timed exercise complete before advancing */
 function advanceToNextExercise(){
   const w = WORKOUTS[currentIndex];
@@ -1872,7 +2013,7 @@ function renderWorkout(){
 
     $("timerBig").textContent = formatTime(state.timer.remaining);
     $("timerExerciseName").textContent = `Default ${formatTime(defaultSeconds)}${override ? " • Custom "+formatTime(override) : ""}`;
-    $("timerStartPause").textContent = state.timer.running ? "Pause" : "Start";
+    $("timerStartPause").textContent = countdownPhase > 0 ? "Cancel" : (state.timer.running ? "Pause" : "Start");
   }
 
   updateProgress(w);
