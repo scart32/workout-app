@@ -971,7 +971,12 @@
     }
     .timerOverlayBig.urgent{
       color: var(--accent);
-      text-shadow: 0 0 60px rgba(255,77,0,.50);
+      text-shadow: 0 0 80px rgba(255,77,0,.70);
+      animation: urgentPulse .4s ease-in-out infinite alternate;
+    }
+    @keyframes urgentPulse{
+      from{ transform: scale(1);    opacity: 1; }
+      to{   transform: scale(1.10); opacity: .85; }
     }
     .timerOverlayHint{
       font-size: 11px;
@@ -1279,6 +1284,22 @@ function successChime(){
   window.addEventListener(evt, ()=>{ if(!audioUnlocked) unlockAudio(); }, { once:true, passive:true });
 });
 
+// Keep AudioContext alive — iOS suspends it after ~30s of silence.
+// A silent 1-sample buffer every 15s keeps it in "running" state
+// so timer-end beeps can fire without needing a user gesture.
+function keepAudioAlive(){
+  if(!audioCtx || !audioUnlocked) return;
+  try{
+    if(audioCtx.state === "suspended"){ audioCtx.resume(); return; }
+    const buf = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(audioCtx.destination);
+    src.start(0);
+  }catch{}
+}
+setInterval(keepAudioAlive, 15000);
+
 let WORKOUTS = [];
 async function loadWorkoutsFromFile(){
   try{
@@ -1499,6 +1520,8 @@ function tick(){
     overlayBig.textContent = t;
     if(state.timer.remaining <= 5){
       overlayBig.className = "timerOverlayBig urgent";
+      beep(1047, 120, 0.25);
+      vibrate([60]);
     }
   }
 
