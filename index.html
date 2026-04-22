@@ -14,21 +14,33 @@
     :root{
       color-scheme: dark;
 
-      --bg0:#06080F;
-      --bg1:#090D1B;
+      --bg0:#04060E;
+      --bg1:#080B1C;
+      --bg2:#0E1330;
 
-      --text:#F8FAFF;
+      --text:#F2F5FF;
       --muted:#8892A4;
       --muted2: rgba(136,146,164,.72);
 
-      --accent:#FF4D00;
-      --accent2:#FFB800;
+      /* Neon palette */
+      --n-lime:    #C6FF3D;
+      --n-cyan:    #00F0FF;
+      --n-magenta: #FF2E9A;
+      --n-violet:  #8B5CF6;
+      --n-amber:   #FFB800;
+      --n-orange:  #FF6B35;
 
-      --stroke: rgba(255,255,255,.13);
-      --stroke2: rgba(255,255,255,.20);
+      /* Mode accents (swapped by body.mode-solo / mode-partner) */
+      --accent:  var(--n-cyan);
+      --accent2: var(--n-lime);
+      --accentGlow: rgba(0,240,255,.40);
+      --accentGlowSoft: rgba(0,240,255,.16);
 
-      --shadow: 0 20px 60px rgba(0,0,0,.60);
-      --glow: 0 0 0 3px rgba(255,77,0,.16);
+      --stroke: rgba(255,255,255,.09);
+      --stroke2: rgba(255,255,255,.15);
+
+      --shadow: 0 20px 60px rgba(0,0,0,.70);
+      --glow: 0 0 0 3px var(--accentGlowSoft);
 
       --r:16px;
       --r2:18px;
@@ -41,6 +53,18 @@
 
       --btnW: 56px;
       --btnWorkW: 148px;
+    }
+    body.mode-partner{
+      --accent:  var(--n-magenta);
+      --accent2: var(--n-violet);
+      --accentGlow: rgba(255,46,154,.45);
+      --accentGlowSoft: rgba(255,46,154,.18);
+    }
+    body.mode-solo{
+      --accent:  var(--n-cyan);
+      --accent2: var(--n-lime);
+      --accentGlow: rgba(0,240,255,.45);
+      --accentGlowSoft: rgba(0,240,255,.18);
     }
 
     *{box-sizing:border-box;}
@@ -56,14 +80,42 @@
       margin:0;
       font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
       background:
-        radial-gradient(900px 700px at -5% -5%, rgba(255,77,0,.22), transparent 55%),
-        radial-gradient(600px 500px at 108% 108%, rgba(255,184,0,.13), transparent 55%),
-        linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 100%);
+        radial-gradient(900px 700px at -5% -5%, rgba(0,240,255,.14), transparent 55%),
+        radial-gradient(700px 500px at 108% 108%, rgba(198,255,61,.08), transparent 55%),
+        radial-gradient(600px 500px at 50% 100%, rgba(139,92,246,.10), transparent 55%),
+        linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 70%, var(--bg2) 100%);
       color:var(--text);
       height:100dvh;
       max-width: 980px;
       margin-inline:auto;
       padding: calc(8px + var(--safeTop)) 10px calc(8px + var(--safeBottom)) 10px;
+      transition: background .5s ease;
+    }
+    body.mode-partner{
+      background:
+        radial-gradient(900px 700px at -5% -5%, rgba(255,46,154,.18), transparent 55%),
+        radial-gradient(700px 500px at 108% 108%, rgba(139,92,246,.14), transparent 55%),
+        radial-gradient(600px 500px at 50% 100%, rgba(255,107,53,.08), transparent 55%),
+        linear-gradient(160deg, var(--bg0) 0%, #110725 70%, #1C0B3F 100%);
+    }
+    body.mode-solo{
+      background:
+        radial-gradient(900px 700px at -5% -5%, rgba(0,240,255,.16), transparent 55%),
+        radial-gradient(700px 500px at 108% 108%, rgba(198,255,61,.10), transparent 55%),
+        radial-gradient(600px 500px at 50% 100%, rgba(139,92,246,.08), transparent 55%),
+        linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 70%, var(--bg2) 100%);
+    }
+    body.mode-partner, body.mode-none {
+      height: auto;
+      min-height: 100dvh;
+    }
+    body.mode-partner, html:has(body.mode-partner),
+    body.mode-none, html:has(body.mode-none){
+      overflow: auto;
+    }
+    body.mode-partner .main, body.mode-none .main{
+      height: auto;
+      overflow: visible;
     }
 
     header{
@@ -990,6 +1042,637 @@
       padding: 12px 32px;
       font-size: 12px;
     }
+
+    /* ============ NEW: MODE CHOOSER ============ */
+    .view#view-mode{ display:none; }
+    .view#view-mode.active{ display:flex; flex-direction:column; gap:16px; justify-content:center; flex:1; min-height: calc(100dvh - 120px); }
+
+    .modeHero{
+      text-align:center;
+      padding: 20px 10px 10px;
+    }
+    .modeHero .kicker{
+      font-size:11px;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: var(--n-cyan);
+      text-shadow: 0 0 12px rgba(0,240,255,.35);
+      margin-bottom: 6px;
+    }
+    .modeHero h2{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 7vw, 48px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1;
+      background: linear-gradient(90deg, var(--n-cyan), var(--n-lime) 50%, var(--n-magenta));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 8s ease-in-out infinite;
+      background-size: 200% 200%;
+    }
+    @keyframes gradientShift{
+      0%,100%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+    }
+    .modeHero p{
+      margin: 10px 0 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modeGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 10px;
+    }
+    @media (max-width: 560px){
+      .modeGrid{ grid-template-columns: 1fr; }
+    }
+    .modeCard{
+      position:relative;
+      padding: 22px 18px;
+      border-radius: 20px;
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      cursor: pointer;
+      overflow:hidden;
+      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+      min-height: 180px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .modeCard::before{
+      content:'';
+      position:absolute;
+      inset:-1px;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent, transparent);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events:none;
+      opacity: 0;
+      transition: opacity .25s ease, background .25s ease;
+    }
+    .modeCard.solo::before{ background: linear-gradient(135deg, var(--n-cyan), var(--n-lime)); }
+    .modeCard.partner::before{ background: linear-gradient(135deg, var(--n-magenta), var(--n-violet)); }
+    .modeCard:hover, .modeCard:focus-visible{
+      transform: translateY(-2px);
+    }
+    .modeCard:hover::before, .modeCard:focus-visible::before{ opacity: 1; }
+    .modeCard:hover.solo{ box-shadow: 0 12px 40px rgba(0,240,255,.20); }
+    .modeCard:hover.partner{ box-shadow: 0 12px 40px rgba(255,46,154,.22); }
+
+    .modeIcon{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 22px;
+      font-weight: 900;
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: -1px;
+    }
+    .modeCard.solo .modeIcon{
+      background: rgba(0,240,255,.12);
+      color: var(--n-cyan);
+      border:1px solid rgba(0,240,255,.35);
+      box-shadow: 0 0 24px rgba(0,240,255,.25);
+    }
+    .modeCard.partner .modeIcon{
+      background: rgba(255,46,154,.12);
+      color: var(--n-magenta);
+      border:1px solid rgba(255,46,154,.35);
+      box-shadow: 0 0 24px rgba(255,46,154,.25);
+    }
+    .modeCard h3{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      line-height: 1;
+    }
+    .modeCard .sub{
+      margin: 6px 0 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .modeCard .cardCta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .modeCard.solo .cardCta{ color: var(--n-cyan); }
+    .modeCard.partner .cardCta{ color: var(--n-magenta); }
+
+    /* ============ NEW: SWITCH MODE CHIP ============ */
+    .chip.chip-mode{
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(0,0,0,.25);
+    }
+    .chip.chip-mode strong{ color: var(--accent); }
+
+    /* ============ NEW: PARTNER DASHBOARD ============ */
+    .view#view-partner-dash{ display:none; }
+    .view#view-partner-dash.active{ display:flex; flex-direction:column; gap: 14px; height: auto; }
+
+    .partnerHero{
+      border-radius: 20px;
+      padding: 18px 16px;
+      border:1px solid var(--stroke2);
+      background:
+        linear-gradient(135deg, rgba(255,46,154,.09), rgba(139,92,246,.06) 50%, rgba(0,240,255,.05)),
+        rgba(0,0,0,.25);
+      position:relative;
+      overflow:hidden;
+    }
+    .partnerHero::after{
+      content:'';
+      position:absolute;
+      right:-40px; top:-40px;
+      width:180px; height:180px;
+      border-radius:50%;
+      background: radial-gradient(circle, rgba(255,46,154,.20), transparent 65%);
+      pointer-events:none;
+    }
+    .partnerHero h2{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      line-height: 1.05;
+    }
+    .partnerHero .heroSub{
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .heroRow{
+      display:flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap:wrap;
+    }
+    .statChip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.35);
+      border:1px solid var(--stroke);
+      font-size:11px;
+      font-weight:700;
+      color: var(--text);
+    }
+    .statChip .num{ font-weight: 900; color: var(--accent); }
+    .statChip.up-next{
+      border-color: var(--accent);
+      background: rgba(255,46,154,.10);
+      color: var(--accent);
+    }
+    .statChip.up-next .num{ color: var(--accent); }
+
+    .sessionGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 560px){
+      .sessionGrid{ grid-template-columns: 1fr; }
+    }
+    .sessionCard{
+      position:relative;
+      padding: 16px;
+      border-radius: 18px;
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      cursor: pointer;
+      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      overflow:hidden;
+    }
+    .sessionCard:hover{ transform: translateY(-2px); }
+    .sessionCard.push{ border-top: 3px solid var(--n-magenta); }
+    .sessionCard.pull{ border-top: 3px solid var(--n-violet); }
+    .sessionCard.push:hover{ box-shadow: 0 10px 30px rgba(255,46,154,.20); }
+    .sessionCard.pull:hover{ box-shadow: 0 10px 30px rgba(139,92,246,.20); }
+    .sessionCard.next{
+      box-shadow: 0 0 0 2px var(--accent), 0 10px 30px var(--accentGlowSoft);
+    }
+    .sessionCard .tag{
+      display:inline-block;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      align-self:flex-start;
+    }
+    .sessionCard.push .tag{ background: rgba(255,46,154,.14); color: var(--n-magenta); border:1px solid rgba(255,46,154,.35); }
+    .sessionCard.pull .tag{ background: rgba(139,92,246,.14); color: var(--n-violet); border:1px solid rgba(139,92,246,.35); }
+    .sessionCard h3{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      line-height: 1;
+    }
+    .sessionCard .meta{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .sessionCard .preview{
+      font-size: 11px;
+      color: rgba(242,245,255,.72);
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .sessionCard .startRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-top: auto;
+      padding-top: 6px;
+    }
+    .sessionCard .startBtn{
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 9px 14px;
+    }
+    .sessionCard.push .startBtn{
+      background: rgba(255,46,154,.18);
+      border-color: rgba(255,46,154,.55);
+      color: #FFD0E8;
+      box-shadow: 0 0 20px rgba(255,46,154,.20);
+    }
+    .sessionCard.pull .startBtn{
+      background: rgba(139,92,246,.18);
+      border-color: rgba(139,92,246,.55);
+      color: #E8DEFF;
+      box-shadow: 0 0 20px rgba(139,92,246,.20);
+    }
+
+    .trackToggleCard{
+      padding: 14px 16px;
+      border-radius: 16px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.25);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .trackToggleCard .info h4{
+      margin:0;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    .trackToggleCard .info p{
+      margin: 4px 0 0 0;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .segBtns{
+      display:inline-flex;
+      border:1px solid var(--stroke2);
+      border-radius: 12px;
+      overflow:hidden;
+      background: rgba(0,0,0,.35);
+    }
+    .segBtns button{
+      border:0;
+      background: transparent;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      color: var(--muted);
+      cursor:pointer;
+      border-radius: 0;
+    }
+    .segBtns button.on{
+      background: var(--accent);
+      color: #05070D;
+      box-shadow: inset 0 0 24px rgba(255,255,255,.25);
+    }
+
+    /* ============ NEW: PARTNER SESSION DETAIL ============ */
+    .view#view-partner-session{ display:none; }
+    .view#view-partner-session.active{ display:flex; flex-direction:column; gap: 12px; height: auto; }
+
+    .sessionHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .sessionHeader h2{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      line-height: 1;
+    }
+    .sessionHeader .sub{
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .blockCard{
+      position:relative;
+      padding: 14px;
+      border-radius: 18px;
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      overflow:hidden;
+    }
+    .blockCard.done{
+      border-color: rgba(198,255,61,.35);
+      background: linear-gradient(180deg, rgba(198,255,61,.04), rgba(198,255,61,.01));
+    }
+    .blockCard.active{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 0 30px var(--accentGlowSoft);
+    }
+    .blockHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+    .blockHead .left{ min-width:0; flex:1; }
+    .blockHead .tag{
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+    .blockHead h3{
+      margin:0;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      line-height: 1.05;
+    }
+    .blockHead .rx{
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .exerciseList{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .exerciseItem{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.25);
+      border:1px solid var(--stroke);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .exerciseItem .slot{
+      font-size: 9.5px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-right: 6px;
+      display: inline-block;
+      min-width: 22px;
+    }
+    .exerciseItem .eqp{
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .exerciseItem .lastWt{
+      font-size: 10px;
+      color: var(--n-lime);
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+
+    .turnIndicator{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 14px 10px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.30);
+      border:1px solid var(--stroke);
+      cursor:pointer;
+      user-select:none;
+      gap: 10px;
+      transition: background .2s ease, border-color .2s ease;
+    }
+    .turnIndicator .turnLabel{
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    .turnIndicator.you{
+      border-color: var(--n-cyan);
+      background: rgba(0,240,255,.10);
+      box-shadow: 0 0 24px rgba(0,240,255,.18);
+    }
+    .turnIndicator.you .turnLabel{ color: var(--n-cyan); text-shadow: 0 0 18px rgba(0,240,255,.45); }
+    .turnIndicator.partner{
+      border-color: var(--n-magenta);
+      background: rgba(255,46,154,.10);
+      box-shadow: 0 0 24px rgba(255,46,154,.18);
+    }
+    .turnIndicator.partner .turnLabel{ color: var(--n-magenta); text-shadow: 0 0 18px rgba(255,46,154,.45); }
+    .turnIndicator .turnHint{
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .setPillRow{
+      display:flex;
+      gap: 6px;
+      flex-wrap:wrap;
+    }
+    .setPill{
+      padding: 8px 10px;
+      min-width: 38px;
+      border-radius: 10px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.25);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: rgba(242,245,255,.75);
+      cursor:pointer;
+      text-align:center;
+      transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+    .setPill.done{
+      border-color: rgba(198,255,61,.55);
+      background: rgba(198,255,61,.15);
+      color: var(--n-lime);
+      box-shadow: 0 0 0 2px rgba(198,255,61,.18);
+    }
+
+    .weightRow{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .weightRow label{
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .weightRow input{
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      width: 70px;
+    }
+
+    .restTimerRow{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 12px;
+      background: rgba(0,0,0,.35);
+      border:1px solid var(--stroke);
+      border-radius: 12px;
+    }
+    .restTimerRow .rtLeft{
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .restTimerRow .rtBig{
+      font-family: 'Barlow Condensed', sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+    .restTimerRow.running .rtBig{
+      text-shadow: 0 0 16px var(--accentGlow);
+    }
+    .restTimerRow button{ padding: 7px 10px; font-size: 11px; }
+
+    .blockCta{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .blockCta button{ padding: 10px 14px; font-size: 12px; font-weight: 900; }
+
+    .pickerRow{
+      display:flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .pickerRow::-webkit-scrollbar{ height:4px; }
+    .pickerRow::-webkit-scrollbar-thumb{ background: var(--stroke2); border-radius: 999px; }
+    .pickerChip{
+      flex:0 0 auto;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.25);
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--muted);
+      cursor:pointer;
+      white-space:nowrap;
+      letter-spacing: .3px;
+    }
+    .pickerChip.on{
+      border-color: var(--accent);
+      background: var(--accentGlowSoft);
+      color: var(--accent);
+    }
+
+    .backRow{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .backRow button{ padding: 8px 12px; font-size: 11px; }
+
+    /* Ensure inner scroll works when partner content grows */
+    .view#view-partner-dash,
+    .view#view-partner-session{
+      overflow: visible;
+    }
   </style>
 </head>
 
@@ -1000,13 +1683,87 @@
     <div class="small" id="todayLabel"></div>
   </div>
   <div class="chips">
-    <div class="chip">Workout <strong id="cycleLabel"></strong></div>
-    <div class="chip chipBtn" id="historyChip">History</div>
+    <div class="chip chip-mode chipBtn" id="modeSwitchChip" style="display:none;">
+      <strong id="modeSwitchLabel">Solo</strong>&nbsp;Switch
+    </div>
+    <div class="chip" id="cycleChip" style="display:none;">Workout <strong id="cycleLabel"></strong></div>
+    <div class="chip chipBtn" id="historyChip" style="display:none;">History</div>
   </div>
 </header>
 
 <div class="main">
-  <section class="card view active" id="view-workout">
+
+  <section class="view" id="view-mode">
+    <div class="modeHero">
+      <div class="kicker">Workout Console</div>
+      <h2>Who's Training?</h2>
+      <p>Pick your mode to start. You'll be asked again next time you open the app.</p>
+    </div>
+    <div class="modeGrid">
+      <div class="modeCard solo" id="modeCardSolo" tabindex="0" role="button" aria-label="Train solo">
+        <div class="modeIcon">JM</div>
+        <div>
+          <h3>Just Me</h3>
+          <p class="sub">Your regular workout list. Timers, bench sets, videos — all as usual.</p>
+        </div>
+        <div class="cardCta"><span>Solo Mode</span><span>→</span></div>
+      </div>
+      <div class="modeCard partner" id="modeCardPartner" tabindex="0" role="button" aria-label="Train with partner">
+        <div class="modeIcon">2U</div>
+        <div>
+          <h3>Two of Us</h3>
+          <p class="sub">Rotating push/pull split. One works, one rests. Fresh exercises each session.</p>
+        </div>
+        <div class="cardCta"><span>Partner Mode</span><span>→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-partner-dash">
+    <div class="partnerHero">
+      <h2 id="partnerHeroTitle">Two of Us</h2>
+      <div class="heroSub" id="partnerHeroSub">Pick today's session. Week rotates between push and pull.</div>
+      <div class="heroRow">
+        <div class="statChip up-next">Next Up: <span class="num" id="partnerNextUp">—</span></div>
+        <div class="statChip">Completed: <span class="num" id="partnerStreak">0</span></div>
+        <div class="statChip">Rotation: <span class="num" id="partnerRotation">0</span></div>
+      </div>
+    </div>
+
+    <div class="sessionGrid" id="sessionGrid"></div>
+
+    <div class="trackToggleCard">
+      <div class="info">
+        <h4>Track Weights This Session?</h4>
+        <p>Logs weight × reps per set so you can see last time's load.</p>
+      </div>
+      <div class="segBtns" id="trackWeightsSeg">
+        <button data-val="on">On</button>
+        <button data-val="off">Off</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-partner-session">
+    <div class="backRow">
+      <button class="btnGhost" id="partnerBackBtn">← Dashboard</button>
+    </div>
+    <div class="sessionHeader">
+      <div class="left">
+        <h2 id="partnerSessionTitle">—</h2>
+        <div class="sub" id="partnerSessionSub">—</div>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <div class="chip"><strong id="partnerSessionMeta">—</strong></div>
+      </div>
+    </div>
+
+    <div id="partnerBlocks" style="display:flex; flex-direction:column; gap: 12px;"></div>
+
+    <button id="partnerCompleteBtn" class="btnPrimary" style="padding:14px; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:900; letter-spacing:.6px; text-transform:uppercase;">Mark Session Complete</button>
+  </section>
+
+  <section class="card view" id="view-workout">
     <div class="workoutHeader">
       <div class="left">
         <div class="labelTop">WORKOUT OF THE DAY</div>
@@ -1329,9 +2086,31 @@ let timerInterval = null;
 let countdownPhase = 0;
 let countdownInterval = null;
 
+const VIEW_IDS = ["view-mode","view-workout","view-history","view-partner-dash","view-partner-session"];
 function setView(which){
-  $("view-workout").classList.toggle("active", which==="workout");
-  $("view-history").classList.toggle("active", which==="history");
+  const map = {
+    mode: "view-mode",
+    workout: "view-workout",
+    history: "view-history",
+    "partner-dash": "view-partner-dash",
+    "partner-session": "view-partner-session"
+  };
+  const target = map[which] || "view-workout";
+  VIEW_IDS.forEach(id => {
+    const el = $(id);
+    if(!el) return;
+    el.classList.toggle("active", id === target);
+  });
+  updateHeaderForView(which);
+}
+function updateHeaderForView(which){
+  const mode = getMode();
+  const showSwitch = mode !== null && which !== "mode";
+  $("modeSwitchChip").style.display = showSwitch ? "inline-flex" : "none";
+  $("modeSwitchLabel").textContent = mode === "partner" ? "Partner" : "Solo";
+  const inSolo = which === "workout" || which === "history";
+  $("cycleChip").style.display = inSolo && mode === "solo" ? "inline-flex" : "none";
+  $("historyChip").style.display = inSolo && mode === "solo" ? "inline-flex" : "none";
 }
 
 function stopTimerHard(){
@@ -2162,16 +2941,675 @@ $("markCompleteBtn").addEventListener("click", ()=>{
   }, 950);
 });
 
+/* ============================================================
+   MODE GATE + PARTNER MODE
+   ============================================================ */
+
+const MODE_KEY = "workout_app_mode_session_v1";
+const PARTNER_STATE_KEY = "workout_app_partner_state_v1";
+const TRACK_WEIGHTS_KEY = "workout_app_track_weights_session_v1";
+
+function getMode(){ return sessionStorage.getItem(MODE_KEY); }
+function setMode(m){
+  if(m){ sessionStorage.setItem(MODE_KEY, m); }
+  else { sessionStorage.removeItem(MODE_KEY); }
+  document.body.classList.toggle("mode-solo", m === "solo");
+  document.body.classList.toggle("mode-partner", m === "partner");
+  document.body.classList.toggle("mode-none", m === null || m === undefined);
+}
+function getTrackWeights(){
+  const v = sessionStorage.getItem(TRACK_WEIGHTS_KEY);
+  return v === null ? null : v === "on";
+}
+function setTrackWeights(on){
+  sessionStorage.setItem(TRACK_WEIGHTS_KEY, on ? "on" : "off");
+  paintTrackWeightsSeg();
+}
+
+/* Partner persistent state (localStorage) */
+const defaultPartnerState = {
+  nextSession: "push",          // alternates after each completion
+  rotations: {},                // { "push::main": 0, "push::ss1": 0, ... "pull::ss1": 0 }
+  completedCount: 0,
+  weightLog: {}                 // { "Barbell Back Squat": [{weight:135, reps:8, date:"2026-04-22"}] }
+};
+function loadPartnerState(){
+  const s = loadJSON(PARTNER_STATE_KEY, defaultPartnerState);
+  return { ...defaultPartnerState, ...s, rotations: s.rotations || {}, weightLog: s.weightLog || {} };
+}
+function savePartnerState(s){ saveJSON(PARTNER_STATE_KEY, s); }
+let PARTNER = loadPartnerState();
+
+/* Partner data loader */
+let PARTNER_DATA = null;
+async function loadPartnerData(){
+  if(PARTNER_DATA) return PARTNER_DATA;
+  try{
+    const res = await fetch("./partner-workouts.json", { cache: "no-store" });
+    if(!res.ok) throw new Error("no partner json");
+    PARTNER_DATA = await res.json();
+  }catch(err){
+    console.warn("Partner workouts load failed", err);
+    toast("Couldn't load partner workouts");
+    PARTNER_DATA = { sessions: [] };
+  }
+  return PARTNER_DATA;
+}
+function getSessionById(id){
+  return PARTNER_DATA?.sessions?.find(s => s.id === id);
+}
+
+/* Rotation helpers */
+function rotKey(sessionId, blockId){ return `${sessionId}::${blockId}`; }
+function getRotationIndex(sessionId, blockId){
+  return PARTNER.rotations[rotKey(sessionId, blockId)] || 0;
+}
+function bumpRotation(sessionId, blockId, poolLen){
+  const k = rotKey(sessionId, blockId);
+  const cur = PARTNER.rotations[k] || 0;
+  PARTNER.rotations[k] = (cur + 1) % Math.max(1, poolLen);
+  savePartnerState(PARTNER);
+}
+function pickForBlock(sessionId, block){
+  if(block.format === "alternating" && Array.isArray(block.pool)){
+    const i = getRotationIndex(sessionId, block.id) % block.pool.length;
+    return { kind: "alt", picked: block.pool[i], index: i, total: block.pool.length };
+  }
+  if((block.format === "superset" || block.format === "rounds") && Array.isArray(block.pairs)){
+    const i = getRotationIndex(sessionId, block.id) % block.pairs.length;
+    return { kind: "pair", picked: block.pairs[i], index: i, total: block.pairs.length };
+  }
+  return { kind: "fixed", picked: null, index: 0, total: 0 };
+}
+
+/* Weight log helpers */
+function logWeight(exName, weight, reps){
+  if(!exName) return;
+  if(!PARTNER.weightLog[exName]) PARTNER.weightLog[exName] = [];
+  PARTNER.weightLog[exName].unshift({ weight, reps, date: todayKey, ts: Date.now() });
+  PARTNER.weightLog[exName] = PARTNER.weightLog[exName].slice(0, 20);
+  savePartnerState(PARTNER);
+}
+function lastWeight(exName){
+  const arr = PARTNER.weightLog[exName];
+  if(!arr || !arr.length) return null;
+  return arr[0];
+}
+
+/* Mode-screen click handlers */
+function gotoMode(){
+  setMode(null);
+  setView("mode");
+}
+function gotoSolo(){
+  setMode("solo");
+  sessionStorage.removeItem(TRACK_WEIGHTS_KEY);
+  setView("workout");
+  renderWorkout();
+}
+async function gotoPartner(){
+  setMode("partner");
+  await loadPartnerData();
+  renderPartnerDashboard();
+  setView("partner-dash");
+}
+$("modeCardSolo").addEventListener("click", gotoSolo);
+$("modeCardSolo").addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); gotoSolo(); } });
+$("modeCardPartner").addEventListener("click", gotoPartner);
+$("modeCardPartner").addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); gotoPartner(); } });
+$("modeSwitchChip").addEventListener("click", gotoMode);
+
+/* Weight-track segmented control */
+function paintTrackWeightsSeg(){
+  const cur = getTrackWeights();
+  $("trackWeightsSeg").querySelectorAll("button").forEach(b => {
+    const on = (b.dataset.val === "on" && cur === true) || (b.dataset.val === "off" && cur === false);
+    b.classList.toggle("on", on);
+  });
+}
+$("trackWeightsSeg").querySelectorAll("button").forEach(b => {
+  b.addEventListener("click", () => {
+    setTrackWeights(b.dataset.val === "on");
+    if(activePartnerSessionId) renderPartnerSession(activePartnerSessionId);
+  });
+});
+
+/* ============ PARTNER DASHBOARD RENDER ============ */
+function renderPartnerDashboard(){
+  if(!PARTNER_DATA) return;
+  const next = PARTNER.nextSession || "push";
+  $("partnerNextUp").textContent = next === "push" ? "Push Day" : "Pull Day";
+  $("partnerStreak").textContent = PARTNER.completedCount || 0;
+
+  // rotation number = total rotations across main blocks
+  const totalRot = Object.values(PARTNER.rotations).reduce((a,b)=>a+(b||0),0);
+  $("partnerRotation").textContent = totalRot;
+
+  const grid = $("sessionGrid");
+  grid.innerHTML = "";
+  PARTNER_DATA.sessions.forEach(sess => {
+    const card = document.createElement("div");
+    card.className = `sessionCard ${sess.id}` + (sess.id === next ? " next" : "");
+    const mainPick = pickForBlock(sess.id, sess.blocks.find(b => b.id === "main") || {});
+    const preview = sess.blocks.map(b => b.label).slice(0,5).join(" · ");
+    card.innerHTML = `
+      <span class="tag">${sess.id === "push" ? "Push" : "Pull"} Day</span>
+      <h3>${sess.title}</h3>
+      <div class="meta">${sess.subtitle} • ~${sess.estMinutes} min</div>
+      <div class="preview">${preview}</div>
+      <div class="startRow">
+        <div class="meta">${sess.blocks.length} blocks</div>
+        <button class="startBtn">Start →</button>
+      </div>
+    `;
+    card.addEventListener("click", () => openPartnerSession(sess.id));
+    grid.appendChild(card);
+  });
+
+  // default track weights to off if not set
+  if(getTrackWeights() === null) setTrackWeights(false);
+  paintTrackWeightsSeg();
+
+  $("partnerHeroSub").textContent = PARTNER.completedCount === 0
+    ? "First one. Pick a day — push is the default."
+    : `You've completed ${PARTNER.completedCount} partner session${PARTNER.completedCount===1?"":"s"}. Next up: ${next === "push" ? "Push Day" : "Pull Day"}.`;
+}
+
+/* ============ PARTNER SESSION DETAIL ============ */
+let activePartnerSessionId = null;
+// Per-session transient state kept in memory (resets each app open)
+const partnerSessionState = {};  // { sessionId: { blocks: { [blockId]: { setsDone:[], turn:"you"|"partner", picked:{a1:idx,a2:idx}, restLeft:0, restRunning:false, restTimerId:null, weights:[] } } } }
+
+function ensureBlockState(sessionId, block){
+  if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {} };
+  const bs = partnerSessionState[sessionId].blocks;
+  if(!bs[block.id]){
+    const totalSets = block.format === "rounds" ? (block.rounds || 3) : (block.sets || 3);
+    bs[block.id] = {
+      setsDone: new Array(totalSets).fill(false),
+      turn: "you",
+      restLeft: 0,
+      restRunning: false,
+      restTimerId: null,
+      weights: [],   // [{weight, reps}] per set for alternating lift
+    };
+  }
+  return bs[block.id];
+}
+
+function openPartnerSession(sessionId){
+  activePartnerSessionId = sessionId;
+  renderPartnerSession(sessionId);
+  setView("partner-session");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderPartnerSession(sessionId){
+  const sess = getSessionById(sessionId);
+  if(!sess) return;
+  $("partnerSessionTitle").textContent = sess.title;
+  $("partnerSessionSub").textContent = `${sess.subtitle} • est. ${sess.estMinutes} min`;
+  $("partnerSessionMeta").textContent = `${sess.blocks.length} blocks`;
+
+  const host = $("partnerBlocks");
+  host.innerHTML = "";
+
+  sess.blocks.forEach((block, bi) => {
+    const bs = ensureBlockState(sessionId, block);
+    const pick = pickForBlock(sessionId, block);
+    const card = document.createElement("div");
+    card.className = "blockCard";
+    const allDone = bs.setsDone.every(Boolean) && bs.setsDone.length > 0;
+    if(allDone) card.classList.add("done");
+
+    let rxText = "";
+    if(block.format === "together") rxText = `${Math.round((block.durationSec||180)/60)} min`;
+    else if(block.format === "alternating") rxText = `${block.sets} × ${block.reps}`;
+    else if(block.format === "superset") rxText = `${block.sets} × ${block.reps}`;
+    else if(block.format === "rounds") rxText = `${block.rounds} rounds`;
+
+    // Header
+    const head = document.createElement("div");
+    head.className = "blockHead";
+    head.innerHTML = `
+      <div class="left">
+        <div class="tag">Block ${bi+1}/${sess.blocks.length} • ${block.label}</div>
+        <h3 id="blockTitle-${block.id}"></h3>
+      </div>
+      <div class="rx">${rxText}</div>
+    `;
+    card.appendChild(head);
+
+    // Body by format
+    if(block.format === "together"){
+      const body = document.createElement("div");
+      body.className = "exerciseList";
+      body.innerHTML = `
+        <div class="exerciseItem" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          <div>${block.description}</div>
+          <div class="eqp">Do it together. No turn swapping.</div>
+        </div>
+      `;
+      card.appendChild(body);
+      head.querySelector(`#blockTitle-${block.id}`).textContent = "Warm-Up";
+
+    } else if(block.format === "alternating"){
+      const picked = pick.picked || block.pool[0];
+      head.querySelector(`#blockTitle-${block.id}`).textContent = picked.name;
+
+      // Picker — let user override rotation pick
+      const picker = document.createElement("div");
+      picker.className = "pickerRow";
+      block.pool.forEach((opt, i) => {
+        const chip = document.createElement("div");
+        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
+        chip.textContent = opt.name;
+        chip.addEventListener("click", () => {
+          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
+          savePartnerState(PARTNER);
+          renderPartnerSession(sessionId);
+        });
+        picker.appendChild(chip);
+      });
+      card.appendChild(picker);
+
+      // Exercise row w/ equipment + last weight
+      const last = lastWeight(picked.name);
+      const exList = document.createElement("div");
+      exList.className = "exerciseList";
+      exList.innerHTML = `
+        <div class="exerciseItem">
+          <div><span class="slot">MAIN</span>${picked.name}</div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span class="eqp">${picked.equipment}</span>
+            ${last ? `<span class="lastWt">Last: ${last.weight} × ${last.reps}</span>` : ""}
+          </div>
+        </div>
+      `;
+      card.appendChild(exList);
+
+      if(block.notes){
+        const note = document.createElement("div");
+        note.style.cssText = "font-size:11px; color:var(--muted); font-weight:600; padding: 0 2px;";
+        note.textContent = block.notes;
+        card.appendChild(note);
+      }
+
+      // Turn indicator
+      const turnEl = document.createElement("div");
+      turnEl.className = "turnIndicator " + bs.turn;
+      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOUR SET" : "PARTNER'S SET"}</div><div class="turnHint">tap to swap</div>`;
+      turnEl.addEventListener("click", () => {
+        bs.turn = bs.turn === "you" ? "partner" : "you";
+        renderPartnerSession(sessionId);
+      });
+      card.appendChild(turnEl);
+
+      // Set pills
+      const pillRow = document.createElement("div");
+      pillRow.className = "setPillRow";
+      bs.setsDone.forEach((done, i) => {
+        const p = document.createElement("div");
+        p.className = "setPill" + (done ? " done" : "");
+        p.textContent = `Set ${i+1}`;
+        p.addEventListener("click", () => {
+          bs.setsDone[i] = !bs.setsDone[i];
+          if(bs.setsDone[i]){
+            // auto-start rest + swap turn
+            bs.turn = bs.turn === "you" ? "partner" : "you";
+            startBlockRest(sessionId, block);
+          }
+          renderPartnerSession(sessionId);
+        });
+        pillRow.appendChild(p);
+      });
+      card.appendChild(pillRow);
+
+      // Weight input if tracking on
+      if(getTrackWeights()){
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
+        const label = document.createElement("div");
+        label.style.cssText = "font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;";
+        label.textContent = "Log last set";
+        wrap.appendChild(label);
+        const row = document.createElement("div");
+        row.className = "weightRow";
+        row.innerHTML = `
+          <label>Wt</label>
+          <input id="wtInput-${block.id}" inputmode="decimal" placeholder="135" />
+          <label>Reps</label>
+          <input id="repsInput-${block.id}" inputmode="numeric" placeholder="8" />
+          <button class="btnGhost" id="logBtn-${block.id}">Log</button>
+        `;
+        wrap.appendChild(row);
+        card.appendChild(wrap);
+
+        row.querySelector(`#logBtn-${block.id}`).addEventListener("click", () => {
+          const w = parseFloat($(`wtInput-${block.id}`).value);
+          const r = parseInt($(`repsInput-${block.id}`).value, 10);
+          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+          logWeight(picked.name, w, r);
+          toast(`Logged ${w} × ${r}`);
+          renderPartnerSession(sessionId);
+        });
+      }
+
+      // Rest timer row
+      card.appendChild(buildRestTimerRow(sessionId, block));
+
+    } else if(block.format === "superset"){
+      const pair = pick.picked || block.pairs[0];
+      head.querySelector(`#blockTitle-${block.id}`).textContent = `${pair.a1.name} + ${pair.a2.name}`;
+
+      // Picker for pair rotation
+      const picker = document.createElement("div");
+      picker.className = "pickerRow";
+      block.pairs.forEach((opt, i) => {
+        const chip = document.createElement("div");
+        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
+        chip.textContent = `${opt.a1.name.split(" ")[0]} + ${opt.a2.name.split(" ")[0]}`;
+        chip.addEventListener("click", () => {
+          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
+          savePartnerState(PARTNER);
+          renderPartnerSession(sessionId);
+        });
+        picker.appendChild(chip);
+      });
+      card.appendChild(picker);
+
+      // Two exercise rows
+      const last1 = lastWeight(pair.a1.name);
+      const last2 = lastWeight(pair.a2.name);
+      const exList = document.createElement("div");
+      exList.className = "exerciseList";
+      exList.innerHTML = `
+        <div class="exerciseItem">
+          <div><span class="slot">A1</span>${pair.a1.name}</div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span class="eqp">${pair.a1.equipment}</span>
+            ${last1 ? `<span class="lastWt">Last: ${last1.weight} × ${last1.reps}</span>` : ""}
+          </div>
+        </div>
+        <div class="exerciseItem">
+          <div><span class="slot">A2</span>${pair.a2.name}</div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <span class="eqp">${pair.a2.equipment}</span>
+            ${last2 ? `<span class="lastWt">Last: ${last2.weight} × ${last2.reps}</span>` : ""}
+          </div>
+        </div>
+      `;
+      card.appendChild(exList);
+
+      // Turn indicator
+      const turnEl = document.createElement("div");
+      turnEl.className = "turnIndicator " + bs.turn;
+      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS"}</div><div class="turnHint">tap to swap</div>`;
+      turnEl.addEventListener("click", () => {
+        bs.turn = bs.turn === "you" ? "partner" : "you";
+        renderPartnerSession(sessionId);
+      });
+      card.appendChild(turnEl);
+
+      // Set pills — superset round = both A1 and A2 done
+      const pillRow = document.createElement("div");
+      pillRow.className = "setPillRow";
+      bs.setsDone.forEach((done, i) => {
+        const p = document.createElement("div");
+        p.className = "setPill" + (done ? " done" : "");
+        p.textContent = `Round ${i+1}`;
+        p.addEventListener("click", () => {
+          bs.setsDone[i] = !bs.setsDone[i];
+          if(bs.setsDone[i]) startBlockRest(sessionId, block);
+          renderPartnerSession(sessionId);
+        });
+        pillRow.appendChild(p);
+      });
+      card.appendChild(pillRow);
+
+      // Log weights (simple row per exercise)
+      if(getTrackWeights()){
+        const wrap = document.createElement("div");
+        wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
+        wrap.innerHTML = `
+          <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last round</div>
+          <div class="weightRow">
+            <label>A1 Wt</label>
+            <input id="wt1-${block.id}" inputmode="decimal" placeholder="—" />
+            <label>Reps</label>
+            <input id="r1-${block.id}" inputmode="numeric" placeholder="—" />
+            <button class="btnGhost" id="log1-${block.id}">Log</button>
+          </div>
+          <div class="weightRow">
+            <label>A2 Wt</label>
+            <input id="wt2-${block.id}" inputmode="decimal" placeholder="—" />
+            <label>Reps</label>
+            <input id="r2-${block.id}" inputmode="numeric" placeholder="—" />
+            <button class="btnGhost" id="log2-${block.id}">Log</button>
+          </div>
+        `;
+        card.appendChild(wrap);
+
+        wrap.querySelector(`#log1-${block.id}`).addEventListener("click", () => {
+          const w = parseFloat($(`wt1-${block.id}`).value);
+          const r = parseInt($(`r1-${block.id}`).value, 10);
+          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+          logWeight(pair.a1.name, w, r);
+          toast(`Logged ${pair.a1.name}`);
+          renderPartnerSession(sessionId);
+        });
+        wrap.querySelector(`#log2-${block.id}`).addEventListener("click", () => {
+          const w = parseFloat($(`wt2-${block.id}`).value);
+          const r = parseInt($(`r2-${block.id}`).value, 10);
+          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+          logWeight(pair.a2.name, w, r);
+          toast(`Logged ${pair.a2.name}`);
+          renderPartnerSession(sessionId);
+        });
+      }
+
+      // Rest timer
+      card.appendChild(buildRestTimerRow(sessionId, block));
+
+    } else if(block.format === "rounds"){
+      const pair = pick.picked || block.pairs[0];
+      head.querySelector(`#blockTitle-${block.id}`).textContent = `${pair.a1.name} ↔ ${pair.a2.name}`;
+
+      const picker = document.createElement("div");
+      picker.className = "pickerRow";
+      block.pairs.forEach((opt, i) => {
+        const chip = document.createElement("div");
+        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
+        chip.textContent = `${opt.a1.name.split(" ")[0]} ↔ ${opt.a2.name.split(" ")[0]}`;
+        chip.addEventListener("click", () => {
+          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
+          savePartnerState(PARTNER);
+          renderPartnerSession(sessionId);
+        });
+        picker.appendChild(chip);
+      });
+      card.appendChild(picker);
+
+      const exList = document.createElement("div");
+      exList.className = "exerciseList";
+      exList.innerHTML = `
+        <div class="exerciseItem">
+          <div><span class="slot">A1</span>${pair.a1.name}</div>
+          <div><span class="eqp">${pair.a1.equipment}</span> • <b>${pair.a1.target || ""}</b></div>
+        </div>
+        <div class="exerciseItem">
+          <div><span class="slot">A2</span>${pair.a2.name}</div>
+          <div><span class="eqp">${pair.a2.equipment}</span> • <b>${pair.a2.target || ""}</b></div>
+        </div>
+      `;
+      card.appendChild(exList);
+
+      const turnEl = document.createElement("div");
+      turnEl.className = "turnIndicator " + bs.turn;
+      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS"}</div><div class="turnHint">tap to swap</div>`;
+      turnEl.addEventListener("click", () => {
+        bs.turn = bs.turn === "you" ? "partner" : "you";
+        renderPartnerSession(sessionId);
+      });
+      card.appendChild(turnEl);
+
+      const pillRow = document.createElement("div");
+      pillRow.className = "setPillRow";
+      bs.setsDone.forEach((done, i) => {
+        const p = document.createElement("div");
+        p.className = "setPill" + (done ? " done" : "");
+        p.textContent = `Round ${i+1}`;
+        p.addEventListener("click", () => {
+          bs.setsDone[i] = !bs.setsDone[i];
+          if(bs.setsDone[i]) startBlockRest(sessionId, block);
+          renderPartnerSession(sessionId);
+        });
+        pillRow.appendChild(p);
+      });
+      card.appendChild(pillRow);
+
+      card.appendChild(buildRestTimerRow(sessionId, block));
+    }
+
+    host.appendChild(card);
+  });
+
+  // Complete button state
+  const allBlocksDone = sess.blocks.every(b => {
+    if(b.format === "together") return true;
+    const bs = ensureBlockState(sessionId, b);
+    return bs.setsDone.every(Boolean) && bs.setsDone.length > 0;
+  });
+  $("partnerCompleteBtn").disabled = !allBlocksDone;
+}
+
+function buildRestTimerRow(sessionId, block){
+  const bs = ensureBlockState(sessionId, block);
+  const restSec = block.restSec || 60;
+  const row = document.createElement("div");
+  row.className = "restTimerRow" + (bs.restRunning ? " running" : "");
+  const display = bs.restLeft > 0 ? formatTime(bs.restLeft) : formatTime(restSec);
+  row.innerHTML = `
+    <div class="rtLeft">Rest</div>
+    <div class="rtBig">${display}</div>
+    <div style="display:flex; gap:6px;">
+      <button class="btnGhost" data-act="start">${bs.restRunning ? "Pause" : "Start"}</button>
+      <button class="btnGhost" data-act="reset">Reset</button>
+    </div>
+  `;
+  row.querySelector('[data-act="start"]').addEventListener("click", () => {
+    if(bs.restRunning) pauseBlockRest(sessionId, block);
+    else startBlockRest(sessionId, block);
+  });
+  row.querySelector('[data-act="reset"]').addEventListener("click", () => {
+    pauseBlockRest(sessionId, block);
+    bs.restLeft = 0;
+    renderPartnerSession(sessionId);
+  });
+  return row;
+}
+function startBlockRest(sessionId, block){
+  const bs = ensureBlockState(sessionId, block);
+  if(bs.restTimerId) clearInterval(bs.restTimerId);
+  if(!bs.restLeft || bs.restLeft <= 0) bs.restLeft = block.restSec || 60;
+  bs.restRunning = true;
+  bs.restTimerId = setInterval(() => {
+    bs.restLeft -= 1;
+    if(bs.restLeft <= 0){
+      bs.restLeft = 0;
+      bs.restRunning = false;
+      clearInterval(bs.restTimerId); bs.restTimerId = null;
+      playSound('alarm1');
+      setTimeout(()=>playSound('alarm2'), 220);
+      vibrate([200,80,200]);
+    }
+    // Only re-render if this session is visible
+    if(activePartnerSessionId === sessionId) renderPartnerSession(sessionId);
+  }, 1000);
+  playSound('tick');
+  renderPartnerSession(sessionId);
+}
+function pauseBlockRest(sessionId, block){
+  const bs = ensureBlockState(sessionId, block);
+  bs.restRunning = false;
+  if(bs.restTimerId){ clearInterval(bs.restTimerId); bs.restTimerId = null; }
+}
+
+/* Complete session → bump rotations, flip next, history */
+$("partnerCompleteBtn").addEventListener("click", () => {
+  const sessionId = activePartnerSessionId;
+  if(!sessionId) return;
+  const sess = getSessionById(sessionId);
+  if(!sess) return;
+
+  // Snapshot of picked exercises for history
+  const snapshotExercises = [];
+  sess.blocks.forEach(block => {
+    if(block.format === "together"){
+      snapshotExercises.push({ label: `${block.label}: ${block.description}`, type:"note" });
+      return;
+    }
+    const pick = pickForBlock(sessionId, block);
+    if(block.format === "alternating" && pick.picked){
+      snapshotExercises.push({ label: `${block.label}: ${pick.picked.name} — ${block.sets}×${block.reps}` });
+    } else if(block.format === "superset" && pick.picked){
+      snapshotExercises.push({ label: `${block.label}: ${pick.picked.a1.name} + ${pick.picked.a2.name} — ${block.sets}×${block.reps}` });
+    } else if(block.format === "rounds" && pick.picked){
+      snapshotExercises.push({ label: `${block.label}: ${pick.picked.a1.name} ↔ ${pick.picked.a2.name} — ${block.rounds} rounds` });
+    }
+    // Advance rotation for this block
+    if(block.format === "alternating") bumpRotation(sessionId, block.id, (block.pool||[]).length || 1);
+    else if(block.format === "superset" || block.format === "rounds") bumpRotation(sessionId, block.id, (block.pairs||[]).length || 1);
+  });
+
+  // Flip next session
+  PARTNER.nextSession = sessionId === "push" ? "pull" : "push";
+  PARTNER.completedCount = (PARTNER.completedCount || 0) + 1;
+  savePartnerState(PARTNER);
+
+  // Push a history entry that works with the existing calendar
+  addWorkoutHistoryEntry({
+    id: `partner-${sessionId}`,
+    title: sess.title + " (Partner)",
+    exercises: snapshotExercises
+  });
+
+  // Clear transient per-block state for this session
+  if(partnerSessionState[sessionId]){
+    Object.values(partnerSessionState[sessionId].blocks).forEach(bs => {
+      if(bs.restTimerId) clearInterval(bs.restTimerId);
+    });
+    delete partnerSessionState[sessionId];
+  }
+
+  showCelebration();
+  setTimeout(() => {
+    renderPartnerDashboard();
+    setView("partner-dash");
+  }, 950);
+});
+
+$("partnerBackBtn").addEventListener("click", () => {
+  setView("partner-dash");
+  renderPartnerDashboard();
+});
+
 (async function init(){
-  await loadWorkoutsFromFile();
+  todayKey = getLocalDateKey();
+  $("todayLabel").textContent = `Today: ${todayKey}`;
+
+  // Show mode gate ASAP — don't wait on fetches
+  const currentMode = getMode();
+  setMode(currentMode);
+  if(!currentMode) setView("mode");
+
+  // Kick off both data loads in parallel
+  const [_w, _p] = await Promise.all([loadWorkoutsFromFile(), loadPartnerData()]);
 
   state = { ...defaultState, ...state };
   if(!state.timerOverrides) state.timerOverrides = {};
   if(!state.setChecks) state.setChecks = {};
   ensureHistory();
-
-  todayKey = getLocalDateKey();
-  $("todayLabel").textContent = `Today: ${todayKey}`;
 
   if(state.lastDate !== todayKey){
     state.lastDate = todayKey;
@@ -2187,7 +3625,16 @@ $("markCompleteBtn").addEventListener("click", ()=>{
     showFlashHold();
   }
 
+  // Always render solo workout so it's ready when switched to
   renderWorkout();
+
+  // Route to the right view based on persisted mode
+  if(currentMode === "solo"){
+    setView("workout");
+  } else if(currentMode === "partner"){
+    renderPartnerDashboard();
+    setView("partner-dash");
+  }
 })();
 </script>
 </body>
