@@ -751,12 +751,54 @@
     .calDay:active{ transform: translateY(1px); }
     .calDay.muted{ opacity:.35; cursor:default; }
     .calNum{ font-weight:950; font-size:12px; }
-    .calDot{
-      position:absolute; right:8px; bottom:8px;
-      width:8px; height:8px; border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      box-shadow: 0 0 6px rgba(255,77,0,.50);
+    .calDots{
+      position:absolute;
+      right:6px; bottom:6px;
+      display:flex;
+      gap:3px;
+      align-items:center;
     }
+    .calDot{
+      width:7px; height:7px;
+      border-radius:999px;
+      display:block;
+    }
+    .calDot.solo{
+      background: var(--n-cyan);
+      box-shadow: 0 0 6px rgba(0,240,255,.55);
+    }
+    .calDot.partner{
+      background: var(--n-magenta);
+      box-shadow: 0 0 6px rgba(255,46,154,.55);
+    }
+    .calDot.manual{
+      background: var(--n-amber);
+      box-shadow: 0 0 6px rgba(255,184,0,.55);
+    }
+
+    .calLegend{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding: 2px 2px 4px;
+      font-size: 10.5px;
+      color: var(--muted);
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+    .calLegend .key{
+      display:inline-flex;
+      gap:5px;
+      align-items:center;
+    }
+    .calLegend .dot{
+      width:8px; height:8px;
+      border-radius:999px;
+    }
+    .calLegend .dot.solo{ background: var(--n-cyan);    box-shadow: 0 0 6px rgba(0,240,255,.55); }
+    .calLegend .dot.partner{ background: var(--n-magenta); box-shadow: 0 0 6px rgba(255,46,154,.55); }
+    .calLegend .dot.manual{ background: var(--n-amber);  box-shadow: 0 0 6px rgba(255,184,0,.55); }
     .calSelected{
       border-color: rgba(255,184,0,.80);
       box-shadow: 0 0 0 3px rgba(255,184,0,.15);
@@ -899,9 +941,14 @@
       color: #FFE599;
     }
     .pill.workout{
-      border-color: rgba(255,77,0,.55);
-      background: rgba(255,77,0,.14);
-      color: #FFD0B8;
+      border-color: rgba(0,240,255,.55);
+      background: rgba(0,240,255,.12);
+      color: #B8F5FF;
+    }
+    .pill.partner{
+      border-color: rgba(255,46,154,.55);
+      background: rgba(255,46,154,.12);
+      color: #FFD0E8;
     }
 
     .modalItemSmall{
@@ -1884,6 +1931,11 @@
       </div>
     </div>
 
+    <div class="calLegend" id="calLegend">
+      <div class="key"><span class="dot solo"></span>Solo</div>
+      <div class="key"><span class="dot partner"></span>Partner</div>
+      <div class="key"><span class="dot manual"></span>Manual</div>
+    </div>
     <div class="calWeekdays" id="calWeekdays"></div>
     <div class="calGrid" id="calGrid"></div>
   </section>
@@ -5653,9 +5705,24 @@ function renderHistoryCalendar(){
     cell.innerHTML = `<div class="calNum">${d}</div>`;
 
     if(entries.length){
-      const dot = document.createElement("div");
-      dot.className = "calDot";
-      cell.appendChild(dot);
+      const types = new Set();
+      for(const e of entries){
+        if(e.type === "manual") types.add("manual");
+        else if(e.type === "workout"){
+          if(typeof e.workoutId === "string" && e.workoutId.startsWith("partner-")) types.add("partner");
+          else types.add("solo");
+        }
+      }
+      const wrap = document.createElement("div");
+      wrap.className = "calDots";
+      ["solo","partner","manual"].forEach(t => {
+        if(types.has(t)){
+          const d = document.createElement("div");
+          d.className = `calDot ${t}`;
+          wrap.appendChild(d);
+        }
+      });
+      cell.appendChild(wrap);
     }
 
     cell.addEventListener("click", ()=> openDayModal(key));
@@ -5695,8 +5762,12 @@ function renderDayModalList(dateKey){
     item.className = "modalItem";
 
     const timeStr = new Date(entry.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
-    const pillClass = entry.type === "manual" ? "manual" : "workout";
-    const pillText  = entry.type === "manual" ? "Manual" : "Workout";
+    let pillClass = "workout";
+    let pillText = "Solo";
+    if(entry.type === "manual"){ pillClass = "manual"; pillText = "Manual"; }
+    else if(typeof entry.workoutId === "string" && entry.workoutId.startsWith("partner-")){
+      pillClass = "partner"; pillText = "Partner";
+    }
 
     const title = entry.title || "(Untitled)";
     const extra =
