@@ -1475,9 +1475,8 @@
       font-weight:850;
       display:flex;
       gap:6px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      align-items:center;
+      flex-wrap: wrap;
     }
     .blockMetaLine .sep{ opacity:.6; }
     .blockMetaLine .tag{
@@ -1486,6 +1485,30 @@
       letter-spacing: .5px;
       text-transform: uppercase;
     }
+    .swapChip{
+      margin-left: auto;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke2);
+      background: rgba(0,0,0,.35);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      transition: background .12s ease, border-color .12s ease;
+    }
+    .swapChip:hover{
+      border-color: var(--accent);
+      background: var(--accentGlowSoft);
+    }
+    .swapChip .swapIco{ font-size: 12px; line-height: 1; }
 
     #partnerActiveBody{
       overflow: auto;
@@ -6592,6 +6615,21 @@ function renderPartnerSession(sessionId){
   else if(block.format === "superset") metaParts.push(`<span>${block.sets} rounds × ${block.reps}</span>`, `<span>rest ${block.restSec}s</span>`);
   else if(block.format === "rounds") metaParts.push(`<span>${block.rounds} rounds</span>`, `<span>rest ${block.restSec}s</span>`);
   meta.innerHTML = metaParts.join('<span class="sep">•</span>');
+  // Append a "Swap" chip when the block has rotation options
+  const poolSize =
+    block.format === "alternating" ? (block.pool?.length || 0) :
+    (block.format === "superset" || block.format === "rounds") ? (block.pairs?.length || 0) :
+    0;
+  if(poolSize > 1){
+    const swap = document.createElement("span");
+    swap.className = "swapChip";
+    swap.setAttribute("role","button");
+    swap.setAttribute("tabindex","0");
+    swap.innerHTML = `<span class="swapIco">⟳</span> Swap (${(pick.index||0)+1}/${poolSize})`;
+    swap.addEventListener("click", () => swapBlockPick(sessionId, block, poolSize));
+    swap.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); swapBlockPick(sessionId, block, poolSize); } });
+    meta.appendChild(swap);
+  }
 
   // Body
   const body = $("partnerBlockBody");
@@ -6640,39 +6678,6 @@ function renderPartnerBlockBody(host, sessionId, block){
     });
     host.appendChild(checkRow);
     return;
-  }
-
-  // Pool / pair picker
-  if(block.format === "alternating" && block.pool){
-    const picker = document.createElement("div");
-    picker.className = "pickerRow";
-    block.pool.forEach((opt, i) => {
-      const chip = document.createElement("div");
-      chip.className = "pickerChip" + (i === pick.index ? " on" : "");
-      chip.textContent = opt.name;
-      chip.addEventListener("click", () => {
-        PARTNER.rotations[rotKey(sessionId, block.id)] = i;
-        savePartnerState(PARTNER);
-        renderPartnerSession(sessionId);
-      });
-      picker.appendChild(chip);
-    });
-    host.appendChild(picker);
-  } else if((block.format === "superset" || block.format === "rounds") && block.pairs){
-    const picker = document.createElement("div");
-    picker.className = "pickerRow";
-    block.pairs.forEach((opt, i) => {
-      const chip = document.createElement("div");
-      chip.className = "pickerChip" + (i === pick.index ? " on" : "");
-      chip.textContent = `${opt.a1.name.split(" ")[0]} + ${opt.a2.name.split(" ")[0]}`;
-      chip.addEventListener("click", () => {
-        PARTNER.rotations[rotKey(sessionId, block.id)] = i;
-        savePartnerState(PARTNER);
-        renderPartnerSession(sessionId);
-      });
-      picker.appendChild(chip);
-    });
-    host.appendChild(picker);
   }
 
   // Exercise rows
@@ -6832,6 +6837,14 @@ function autoAdvanceBlock(sessionId){
   if(cur < sess.blocks.length - 1){
     setPartnerActiveBlockIdx(sessionId, cur + 1);
   }
+}
+
+function swapBlockPick(sessionId, block, poolSize){
+  const k = rotKey(sessionId, block.id);
+  const cur = PARTNER.rotations[k] || 0;
+  PARTNER.rotations[k] = (cur + 1) % poolSize;
+  savePartnerState(PARTNER);
+  renderPartnerSession(sessionId);
 }
 
 function buildRestTimerRow(sessionId, block){
