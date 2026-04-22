@@ -6276,99 +6276,335 @@ let PARTNER = loadPartnerState();
 
 /* Partner data — inline fallback (used when fetch() is blocked, e.g. file://) */
 const DEFAULT_PARTNER_DATA = {
-  sessions: [
+  "sessions": [
     {
-      id: "push",
-      title: "Partner Push Day",
-      subtitle: "Chest • Shoulders • Triceps • Quads",
-      emphasis: "push",
-      estMinutes: 48,
-      blocks: [
-        { id: "warmup", label: "Warm-Up (Together)", format: "together", durationSec: 180,
-          description: "3 rounds: 30s band pull-aparts + 30s bodyweight squats + 30s Bosu balance" },
-        { id: "main", label: "Main Compound", format: "alternating", sets: 4, reps: "6-8", restSec: 90,
-          notes: "Share the bar. One lifts, one spots. Adjust plates between partners as needed.",
-          pool: [
-            { name: "Barbell Back Squat", equipment: "Rack" },
-            { name: "Barbell Front Squat", equipment: "Rack" },
-            { name: "Barbell Bench Press", equipment: "Rack" },
-            { name: "Barbell Overhead Press", equipment: "Rack" }
+      "id": "push",
+      "title": "Partner Push Day",
+      "subtitle": "Chest • Shoulders • Triceps • Quads",
+      "emphasis": "push",
+      "estMinutes": 45,
+      "blocks": [
+        {
+          "id": "main",
+          "label": "Main Compound",
+          "format": "alternating",
+          "sets": 4,
+          "reps": "6-8",
+          "restSec": 90,
+          "notes": "Share the bar. Alternate sets with your partner.",
+          "pool": [
+            {
+              "name": "Barbell Back Squat",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Front Squat",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Bench Press",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Overhead Press",
+              "equipment": "Rack"
+            }
           ]
         },
-        { id: "ss1", label: "Superset 1", format: "superset", sets: 3, reps: "8-10", restSec: 60,
-          pairs: [
-            { a1: { name: "DB Shoulder Press", equipment: "DBs" }, a2: { name: "Cable Face Pull", equipment: "Cables" } },
-            { a1: { name: "DB Floor Press", equipment: "DBs" }, a2: { name: "Band Pull-Apart", equipment: "Bands" } },
-            { a1: { name: "DB Incline Press", equipment: "DBs" }, a2: { name: "Cable Tricep Pushdown", equipment: "Cables" } },
-            { a1: { name: "KB Push Press", equipment: "KB" }, a2: { name: "Band Overhead Tricep Ext", equipment: "Bands" } }
+        {
+          "id": "push-second",
+          "label": "Secondary Push",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "8-10",
+          "restSec": 60,
+          "pool": [
+            {
+              "name": "DB Shoulder Press",
+              "equipment": "DBs"
+            },
+            {
+              "name": "DB Incline Press",
+              "equipment": "DBs"
+            },
+            {
+              "name": "DB Floor Press",
+              "equipment": "DBs"
+            },
+            {
+              "name": "KB Push Press",
+              "equipment": "KB"
+            }
           ]
         },
-        { id: "ss2", label: "Superset 2", format: "superset", sets: 3, reps: "10-12", restSec: 60,
-          pairs: [
-            { a1: { name: "Walking DB Lunges", equipment: "DBs" }, a2: { name: "Cable Lateral Raise", equipment: "Cables" } },
-            { a1: { name: "Bulgarian Split Squat (DB)", equipment: "DBs" }, a2: { name: "Cable Chest Fly", equipment: "Cables" } },
-            { a1: { name: "Goblet Squat (KB)", equipment: "KB" }, a2: { name: "Band Front Raise", equipment: "Bands" } },
-            { a1: { name: "Heels-Elevated DB Squat", equipment: "DBs" }, a2: { name: "Cable Rope Tricep Ext", equipment: "Cables" } }
+        {
+          "id": "legs",
+          "label": "Leg Accessory",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "10",
+          "restSec": 60,
+          "pool": [
+            {
+              "name": "Walking DB Lunges",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Bulgarian Split Squat (DB)",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Goblet Squat (KB)",
+              "equipment": "KB"
+            },
+            {
+              "name": "Heels-Elevated DB Squat",
+              "equipment": "DBs"
+            }
           ]
         },
-        { id: "finisher", label: "Finisher (Round-for-Round)", format: "rounds", rounds: 3, restSec: 45,
-          pairs: [
-            { a1: { name: "KB Swing", equipment: "KB", target: "20 reps" }, a2: { name: "Bosu Plank", equipment: "Bosu", target: "45s" } },
-            { a1: { name: "KB Goblet Hold", equipment: "KB", target: "45s" }, a2: { name: "Bosu Mountain Climbers", equipment: "Bosu", target: "30s" } },
-            { a1: { name: "DB Farmer Carry", equipment: "DBs", target: "40s" }, a2: { name: "Bosu V-Ups", equipment: "Bosu", target: "15 reps" } },
-            { a1: { name: "KB Clean", equipment: "KB", target: "12 reps" }, a2: { name: "Bosu Push-Up Plank", equipment: "Bosu", target: "30s" } }
+        {
+          "id": "shoulders",
+          "label": "Shoulder Accessory",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 45,
+          "pool": [
+            {
+              "name": "Cable Lateral Raise",
+              "equipment": "Cables"
+            },
+            {
+              "name": "Band Front Raise",
+              "equipment": "Bands"
+            },
+            {
+              "name": "Cable Face Pull",
+              "equipment": "Cables"
+            },
+            {
+              "name": "DB Lateral Raise",
+              "equipment": "DBs"
+            }
+          ]
+        },
+        {
+          "id": "triceps",
+          "label": "Triceps",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 45,
+          "pool": [
+            {
+              "name": "Cable Tricep Pushdown",
+              "equipment": "Cables"
+            },
+            {
+              "name": "Band Overhead Tricep Ext",
+              "equipment": "Bands"
+            },
+            {
+              "name": "DB Skull Crusher",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Cable Rope Tricep Ext",
+              "equipment": "Cables"
+            }
+          ]
+        },
+        {
+          "id": "finisher",
+          "label": "Finisher",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "20",
+          "restSec": 45,
+          "pool": [
+            {
+              "name": "KB Swing",
+              "equipment": "KB"
+            },
+            {
+              "name": "DB Farmer Carry (30s)",
+              "equipment": "DBs"
+            },
+            {
+              "name": "KB Clean",
+              "equipment": "KB"
+            },
+            {
+              "name": "Bosu Push-Up Plank (30s)",
+              "equipment": "Bosu"
+            }
           ]
         }
       ]
     },
     {
-      id: "pull",
-      title: "Partner Pull Day",
-      subtitle: "Back • Hamstrings • Biceps • Glutes",
-      emphasis: "pull",
-      estMinutes: 48,
-      blocks: [
-        { id: "warmup", label: "Warm-Up (Together)", format: "together", durationSec: 180,
-          description: "3 rounds: 30s cat-cow + 30s band dislocates + 30s Cossack squats" },
-        { id: "main", label: "Main Compound", format: "alternating", sets: 4, reps: "6-8", restSec: 90,
-          notes: "Share the bar. Strip or add plates between partners as needed.",
-          pool: [
-            { name: "Barbell RDL", equipment: "Rack" },
-            { name: "Barbell Deadlift", equipment: "Rack" },
-            { name: "Barbell Bent-Over Row", equipment: "Rack" },
-            { name: "Barbell Good Morning", equipment: "Rack" }
+      "id": "pull",
+      "title": "Partner Pull Day",
+      "subtitle": "Back • Hamstrings • Biceps • Glutes",
+      "emphasis": "pull",
+      "estMinutes": 45,
+      "blocks": [
+        {
+          "id": "main",
+          "label": "Main Compound",
+          "format": "alternating",
+          "sets": 4,
+          "reps": "6-8",
+          "restSec": 90,
+          "notes": "Share the bar. Alternate sets with your partner.",
+          "pool": [
+            {
+              "name": "Barbell RDL",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Deadlift",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Bent-Over Row",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Barbell Good Morning",
+              "equipment": "Rack"
+            }
           ]
         },
-        { id: "ss1", label: "Superset 1", format: "superset", sets: 3, reps: "6-10", restSec: 60,
-          pairs: [
-            { a1: { name: "Pull-Ups (band ok)", equipment: "Rack+Band" }, a2: { name: "DB Incline Press", equipment: "DBs" } },
-            { a1: { name: "Chin-Ups", equipment: "Rack" }, a2: { name: "DB Floor Press", equipment: "DBs" } },
-            { a1: { name: "Neutral-Grip Pull-Ups", equipment: "Rack" }, a2: { name: "KB Overhead Press", equipment: "KB" } },
-            { a1: { name: "Weighted Pull-Ups", equipment: "Rack+KB" }, a2: { name: "DB Shoulder Press", equipment: "DBs" } }
+        {
+          "id": "vertical-pull",
+          "label": "Vertical Pull",
+          "format": "alternating",
+          "sets": 4,
+          "reps": "6-10",
+          "restSec": 60,
+          "pool": [
+            {
+              "name": "Pull-Ups (band ok)",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Chin-Ups",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Neutral-Grip Pull-Ups",
+              "equipment": "Rack"
+            },
+            {
+              "name": "Weighted Pull-Ups",
+              "equipment": "Rack+KB"
+            }
           ]
         },
-        { id: "ss2", label: "Superset 2", format: "superset", sets: 3, reps: "10-12", restSec: 60,
-          pairs: [
-            { a1: { name: "KB Goblet Squat", equipment: "KB" }, a2: { name: "Cable Row", equipment: "Cables" } },
-            { a1: { name: "KB Swing", equipment: "KB" }, a2: { name: "Cable Lat Pulldown", equipment: "Cables" } },
-            { a1: { name: "Single-Leg DB RDL", equipment: "DBs" }, a2: { name: "Cable Face Pull", equipment: "Cables" } },
-            { a1: { name: "DB Hip Thrust", equipment: "DBs" }, a2: { name: "Cable Straight-Arm Pull", equipment: "Cables" } }
+        {
+          "id": "horizontal-pull",
+          "label": "Horizontal Pull",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "10",
+          "restSec": 60,
+          "pool": [
+            {
+              "name": "DB Row",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Cable Row",
+              "equipment": "Cables"
+            },
+            {
+              "name": "Chest-Supported DB Row",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Cable Lat Pulldown",
+              "equipment": "Cables"
+            }
           ]
         },
-        { id: "ss3", label: "Arms Finisher", format: "superset", sets: 3, reps: "10-15", restSec: 45,
-          pairs: [
-            { a1: { name: "DB Bicep Curl", equipment: "DBs" }, a2: { name: "Band Tricep Pushdown", equipment: "Bands" } },
-            { a1: { name: "DB Hammer Curl", equipment: "DBs" }, a2: { name: "Cable Tricep Rope", equipment: "Cables" } },
-            { a1: { name: "Cable Curl", equipment: "Cables" }, a2: { name: "DB Skull Crusher", equipment: "DBs" } },
-            { a1: { name: "KB Zottman Curl", equipment: "KB" }, a2: { name: "Band Overhead Tricep", equipment: "Bands" } }
+        {
+          "id": "posterior",
+          "label": "Posterior / Legs",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 60,
+          "pool": [
+            {
+              "name": "KB Goblet Squat",
+              "equipment": "KB"
+            },
+            {
+              "name": "KB Swing",
+              "equipment": "KB"
+            },
+            {
+              "name": "Single-Leg DB RDL",
+              "equipment": "DBs"
+            },
+            {
+              "name": "DB Hip Thrust",
+              "equipment": "DBs"
+            }
           ]
         },
-        { id: "finisher", label: "Core Finisher (Round-for-Round)", format: "rounds", rounds: 3, restSec: 45,
-          pairs: [
-            { a1: { name: "Bosu V-Ups", equipment: "Bosu", target: "15 reps" }, a2: { name: "KB Russian Twist", equipment: "KB", target: "20 reps" } },
-            { a1: { name: "Bosu Plank", equipment: "Bosu", target: "45s" }, a2: { name: "DB Farmer Carry", equipment: "DBs", target: "40s" } },
-            { a1: { name: "Bosu Mountain Climbers", equipment: "Bosu", target: "30s" }, a2: { name: "Band Pallof Press", equipment: "Bands", target: "30s" } },
-            { a1: { name: "Bosu Side Plank", equipment: "Bosu", target: "30s/side" }, a2: { name: "Cable Woodchopper", equipment: "Cables", target: "15/side" } }
+        {
+          "id": "biceps",
+          "label": "Biceps",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 45,
+          "pool": [
+            {
+              "name": "DB Bicep Curl",
+              "equipment": "DBs"
+            },
+            {
+              "name": "DB Hammer Curl",
+              "equipment": "DBs"
+            },
+            {
+              "name": "Cable Curl",
+              "equipment": "Cables"
+            },
+            {
+              "name": "KB Zottman Curl",
+              "equipment": "KB"
+            }
+          ]
+        },
+        {
+          "id": "core",
+          "label": "Core Finisher",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "15",
+          "restSec": 45,
+          "pool": [
+            {
+              "name": "Bosu V-Ups",
+              "equipment": "Bosu"
+            },
+            {
+              "name": "KB Russian Twist",
+              "equipment": "KB"
+            },
+            {
+              "name": "Bosu Plank (45s)",
+              "equipment": "Bosu"
+            },
+            {
+              "name": "Band Pallof Press",
+              "equipment": "Bands"
+            }
           ]
         }
       ]
@@ -6520,19 +6756,12 @@ function ensureBlockState(sessionId, block){
   if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {}, activeBlockIdx: 0 };
   const bs = partnerSessionState[sessionId].blocks;
   if(!bs[block.id]){
-    const totalSets = block.format === "rounds"
-      ? (block.rounds || 3)
-      : block.format === "together"
-        ? 0
-        : (block.sets || 3);
     bs[block.id] = {
-      setsDone: new Array(totalSets).fill(false),
-      togetherDone: false,
+      setsDone: new Array(block.sets || 3).fill(false),
       turn: "you",
       restLeft: 0,
       restRunning: false,
       restTimerId: null,
-      weights: [],
     };
   }
   return bs[block.id];
@@ -6552,10 +6781,6 @@ function openPartnerSession(sessionId){
 }
 
 function isBlockDone(sessionId, block){
-  if(block.format === "together"){
-    const bs = ensureBlockState(sessionId, block);
-    return !!bs.togetherDone;
-  }
   const bs = ensureBlockState(sessionId, block);
   return bs.setsDone.length > 0 && bs.setsDone.every(Boolean);
 }
@@ -6595,41 +6820,16 @@ function renderPartnerSession(sessionId){
   $("partnerCompleteHint").textContent = doneBlocks === totalBlocks ? "Ready" : "Finish all blocks";
   $("partnerPaneCount").textContent = `${activeIdx + 1} / ${totalBlocks}`;
 
-  // Block title
-  let titleText = "";
+  // Block title — always the currently-picked exercise from the pool
   const pick = pickForBlock(sessionId, block);
-  if(block.format === "together") titleText = block.label;
-  else if(block.format === "alternating") titleText = pick.picked?.name || block.label;
-  else if(block.format === "superset" || block.format === "rounds"){
-    const p = pick.picked;
-    titleText = p ? `${p.a1.name} + ${p.a2.name}` : block.label;
-  }
-  $("partnerBlockTitle").textContent = titleText;
+  $("partnerBlockTitle").textContent = pick.picked?.name || block.label;
 
   // Meta line
-  const meta = $("partnerBlockMeta");
-  meta.innerHTML = "";
-  const metaParts = [`<span class="tag">${block.label}</span>`];
-  if(block.format === "together") metaParts.push(`<span>${Math.round((block.durationSec||180)/60)} min together</span>`);
-  else if(block.format === "alternating") metaParts.push(`<span>${block.sets} sets × ${block.reps} reps</span>`, `<span>rest ${block.restSec}s</span>`);
-  else if(block.format === "superset") metaParts.push(`<span>${block.sets} rounds × ${block.reps}</span>`, `<span>rest ${block.restSec}s</span>`);
-  else if(block.format === "rounds") metaParts.push(`<span>${block.rounds} rounds</span>`, `<span>rest ${block.restSec}s</span>`);
-  meta.innerHTML = metaParts.join('<span class="sep">•</span>');
-  // Append a "Swap" chip when the block has rotation options
-  const poolSize =
-    block.format === "alternating" ? (block.pool?.length || 0) :
-    (block.format === "superset" || block.format === "rounds") ? (block.pairs?.length || 0) :
-    0;
-  if(poolSize > 1){
-    const swap = document.createElement("span");
-    swap.className = "swapChip";
-    swap.setAttribute("role","button");
-    swap.setAttribute("tabindex","0");
-    swap.innerHTML = `<span class="swapIco">⟳</span> Swap (${(pick.index||0)+1}/${poolSize})`;
-    swap.addEventListener("click", () => swapBlockPick(sessionId, block, poolSize));
-    swap.addEventListener("keydown", e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); swapBlockPick(sessionId, block, poolSize); } });
-    meta.appendChild(swap);
-  }
+  $("partnerBlockMeta").innerHTML = [
+    `<span class="tag">${block.label}</span>`,
+    `<span>${block.sets} sets × ${block.reps} reps</span>`,
+    `<span>rest ${block.restSec}s</span>`
+  ].join('<span class="sep">•</span>');
 
   // Body
   const body = $("partnerBlockBody");
@@ -6643,15 +6843,11 @@ function renderPartnerSession(sessionId){
   // Next block title
   const nextBlock = sess.blocks[activeIdx + 1];
   if(nextBlock){
-    let nextTitle = `Next: ${nextBlock.label}`;
     const nextPick = pickForBlock(sessionId, nextBlock);
-    if(nextBlock.format === "alternating" && nextPick.picked) nextTitle = `Next: ${nextBlock.label} — ${nextPick.picked.name}`;
-    else if((nextBlock.format === "superset" || nextBlock.format === "rounds") && nextPick.picked){
-      nextTitle = `Next: ${nextBlock.label} — ${nextPick.picked.a1.name} + ${nextPick.picked.a2.name}`;
-    }
-    $("partnerNextBlockTitle").textContent = nextTitle;
+    const nextName = nextPick.picked?.name || nextBlock.label;
+    $("partnerNextBlockTitle").textContent = `Next: ${nextBlock.label} — ${nextName}`;
   } else {
-    $("partnerNextBlockTitle").textContent = "Last block — mark session complete when done";
+    $("partnerNextBlockTitle").textContent = "Last one — mark session complete when done";
   }
 
   // Complete button enabled only when every block is done
@@ -6662,62 +6858,18 @@ function renderPartnerSession(sessionId){
 function renderPartnerBlockBody(host, sessionId, block){
   const bs = ensureBlockState(sessionId, block);
   const pick = pickForBlock(sessionId, block);
+  const picked = pick.picked || block.pool[0];
+  const last = lastWeight(picked.name);
 
-  if(block.format === "together"){
-    const checkRow = document.createElement("div");
-    checkRow.className = "checkRow" + (bs.togetherDone ? " isChecked" : "");
-    checkRow.innerHTML = `
-      <input type="checkbox" ${bs.togetherDone ? "checked" : ""}/>
-      <div class="label">${block.description}</div>
-    `;
-    checkRow.addEventListener("click", (e) => {
-      const wasChecked = bs.togetherDone;
-      bs.togetherDone = !wasChecked;
-      if(bs.togetherDone) autoAdvanceBlock(sessionId);
-      renderPartnerSession(sessionId);
-    });
-    host.appendChild(checkRow);
-    return;
-  }
-
-  // Exercise rows
+  // Exercise row (equipment + last weight)
   const exList = document.createElement("div");
   exList.className = "exerciseList";
-  if(block.format === "alternating"){
-    const picked = pick.picked || block.pool[0];
-    const last = lastWeight(picked.name);
-    exList.innerHTML = `
-      <div class="exerciseItem">
-        <div><span class="slot">MAIN</span>${picked.name}</div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <span class="eqp">${picked.equipment}</span>
-          ${last ? `<span class="lastWt">Last: ${last.weight} × ${last.reps}</span>` : ""}
-        </div>
-      </div>
-    `;
-  } else if(block.format === "superset" || block.format === "rounds"){
-    const pair = pick.picked || block.pairs[0];
-    const last1 = lastWeight(pair.a1.name);
-    const last2 = lastWeight(pair.a2.name);
-    const t1 = pair.a1.target ? ` • <b>${pair.a1.target}</b>` : "";
-    const t2 = pair.a2.target ? ` • <b>${pair.a2.target}</b>` : "";
-    exList.innerHTML = `
-      <div class="exerciseItem">
-        <div><span class="slot">A1</span>${pair.a1.name}</div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <span class="eqp">${pair.a1.equipment}${t1}</span>
-          ${last1 ? `<span class="lastWt">Last: ${last1.weight} × ${last1.reps}</span>` : ""}
-        </div>
-      </div>
-      <div class="exerciseItem">
-        <div><span class="slot">A2</span>${pair.a2.name}</div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <span class="eqp">${pair.a2.equipment}${t2}</span>
-          ${last2 ? `<span class="lastWt">Last: ${last2.weight} × ${last2.reps}</span>` : ""}
-        </div>
-      </div>
-    `;
-  }
+  exList.innerHTML = `
+    <div class="exerciseItem">
+      <div><span class="slot">${picked.equipment}</span>${picked.name}</div>
+      ${last ? `<span class="lastWt">Last: ${last.weight} × ${last.reps}</span>` : ""}
+    </div>
+  `;
   host.appendChild(exList);
 
   if(block.notes){
@@ -6730,8 +6882,7 @@ function renderPartnerBlockBody(host, sessionId, block){
   // Turn indicator
   const turnEl = document.createElement("div");
   turnEl.className = "turnIndicator " + bs.turn;
-  const turnLabel = block.format === "alternating" ? (bs.turn === "you" ? "YOUR SET" : "PARTNER'S SET") : (bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS");
-  turnEl.innerHTML = `<div class="turnLabel">${turnLabel}</div><div class="turnHint">tap to swap</div>`;
+  turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOUR SET" : "PARTNER'S SET"}</div><div class="turnHint">tap to swap</div>`;
   turnEl.addEventListener("click", () => {
     bs.turn = bs.turn === "you" ? "partner" : "you";
     renderPartnerSession(sessionId);
@@ -6741,17 +6892,15 @@ function renderPartnerBlockBody(host, sessionId, block){
   // Set pills
   const pillRow = document.createElement("div");
   pillRow.className = "setPillRow";
-  const pillLabel = block.format === "alternating" ? "Set" : "Round";
   bs.setsDone.forEach((done, i) => {
     const p = document.createElement("div");
     p.className = "setPill" + (done ? " done" : "");
-    p.textContent = `${pillLabel} ${i+1}`;
+    p.textContent = `Set ${i+1}`;
     p.addEventListener("click", () => {
       bs.setsDone[i] = !bs.setsDone[i];
       if(bs.setsDone[i]){
-        if(block.format === "alternating") bs.turn = bs.turn === "you" ? "partner" : "you";
+        bs.turn = bs.turn === "you" ? "partner" : "you";
         startBlockRest(sessionId, block);
-        // If this was last set and block done, auto-advance to next block
         if(bs.setsDone.every(Boolean)) autoAdvanceBlock(sessionId);
       }
       renderPartnerSession(sessionId);
@@ -6760,70 +6909,29 @@ function renderPartnerBlockBody(host, sessionId, block){
   });
   host.appendChild(pillRow);
 
-  // Weight log (only if tracking + a strength block)
-  if(getTrackWeights() && (block.format === "alternating" || block.format === "superset")){
-    if(block.format === "alternating"){
-      const picked = pick.picked || block.pool[0];
-      const wrap = document.createElement("div");
-      wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
-      wrap.innerHTML = `
-        <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last set</div>
-        <div class="weightRow">
-          <label>Wt</label>
-          <input id="wtInput-${block.id}" inputmode="decimal" placeholder="135" />
-          <label>Reps</label>
-          <input id="repsInput-${block.id}" inputmode="numeric" placeholder="8" />
-          <button class="btnGhost" id="logBtn-${block.id}">Log</button>
-        </div>
-      `;
-      host.appendChild(wrap);
-      wrap.querySelector(`#logBtn-${block.id}`).addEventListener("click", () => {
-        const w = parseFloat($(`wtInput-${block.id}`).value);
-        const r = parseInt($(`repsInput-${block.id}`).value, 10);
-        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-        logWeight(picked.name, w, r);
-        toast(`Logged ${w} × ${r}`);
-        renderPartnerSession(sessionId);
-      });
-    } else {
-      const pair = pick.picked || block.pairs[0];
-      const wrap = document.createElement("div");
-      wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
-      wrap.innerHTML = `
-        <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last round</div>
-        <div class="weightRow">
-          <label>A1 Wt</label>
-          <input id="wt1-${block.id}" inputmode="decimal" placeholder="—" />
-          <label>Reps</label>
-          <input id="r1-${block.id}" inputmode="numeric" placeholder="—" />
-          <button class="btnGhost" id="log1-${block.id}">Log</button>
-        </div>
-        <div class="weightRow">
-          <label>A2 Wt</label>
-          <input id="wt2-${block.id}" inputmode="decimal" placeholder="—" />
-          <label>Reps</label>
-          <input id="r2-${block.id}" inputmode="numeric" placeholder="—" />
-          <button class="btnGhost" id="log2-${block.id}">Log</button>
-        </div>
-      `;
-      host.appendChild(wrap);
-      wrap.querySelector(`#log1-${block.id}`).addEventListener("click", () => {
-        const w = parseFloat($(`wt1-${block.id}`).value);
-        const r = parseInt($(`r1-${block.id}`).value, 10);
-        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-        logWeight(pair.a1.name, w, r);
-        toast(`Logged ${pair.a1.name}`);
-        renderPartnerSession(sessionId);
-      });
-      wrap.querySelector(`#log2-${block.id}`).addEventListener("click", () => {
-        const w = parseFloat($(`wt2-${block.id}`).value);
-        const r = parseInt($(`r2-${block.id}`).value, 10);
-        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-        logWeight(pair.a2.name, w, r);
-        toast(`Logged ${pair.a2.name}`);
-        renderPartnerSession(sessionId);
-      });
-    }
+  // Weight log (only if tracking)
+  if(getTrackWeights()){
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
+    wrap.innerHTML = `
+      <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last set</div>
+      <div class="weightRow">
+        <label>Wt</label>
+        <input id="wtInput-${block.id}" inputmode="decimal" placeholder="135" />
+        <label>Reps</label>
+        <input id="repsInput-${block.id}" inputmode="numeric" placeholder="8" />
+        <button class="btnGhost" id="logBtn-${block.id}">Log</button>
+      </div>
+    `;
+    host.appendChild(wrap);
+    wrap.querySelector(`#logBtn-${block.id}`).addEventListener("click", () => {
+      const w = parseFloat($(`wtInput-${block.id}`).value);
+      const r = parseInt($(`repsInput-${block.id}`).value, 10);
+      if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+      logWeight(picked.name, w, r);
+      toast(`Logged ${w} × ${r}`);
+      renderPartnerSession(sessionId);
+    });
   }
 
   // Rest timer
@@ -6837,14 +6945,6 @@ function autoAdvanceBlock(sessionId){
   if(cur < sess.blocks.length - 1){
     setPartnerActiveBlockIdx(sessionId, cur + 1);
   }
-}
-
-function swapBlockPick(sessionId, block, poolSize){
-  const k = rotKey(sessionId, block.id);
-  const cur = PARTNER.rotations[k] || 0;
-  PARTNER.rotations[k] = (cur + 1) % poolSize;
-  savePartnerState(PARTNER);
-  renderPartnerSession(sessionId);
 }
 
 function buildRestTimerRow(sessionId, block){
@@ -6906,24 +7006,14 @@ $("partnerCompleteBtn").addEventListener("click", () => {
   const sess = getSessionById(sessionId);
   if(!sess) return;
 
-  // Snapshot of picked exercises for history
+  // Snapshot of picked exercises for history + advance rotation
   const snapshotExercises = [];
   sess.blocks.forEach(block => {
-    if(block.format === "together"){
-      snapshotExercises.push({ label: `${block.label}: ${block.description}`, type:"note" });
-      return;
-    }
     const pick = pickForBlock(sessionId, block);
-    if(block.format === "alternating" && pick.picked){
+    if(pick.picked){
       snapshotExercises.push({ label: `${block.label}: ${pick.picked.name} — ${block.sets}×${block.reps}` });
-    } else if(block.format === "superset" && pick.picked){
-      snapshotExercises.push({ label: `${block.label}: ${pick.picked.a1.name} + ${pick.picked.a2.name} — ${block.sets}×${block.reps}` });
-    } else if(block.format === "rounds" && pick.picked){
-      snapshotExercises.push({ label: `${block.label}: ${pick.picked.a1.name} ↔ ${pick.picked.a2.name} — ${block.rounds} rounds` });
     }
-    // Advance rotation for this block
-    if(block.format === "alternating") bumpRotation(sessionId, block.id, (block.pool||[]).length || 1);
-    else if(block.format === "superset" || block.format === "rounds") bumpRotation(sessionId, block.id, (block.pairs||[]).length || 1);
+    bumpRotation(sessionId, block.id, (block.pool||[]).length || 1);
   });
 
   // Flip next session

@@ -5,15 +5,8 @@
       "title": "Partner Push Day",
       "subtitle": "Chest • Shoulders • Triceps • Quads",
       "emphasis": "push",
-      "estMinutes": 48,
+      "estMinutes": 45,
       "blocks": [
-        {
-          "id": "warmup",
-          "label": "Warm-Up (Together)",
-          "format": "together",
-          "durationSec": 180,
-          "description": "3 rounds: 30s band pull-aparts + 30s bodyweight squats + 30s Bosu balance"
-        },
         {
           "id": "main",
           "label": "Main Compound",
@@ -21,7 +14,7 @@
           "sets": 4,
           "reps": "6-8",
           "restSec": 90,
-          "notes": "Share the bar. One lifts, one spots. Adjust plates between partners as needed.",
+          "notes": "Share the bar. Alternate sets with your partner.",
           "pool": [
             { "name": "Barbell Back Squat", "equipment": "Rack" },
             { "name": "Barbell Front Squat", "equipment": "Rack" },
@@ -30,44 +23,73 @@
           ]
         },
         {
-          "id": "ss1",
-          "label": "Superset 1",
-          "format": "superset",
+          "id": "push-second",
+          "label": "Secondary Push",
+          "format": "alternating",
           "sets": 3,
           "reps": "8-10",
           "restSec": 60,
-          "pairs": [
-            { "a1": { "name": "DB Shoulder Press", "equipment": "DBs" }, "a2": { "name": "Cable Face Pull", "equipment": "Cables" } },
-            { "a1": { "name": "DB Floor Press", "equipment": "DBs" }, "a2": { "name": "Band Pull-Apart", "equipment": "Bands" } },
-            { "a1": { "name": "DB Incline Press", "equipment": "DBs" }, "a2": { "name": "Cable Tricep Pushdown", "equipment": "Cables" } },
-            { "a1": { "name": "KB Push Press", "equipment": "KB" }, "a2": { "name": "Band Overhead Tricep Ext", "equipment": "Bands" } }
+          "pool": [
+            { "name": "DB Shoulder Press", "equipment": "DBs" },
+            { "name": "DB Incline Press", "equipment": "DBs" },
+            { "name": "DB Floor Press", "equipment": "DBs" },
+            { "name": "KB Push Press", "equipment": "KB" }
           ]
         },
         {
-          "id": "ss2",
-          "label": "Superset 2",
-          "format": "superset",
+          "id": "legs",
+          "label": "Leg Accessory",
+          "format": "alternating",
           "sets": 3,
-          "reps": "10-12",
+          "reps": "10",
           "restSec": 60,
-          "pairs": [
-            { "a1": { "name": "Walking DB Lunges", "equipment": "DBs" }, "a2": { "name": "Cable Lateral Raise", "equipment": "Cables" } },
-            { "a1": { "name": "Bulgarian Split Squat (DB)", "equipment": "DBs" }, "a2": { "name": "Cable Chest Fly", "equipment": "Cables" } },
-            { "a1": { "name": "Goblet Squat (KB)", "equipment": "KB" }, "a2": { "name": "Band Front Raise", "equipment": "Bands" } },
-            { "a1": { "name": "Heels-Elevated DB Squat", "equipment": "DBs" }, "a2": { "name": "Cable Rope Tricep Ext", "equipment": "Cables" } }
+          "pool": [
+            { "name": "Walking DB Lunges", "equipment": "DBs" },
+            { "name": "Bulgarian Split Squat (DB)", "equipment": "DBs" },
+            { "name": "Goblet Squat (KB)", "equipment": "KB" },
+            { "name": "Heels-Elevated DB Squat", "equipment": "DBs" }
+          ]
+        },
+        {
+          "id": "shoulders",
+          "label": "Shoulder Accessory",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 45,
+          "pool": [
+            { "name": "Cable Lateral Raise", "equipment": "Cables" },
+            { "name": "Band Front Raise", "equipment": "Bands" },
+            { "name": "Cable Face Pull", "equipment": "Cables" },
+            { "name": "DB Lateral Raise", "equipment": "DBs" }
+          ]
+        },
+        {
+          "id": "triceps",
+          "label": "Triceps",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
+          "restSec": 45,
+          "pool": [
+            { "name": "Cable Tricep Pushdown", "equipment": "Cables" },
+            { "name": "Band Overhead Tricep Ext", "equipment": "Bands" },
+            { "name": "DB Skull Crusher", "equipment": "DBs" },
+            { "name": "Cable Rope Tricep Ext", "equipment": "Cables" }
           ]
         },
         {
           "id": "finisher",
-          "label": "Finisher (Round-for-Round)",
-          "format": "rounds",
-          "rounds": 3,
+          "label": "Finisher",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "20",
           "restSec": 45,
-          "pairs": [
-            { "a1": { "name": "KB Swing", "equipment": "KB", "target": "20 reps" }, "a2": { "name": "Bosu Plank", "equipment": "Bosu", "target": "45s" } },
-            { "a1": { "name": "KB Goblet Hold", "equipment": "KB", "target": "45s" }, "a2": { "name": "Bosu Mountain Climbers", "equipment": "Bosu", "target": "30s" } },
-            { "a1": { "name": "DB Farmer Carry", "equipment": "DBs", "target": "40s" }, "a2": { "name": "Bosu V-Ups", "equipment": "Bosu", "target": "15 reps" } },
-            { "a1": { "name": "KB Clean", "equipment": "KB", "target": "12 reps" }, "a2": { "name": "Bosu Push-Up Plank", "equipment": "Bosu", "target": "30s" } }
+          "pool": [
+            { "name": "KB Swing", "equipment": "KB" },
+            { "name": "DB Farmer Carry (30s)", "equipment": "DBs" },
+            { "name": "KB Clean", "equipment": "KB" },
+            { "name": "Bosu Push-Up Plank (30s)", "equipment": "Bosu" }
           ]
         }
       ]
@@ -77,15 +99,8 @@
       "title": "Partner Pull Day",
       "subtitle": "Back • Hamstrings • Biceps • Glutes",
       "emphasis": "pull",
-      "estMinutes": 48,
+      "estMinutes": 45,
       "blocks": [
-        {
-          "id": "warmup",
-          "label": "Warm-Up (Together)",
-          "format": "together",
-          "durationSec": 180,
-          "description": "3 rounds: 30s cat-cow + 30s band dislocates + 30s Cossack squats"
-        },
         {
           "id": "main",
           "label": "Main Compound",
@@ -93,7 +108,7 @@
           "sets": 4,
           "reps": "6-8",
           "restSec": 90,
-          "notes": "Share the bar. Strip or add plates between partners as needed.",
+          "notes": "Share the bar. Alternate sets with your partner.",
           "pool": [
             { "name": "Barbell RDL", "equipment": "Rack" },
             { "name": "Barbell Deadlift", "equipment": "Rack" },
@@ -102,58 +117,73 @@
           ]
         },
         {
-          "id": "ss1",
-          "label": "Superset 1",
-          "format": "superset",
-          "sets": 3,
+          "id": "vertical-pull",
+          "label": "Vertical Pull",
+          "format": "alternating",
+          "sets": 4,
           "reps": "6-10",
           "restSec": 60,
-          "pairs": [
-            { "a1": { "name": "Pull-Ups (band ok)", "equipment": "Rack+Band" }, "a2": { "name": "DB Incline Press", "equipment": "DBs" } },
-            { "a1": { "name": "Chin-Ups", "equipment": "Rack" }, "a2": { "name": "DB Floor Press", "equipment": "DBs" } },
-            { "a1": { "name": "Neutral-Grip Pull-Ups", "equipment": "Rack" }, "a2": { "name": "KB Overhead Press", "equipment": "KB" } },
-            { "a1": { "name": "Weighted Pull-Ups", "equipment": "Rack+KB" }, "a2": { "name": "DB Shoulder Press", "equipment": "DBs" } }
+          "pool": [
+            { "name": "Pull-Ups (band ok)", "equipment": "Rack" },
+            { "name": "Chin-Ups", "equipment": "Rack" },
+            { "name": "Neutral-Grip Pull-Ups", "equipment": "Rack" },
+            { "name": "Weighted Pull-Ups", "equipment": "Rack+KB" }
           ]
         },
         {
-          "id": "ss2",
-          "label": "Superset 2",
-          "format": "superset",
+          "id": "horizontal-pull",
+          "label": "Horizontal Pull",
+          "format": "alternating",
           "sets": 3,
-          "reps": "10-12",
+          "reps": "10",
           "restSec": 60,
-          "pairs": [
-            { "a1": { "name": "KB Goblet Squat", "equipment": "KB" }, "a2": { "name": "Cable Row", "equipment": "Cables" } },
-            { "a1": { "name": "KB Swing", "equipment": "KB" }, "a2": { "name": "Cable Lat Pulldown", "equipment": "Cables" } },
-            { "a1": { "name": "Single-Leg DB RDL", "equipment": "DBs" }, "a2": { "name": "Cable Face Pull", "equipment": "Cables" } },
-            { "a1": { "name": "DB Hip Thrust", "equipment": "DBs" }, "a2": { "name": "Cable Straight-Arm Pull", "equipment": "Cables" } }
+          "pool": [
+            { "name": "DB Row", "equipment": "DBs" },
+            { "name": "Cable Row", "equipment": "Cables" },
+            { "name": "Chest-Supported DB Row", "equipment": "DBs" },
+            { "name": "Cable Lat Pulldown", "equipment": "Cables" }
           ]
         },
         {
-          "id": "ss3",
-          "label": "Arms Finisher",
-          "format": "superset",
+          "id": "posterior",
+          "label": "Posterior / Legs",
+          "format": "alternating",
           "sets": 3,
-          "reps": "10-15",
-          "restSec": 45,
-          "pairs": [
-            { "a1": { "name": "DB Bicep Curl", "equipment": "DBs" }, "a2": { "name": "Band Tricep Pushdown", "equipment": "Bands" } },
-            { "a1": { "name": "DB Hammer Curl", "equipment": "DBs" }, "a2": { "name": "Cable Tricep Rope", "equipment": "Cables" } },
-            { "a1": { "name": "Cable Curl", "equipment": "Cables" }, "a2": { "name": "DB Skull Crusher", "equipment": "DBs" } },
-            { "a1": { "name": "KB Zottman Curl", "equipment": "KB" }, "a2": { "name": "Band Overhead Tricep", "equipment": "Bands" } }
+          "reps": "12",
+          "restSec": 60,
+          "pool": [
+            { "name": "KB Goblet Squat", "equipment": "KB" },
+            { "name": "KB Swing", "equipment": "KB" },
+            { "name": "Single-Leg DB RDL", "equipment": "DBs" },
+            { "name": "DB Hip Thrust", "equipment": "DBs" }
           ]
         },
         {
-          "id": "finisher",
-          "label": "Core Finisher (Round-for-Round)",
-          "format": "rounds",
-          "rounds": 3,
+          "id": "biceps",
+          "label": "Biceps",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "12",
           "restSec": 45,
-          "pairs": [
-            { "a1": { "name": "Bosu V-Ups", "equipment": "Bosu", "target": "15 reps" }, "a2": { "name": "KB Russian Twist", "equipment": "KB", "target": "20 reps" } },
-            { "a1": { "name": "Bosu Plank", "equipment": "Bosu", "target": "45s" }, "a2": { "name": "DB Farmer Carry", "equipment": "DBs", "target": "40s" } },
-            { "a1": { "name": "Bosu Mountain Climbers", "equipment": "Bosu", "target": "30s" }, "a2": { "name": "Band Pallof Press", "equipment": "Bands", "target": "30s" } },
-            { "a1": { "name": "Bosu Side Plank", "equipment": "Bosu", "target": "30s/side" }, "a2": { "name": "Cable Woodchopper", "equipment": "Cables", "target": "15/side" } }
+          "pool": [
+            { "name": "DB Bicep Curl", "equipment": "DBs" },
+            { "name": "DB Hammer Curl", "equipment": "DBs" },
+            { "name": "Cable Curl", "equipment": "Cables" },
+            { "name": "KB Zottman Curl", "equipment": "KB" }
+          ]
+        },
+        {
+          "id": "core",
+          "label": "Core Finisher",
+          "format": "alternating",
+          "sets": 3,
+          "reps": "15",
+          "restSec": 45,
+          "pool": [
+            { "name": "Bosu V-Ups", "equipment": "Bosu" },
+            { "name": "KB Russian Twist", "equipment": "KB" },
+            { "name": "Bosu Plank (45s)", "equipment": "Bosu" },
+            { "name": "Band Pallof Press", "equipment": "Bands" }
           ]
         }
       ]
