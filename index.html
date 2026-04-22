@@ -105,15 +105,27 @@
         radial-gradient(600px 500px at 50% 100%, rgba(139,92,246,.08), transparent 55%),
         linear-gradient(160deg, var(--bg0) 0%, var(--bg1) 70%, var(--bg2) 100%);
     }
-    body.mode-partner, body.mode-none {
+    /* When on the mode screen or the partner dashboard, allow the page
+       to grow and scroll. For solo and for the single-block partner
+       session detail we keep the original fixed-viewport behavior. */
+    body.mode-none {
       height: auto;
       min-height: 100dvh;
     }
-    body.mode-partner, html:has(body.mode-partner),
     body.mode-none, html:has(body.mode-none){
       overflow: auto;
     }
-    body.mode-partner .main, body.mode-none .main{
+    body.mode-none .main{
+      height: auto;
+      overflow: visible;
+    }
+    /* Partner dashboard scrolls; session detail fits screen like solo */
+    body.mode-partner:has(#view-partner-dash.active){
+      height: auto;
+      min-height: 100dvh;
+      overflow: auto;
+    }
+    body.mode-partner:has(#view-partner-dash.active) .main{
       height: auto;
       overflow: visible;
     }
@@ -1392,81 +1404,45 @@
       box-shadow: inset 0 0 24px rgba(255,255,255,.25);
     }
 
-    /* ============ NEW: PARTNER SESSION DETAIL ============ */
-    .view#view-partner-session{ display:none; }
-    .view#view-partner-session.active{ display:flex; flex-direction:column; gap: 12px; height: auto; }
+    /* ============ PARTNER SESSION DETAIL (single-block, mirrors solo) ============ */
+    .view#view-partner-session{ display:none; height:100%; }
+    .view#view-partner-session.active{ display:flex; flex-direction:column; gap: var(--gap); }
 
-    .sessionHeader{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .sessionHeader h2{
+    .view#view-partner-session #partnerBlockTitle{
       margin:0;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 24px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .4px;
-      line-height: 1;
-    }
-    .sessionHeader .sub{
-      margin-top: 4px;
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    .blockCard{
-      position:relative;
-      padding: 14px;
-      border-radius: 18px;
-      border:1px solid var(--stroke2);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
+      font-size:17px;
+      font-weight:900;
+      letter-spacing:.2px;
+      text-transform:uppercase;
+      line-height:1.1;
       overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      min-width:0;
+      flex:1 1 auto;
     }
-    .blockCard.done{
-      border-color: rgba(198,255,61,.35);
-      background: linear-gradient(180deg, rgba(198,255,61,.04), rgba(198,255,61,.01));
-    }
-    .blockCard.active{
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent), 0 0 30px var(--accentGlowSoft);
-    }
-    .blockHead{
+    .blockMetaLine{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:850;
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
+      gap:6px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .blockHead .left{ min-width:0; flex:1; }
-    .blockHead .tag{
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
+    .blockMetaLine .sep{ opacity:.6; }
+    .blockMetaLine .tag{
       color: var(--accent);
-      margin-bottom: 3px;
-    }
-    .blockHead h3{
-      margin:0;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
       font-weight: 900;
+      letter-spacing: .5px;
       text-transform: uppercase;
-      letter-spacing: .3px;
-      line-height: 1.05;
     }
-    .blockHead .rx{
-      font-size: 11px;
-      color: var(--muted);
-      font-weight: 700;
-      white-space: nowrap;
+
+    #partnerActiveBody{
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .exerciseList{
@@ -1744,23 +1720,59 @@
     </div>
   </section>
 
-  <section class="view" id="view-partner-session">
-    <div class="backRow">
-      <button class="btnGhost" id="partnerBackBtn">← Dashboard</button>
-    </div>
-    <div class="sessionHeader">
+  <section class="card view" id="view-partner-session">
+    <div class="workoutHeader">
       <div class="left">
-        <h2 id="partnerSessionTitle">—</h2>
-        <div class="sub" id="partnerSessionSub">—</div>
+        <div class="labelTop" id="partnerSessionKicker">PARTNER SESSION</div>
+        <h2 id="partnerSessionTitle">Loading…</h2>
+        <div id="partnerSessionSub"></div>
       </div>
-      <div style="display:flex; gap:6px; align-items:center;">
+      <div style="display:flex; gap:6px; white-space:nowrap;">
+        <div class="chip chipBtn" id="partnerBackBtn" title="Back to dashboard">← Back</div>
         <div class="chip"><strong id="partnerSessionMeta">—</strong></div>
       </div>
     </div>
 
-    <div id="partnerBlocks" style="display:flex; flex-direction:column; gap: 12px;"></div>
+    <div class="progressWrap">
+      <div class="progressMeta">
+        <div id="partnerProgressText">0 / 0</div>
+        <div id="partnerCompleteHint"></div>
+      </div>
+      <div class="bar"><div id="partnerProgressBar"></div></div>
+    </div>
 
-    <button id="partnerCompleteBtn" class="btnPrimary" style="padding:14px; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:900; letter-spacing:.6px; text-transform:uppercase;">Mark Session Complete</button>
+    <div class="stack">
+      <div class="activePane">
+        <div class="paneHeader">
+          <b id="partnerPaneLabel">Active Block</b>
+          <div class="count" id="partnerPaneCount">—</div>
+        </div>
+
+        <div class="activeBody" id="partnerActiveBody">
+          <div class="activeLine">
+            <p id="partnerBlockTitle">—</p>
+            <div class="exNav">
+              <button id="partnerPrevBlockBtn" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M6.5 1.5L3 5l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="partnerNextBlockBtn" class="btnGhost"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M3.5 1.5L7 5l-3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+
+          <div id="partnerBlockMeta" class="blockMetaLine"></div>
+
+          <div id="partnerBlockBody"></div>
+        </div>
+      </div>
+
+      <div class="nextPane">
+        <div class="nextBody">
+          <div class="nextLine">
+            <p id="partnerNextBlockTitle">—</p>
+          </div>
+        </div>
+      </div>
+
+      <button id="partnerCompleteBtn" class="btnPrimary" disabled>Mark Session Complete</button>
+    </div>
   </section>
 
   <section class="card view" id="view-workout">
@@ -6411,17 +6423,22 @@ let activePartnerSessionId = null;
 const partnerSessionState = {};  // { sessionId: { blocks: { [blockId]: { setsDone:[], turn:"you"|"partner", picked:{a1:idx,a2:idx}, restLeft:0, restRunning:false, restTimerId:null, weights:[] } } } }
 
 function ensureBlockState(sessionId, block){
-  if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {} };
+  if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {}, activeBlockIdx: 0 };
   const bs = partnerSessionState[sessionId].blocks;
   if(!bs[block.id]){
-    const totalSets = block.format === "rounds" ? (block.rounds || 3) : (block.sets || 3);
+    const totalSets = block.format === "rounds"
+      ? (block.rounds || 3)
+      : block.format === "together"
+        ? 0
+        : (block.sets || 3);
     bs[block.id] = {
       setsDone: new Array(totalSets).fill(false),
+      togetherDone: false,
       turn: "you",
       restLeft: 0,
       restRunning: false,
       restTimerId: null,
-      weights: [],   // [{weight, reps}] per set for alternating lift
+      weights: [],
     };
   }
   return bs[block.id];
@@ -6429,348 +6446,321 @@ function ensureBlockState(sessionId, block){
 
 function openPartnerSession(sessionId){
   activePartnerSessionId = sessionId;
-  renderPartnerSession(sessionId);
+  // Seed active block: first incomplete block, or 0
+  const sess = getSessionById(sessionId);
+  if(sess){
+    if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {}, activeBlockIdx: 0 };
+    partnerSessionState[sessionId].activeBlockIdx = findFirstIncompleteBlockIdx(sessionId, sess);
+  }
   setView("partner-session");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  renderPartnerSession(sessionId);
+  window.scrollTo({ top: 0 });
+}
+
+function isBlockDone(sessionId, block){
+  if(block.format === "together"){
+    const bs = ensureBlockState(sessionId, block);
+    return !!bs.togetherDone;
+  }
+  const bs = ensureBlockState(sessionId, block);
+  return bs.setsDone.length > 0 && bs.setsDone.every(Boolean);
+}
+function findFirstIncompleteBlockIdx(sessionId, sess){
+  for(let i = 0; i < sess.blocks.length; i++){
+    if(!isBlockDone(sessionId, sess.blocks[i])) return i;
+  }
+  return 0;
+}
+function getPartnerActiveBlockIdx(sessionId){
+  return partnerSessionState[sessionId]?.activeBlockIdx || 0;
+}
+function setPartnerActiveBlockIdx(sessionId, idx){
+  if(!partnerSessionState[sessionId]) partnerSessionState[sessionId] = { blocks: {}, activeBlockIdx: 0 };
+  partnerSessionState[sessionId].activeBlockIdx = idx;
 }
 
 function renderPartnerSession(sessionId){
   const sess = getSessionById(sessionId);
   if(!sess) return;
+
   $("partnerSessionTitle").textContent = sess.title;
   $("partnerSessionSub").textContent = `${sess.subtitle} • est. ${sess.estMinutes} min`;
   $("partnerSessionMeta").textContent = `${sess.blocks.length} blocks`;
+  $("partnerSessionKicker").textContent = `PARTNER ${sess.emphasis?.toUpperCase() || "SESSION"} DAY`;
 
-  const host = $("partnerBlocks");
-  host.innerHTML = "";
+  const activeIdx = Math.max(0, Math.min(getPartnerActiveBlockIdx(sessionId), sess.blocks.length - 1));
+  const block = sess.blocks[activeIdx];
+  const bs = ensureBlockState(sessionId, block);
 
-  sess.blocks.forEach((block, bi) => {
-    const bs = ensureBlockState(sessionId, block);
-    const pick = pickForBlock(sessionId, block);
-    const card = document.createElement("div");
-    card.className = "blockCard";
-    const allDone = bs.setsDone.every(Boolean) && bs.setsDone.length > 0;
-    if(allDone) card.classList.add("done");
+  // Progress: count done blocks
+  const totalBlocks = sess.blocks.length;
+  const doneBlocks = sess.blocks.filter(b => isBlockDone(sessionId, b)).length;
+  const pct = totalBlocks ? Math.round((doneBlocks/totalBlocks) * 100) : 0;
+  $("partnerProgressText").textContent = `${doneBlocks} / ${totalBlocks}`;
+  $("partnerProgressBar").style.width = `${pct}%`;
+  $("partnerCompleteHint").textContent = doneBlocks === totalBlocks ? "Ready" : "Finish all blocks";
+  $("partnerPaneCount").textContent = `${activeIdx + 1} / ${totalBlocks}`;
 
-    let rxText = "";
-    if(block.format === "together") rxText = `${Math.round((block.durationSec||180)/60)} min`;
-    else if(block.format === "alternating") rxText = `${block.sets} × ${block.reps}`;
-    else if(block.format === "superset") rxText = `${block.sets} × ${block.reps}`;
-    else if(block.format === "rounds") rxText = `${block.rounds} rounds`;
+  // Block title
+  let titleText = "";
+  const pick = pickForBlock(sessionId, block);
+  if(block.format === "together") titleText = block.label;
+  else if(block.format === "alternating") titleText = pick.picked?.name || block.label;
+  else if(block.format === "superset" || block.format === "rounds"){
+    const p = pick.picked;
+    titleText = p ? `${p.a1.name} + ${p.a2.name}` : block.label;
+  }
+  $("partnerBlockTitle").textContent = titleText;
 
-    // Header
-    const head = document.createElement("div");
-    head.className = "blockHead";
-    head.innerHTML = `
-      <div class="left">
-        <div class="tag">Block ${bi+1}/${sess.blocks.length} • ${block.label}</div>
-        <h3 id="blockTitle-${block.id}"></h3>
-      </div>
-      <div class="rx">${rxText}</div>
+  // Meta line
+  const meta = $("partnerBlockMeta");
+  meta.innerHTML = "";
+  const metaParts = [`<span class="tag">${block.label}</span>`];
+  if(block.format === "together") metaParts.push(`<span>${Math.round((block.durationSec||180)/60)} min together</span>`);
+  else if(block.format === "alternating") metaParts.push(`<span>${block.sets} sets × ${block.reps} reps</span>`, `<span>rest ${block.restSec}s</span>`);
+  else if(block.format === "superset") metaParts.push(`<span>${block.sets} rounds × ${block.reps}</span>`, `<span>rest ${block.restSec}s</span>`);
+  else if(block.format === "rounds") metaParts.push(`<span>${block.rounds} rounds</span>`, `<span>rest ${block.restSec}s</span>`);
+  meta.innerHTML = metaParts.join('<span class="sep">•</span>');
+
+  // Body
+  const body = $("partnerBlockBody");
+  body.innerHTML = "";
+  renderPartnerBlockBody(body, sessionId, block);
+
+  // Prev/Next block
+  $("partnerPrevBlockBtn").disabled = activeIdx === 0;
+  $("partnerNextBlockBtn").disabled = activeIdx >= totalBlocks - 1;
+
+  // Next block title
+  const nextBlock = sess.blocks[activeIdx + 1];
+  if(nextBlock){
+    let nextTitle = `Next: ${nextBlock.label}`;
+    const nextPick = pickForBlock(sessionId, nextBlock);
+    if(nextBlock.format === "alternating" && nextPick.picked) nextTitle = `Next: ${nextBlock.label} — ${nextPick.picked.name}`;
+    else if((nextBlock.format === "superset" || nextBlock.format === "rounds") && nextPick.picked){
+      nextTitle = `Next: ${nextBlock.label} — ${nextPick.picked.a1.name} + ${nextPick.picked.a2.name}`;
+    }
+    $("partnerNextBlockTitle").textContent = nextTitle;
+  } else {
+    $("partnerNextBlockTitle").textContent = "Last block — mark session complete when done";
+  }
+
+  // Complete button enabled only when every block is done
+  const allBlocksDone = sess.blocks.every(b => isBlockDone(sessionId, b));
+  $("partnerCompleteBtn").disabled = !allBlocksDone;
+}
+
+function renderPartnerBlockBody(host, sessionId, block){
+  const bs = ensureBlockState(sessionId, block);
+  const pick = pickForBlock(sessionId, block);
+
+  if(block.format === "together"){
+    const checkRow = document.createElement("div");
+    checkRow.className = "checkRow" + (bs.togetherDone ? " isChecked" : "");
+    checkRow.innerHTML = `
+      <input type="checkbox" ${bs.togetherDone ? "checked" : ""}/>
+      <div class="label">${block.description}</div>
     `;
-    card.appendChild(head);
+    checkRow.addEventListener("click", (e) => {
+      const wasChecked = bs.togetherDone;
+      bs.togetherDone = !wasChecked;
+      if(bs.togetherDone) autoAdvanceBlock(sessionId);
+      renderPartnerSession(sessionId);
+    });
+    host.appendChild(checkRow);
+    return;
+  }
 
-    // Body by format
-    if(block.format === "together"){
-      const body = document.createElement("div");
-      body.className = "exerciseList";
-      body.innerHTML = `
-        <div class="exerciseItem" style="flex-direction:column; align-items:flex-start; gap:4px;">
-          <div>${block.description}</div>
-          <div class="eqp">Do it together. No turn swapping.</div>
-        </div>
-      `;
-      card.appendChild(body);
-      head.querySelector(`#blockTitle-${block.id}`).textContent = "Warm-Up";
-
-    } else if(block.format === "alternating"){
-      const picked = pick.picked || block.pool[0];
-      head.querySelector(`#blockTitle-${block.id}`).textContent = picked.name;
-
-      // Picker — let user override rotation pick
-      const picker = document.createElement("div");
-      picker.className = "pickerRow";
-      block.pool.forEach((opt, i) => {
-        const chip = document.createElement("div");
-        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
-        chip.textContent = opt.name;
-        chip.addEventListener("click", () => {
-          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
-          savePartnerState(PARTNER);
-          renderPartnerSession(sessionId);
-        });
-        picker.appendChild(chip);
-      });
-      card.appendChild(picker);
-
-      // Exercise row w/ equipment + last weight
-      const last = lastWeight(picked.name);
-      const exList = document.createElement("div");
-      exList.className = "exerciseList";
-      exList.innerHTML = `
-        <div class="exerciseItem">
-          <div><span class="slot">MAIN</span>${picked.name}</div>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <span class="eqp">${picked.equipment}</span>
-            ${last ? `<span class="lastWt">Last: ${last.weight} × ${last.reps}</span>` : ""}
-          </div>
-        </div>
-      `;
-      card.appendChild(exList);
-
-      if(block.notes){
-        const note = document.createElement("div");
-        note.style.cssText = "font-size:11px; color:var(--muted); font-weight:600; padding: 0 2px;";
-        note.textContent = block.notes;
-        card.appendChild(note);
-      }
-
-      // Turn indicator
-      const turnEl = document.createElement("div");
-      turnEl.className = "turnIndicator " + bs.turn;
-      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOUR SET" : "PARTNER'S SET"}</div><div class="turnHint">tap to swap</div>`;
-      turnEl.addEventListener("click", () => {
-        bs.turn = bs.turn === "you" ? "partner" : "you";
+  // Pool / pair picker
+  if(block.format === "alternating" && block.pool){
+    const picker = document.createElement("div");
+    picker.className = "pickerRow";
+    block.pool.forEach((opt, i) => {
+      const chip = document.createElement("div");
+      chip.className = "pickerChip" + (i === pick.index ? " on" : "");
+      chip.textContent = opt.name;
+      chip.addEventListener("click", () => {
+        PARTNER.rotations[rotKey(sessionId, block.id)] = i;
+        savePartnerState(PARTNER);
         renderPartnerSession(sessionId);
       });
-      card.appendChild(turnEl);
-
-      // Set pills
-      const pillRow = document.createElement("div");
-      pillRow.className = "setPillRow";
-      bs.setsDone.forEach((done, i) => {
-        const p = document.createElement("div");
-        p.className = "setPill" + (done ? " done" : "");
-        p.textContent = `Set ${i+1}`;
-        p.addEventListener("click", () => {
-          bs.setsDone[i] = !bs.setsDone[i];
-          if(bs.setsDone[i]){
-            // auto-start rest + swap turn
-            bs.turn = bs.turn === "you" ? "partner" : "you";
-            startBlockRest(sessionId, block);
-          }
-          renderPartnerSession(sessionId);
-        });
-        pillRow.appendChild(p);
+      picker.appendChild(chip);
+    });
+    host.appendChild(picker);
+  } else if((block.format === "superset" || block.format === "rounds") && block.pairs){
+    const picker = document.createElement("div");
+    picker.className = "pickerRow";
+    block.pairs.forEach((opt, i) => {
+      const chip = document.createElement("div");
+      chip.className = "pickerChip" + (i === pick.index ? " on" : "");
+      chip.textContent = `${opt.a1.name.split(" ")[0]} + ${opt.a2.name.split(" ")[0]}`;
+      chip.addEventListener("click", () => {
+        PARTNER.rotations[rotKey(sessionId, block.id)] = i;
+        savePartnerState(PARTNER);
+        renderPartnerSession(sessionId);
       });
-      card.appendChild(pillRow);
+      picker.appendChild(chip);
+    });
+    host.appendChild(picker);
+  }
 
-      // Weight input if tracking on
-      if(getTrackWeights()){
-        const wrap = document.createElement("div");
-        wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
-        const label = document.createElement("div");
-        label.style.cssText = "font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;";
-        label.textContent = "Log last set";
-        wrap.appendChild(label);
-        const row = document.createElement("div");
-        row.className = "weightRow";
-        row.innerHTML = `
+  // Exercise rows
+  const exList = document.createElement("div");
+  exList.className = "exerciseList";
+  if(block.format === "alternating"){
+    const picked = pick.picked || block.pool[0];
+    const last = lastWeight(picked.name);
+    exList.innerHTML = `
+      <div class="exerciseItem">
+        <div><span class="slot">MAIN</span>${picked.name}</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="eqp">${picked.equipment}</span>
+          ${last ? `<span class="lastWt">Last: ${last.weight} × ${last.reps}</span>` : ""}
+        </div>
+      </div>
+    `;
+  } else if(block.format === "superset" || block.format === "rounds"){
+    const pair = pick.picked || block.pairs[0];
+    const last1 = lastWeight(pair.a1.name);
+    const last2 = lastWeight(pair.a2.name);
+    const t1 = pair.a1.target ? ` • <b>${pair.a1.target}</b>` : "";
+    const t2 = pair.a2.target ? ` • <b>${pair.a2.target}</b>` : "";
+    exList.innerHTML = `
+      <div class="exerciseItem">
+        <div><span class="slot">A1</span>${pair.a1.name}</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="eqp">${pair.a1.equipment}${t1}</span>
+          ${last1 ? `<span class="lastWt">Last: ${last1.weight} × ${last1.reps}</span>` : ""}
+        </div>
+      </div>
+      <div class="exerciseItem">
+        <div><span class="slot">A2</span>${pair.a2.name}</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="eqp">${pair.a2.equipment}${t2}</span>
+          ${last2 ? `<span class="lastWt">Last: ${last2.weight} × ${last2.reps}</span>` : ""}
+        </div>
+      </div>
+    `;
+  }
+  host.appendChild(exList);
+
+  if(block.notes){
+    const n = document.createElement("div");
+    n.style.cssText = "font-size:11px; color:var(--muted); font-weight:600; padding: 2px 2px 0;";
+    n.textContent = block.notes;
+    host.appendChild(n);
+  }
+
+  // Turn indicator
+  const turnEl = document.createElement("div");
+  turnEl.className = "turnIndicator " + bs.turn;
+  const turnLabel = block.format === "alternating" ? (bs.turn === "you" ? "YOUR SET" : "PARTNER'S SET") : (bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS");
+  turnEl.innerHTML = `<div class="turnLabel">${turnLabel}</div><div class="turnHint">tap to swap</div>`;
+  turnEl.addEventListener("click", () => {
+    bs.turn = bs.turn === "you" ? "partner" : "you";
+    renderPartnerSession(sessionId);
+  });
+  host.appendChild(turnEl);
+
+  // Set pills
+  const pillRow = document.createElement("div");
+  pillRow.className = "setPillRow";
+  const pillLabel = block.format === "alternating" ? "Set" : "Round";
+  bs.setsDone.forEach((done, i) => {
+    const p = document.createElement("div");
+    p.className = "setPill" + (done ? " done" : "");
+    p.textContent = `${pillLabel} ${i+1}`;
+    p.addEventListener("click", () => {
+      bs.setsDone[i] = !bs.setsDone[i];
+      if(bs.setsDone[i]){
+        if(block.format === "alternating") bs.turn = bs.turn === "you" ? "partner" : "you";
+        startBlockRest(sessionId, block);
+        // If this was last set and block done, auto-advance to next block
+        if(bs.setsDone.every(Boolean)) autoAdvanceBlock(sessionId);
+      }
+      renderPartnerSession(sessionId);
+    });
+    pillRow.appendChild(p);
+  });
+  host.appendChild(pillRow);
+
+  // Weight log (only if tracking + a strength block)
+  if(getTrackWeights() && (block.format === "alternating" || block.format === "superset")){
+    if(block.format === "alternating"){
+      const picked = pick.picked || block.pool[0];
+      const wrap = document.createElement("div");
+      wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
+      wrap.innerHTML = `
+        <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last set</div>
+        <div class="weightRow">
           <label>Wt</label>
           <input id="wtInput-${block.id}" inputmode="decimal" placeholder="135" />
           <label>Reps</label>
           <input id="repsInput-${block.id}" inputmode="numeric" placeholder="8" />
           <button class="btnGhost" id="logBtn-${block.id}">Log</button>
-        `;
-        wrap.appendChild(row);
-        card.appendChild(wrap);
-
-        row.querySelector(`#logBtn-${block.id}`).addEventListener("click", () => {
-          const w = parseFloat($(`wtInput-${block.id}`).value);
-          const r = parseInt($(`repsInput-${block.id}`).value, 10);
-          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-          logWeight(picked.name, w, r);
-          toast(`Logged ${w} × ${r}`);
-          renderPartnerSession(sessionId);
-        });
-      }
-
-      // Rest timer row
-      card.appendChild(buildRestTimerRow(sessionId, block));
-
-    } else if(block.format === "superset"){
-      const pair = pick.picked || block.pairs[0];
-      head.querySelector(`#blockTitle-${block.id}`).textContent = `${pair.a1.name} + ${pair.a2.name}`;
-
-      // Picker for pair rotation
-      const picker = document.createElement("div");
-      picker.className = "pickerRow";
-      block.pairs.forEach((opt, i) => {
-        const chip = document.createElement("div");
-        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
-        chip.textContent = `${opt.a1.name.split(" ")[0]} + ${opt.a2.name.split(" ")[0]}`;
-        chip.addEventListener("click", () => {
-          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
-          savePartnerState(PARTNER);
-          renderPartnerSession(sessionId);
-        });
-        picker.appendChild(chip);
-      });
-      card.appendChild(picker);
-
-      // Two exercise rows
-      const last1 = lastWeight(pair.a1.name);
-      const last2 = lastWeight(pair.a2.name);
-      const exList = document.createElement("div");
-      exList.className = "exerciseList";
-      exList.innerHTML = `
-        <div class="exerciseItem">
-          <div><span class="slot">A1</span>${pair.a1.name}</div>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <span class="eqp">${pair.a1.equipment}</span>
-            ${last1 ? `<span class="lastWt">Last: ${last1.weight} × ${last1.reps}</span>` : ""}
-          </div>
-        </div>
-        <div class="exerciseItem">
-          <div><span class="slot">A2</span>${pair.a2.name}</div>
-          <div style="display:flex; gap:10px; align-items:center;">
-            <span class="eqp">${pair.a2.equipment}</span>
-            ${last2 ? `<span class="lastWt">Last: ${last2.weight} × ${last2.reps}</span>` : ""}
-          </div>
         </div>
       `;
-      card.appendChild(exList);
-
-      // Turn indicator
-      const turnEl = document.createElement("div");
-      turnEl.className = "turnIndicator " + bs.turn;
-      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS"}</div><div class="turnHint">tap to swap</div>`;
-      turnEl.addEventListener("click", () => {
-        bs.turn = bs.turn === "you" ? "partner" : "you";
+      host.appendChild(wrap);
+      wrap.querySelector(`#logBtn-${block.id}`).addEventListener("click", () => {
+        const w = parseFloat($(`wtInput-${block.id}`).value);
+        const r = parseInt($(`repsInput-${block.id}`).value, 10);
+        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+        logWeight(picked.name, w, r);
+        toast(`Logged ${w} × ${r}`);
         renderPartnerSession(sessionId);
       });
-      card.appendChild(turnEl);
-
-      // Set pills — superset round = both A1 and A2 done
-      const pillRow = document.createElement("div");
-      pillRow.className = "setPillRow";
-      bs.setsDone.forEach((done, i) => {
-        const p = document.createElement("div");
-        p.className = "setPill" + (done ? " done" : "");
-        p.textContent = `Round ${i+1}`;
-        p.addEventListener("click", () => {
-          bs.setsDone[i] = !bs.setsDone[i];
-          if(bs.setsDone[i]) startBlockRest(sessionId, block);
-          renderPartnerSession(sessionId);
-        });
-        pillRow.appendChild(p);
-      });
-      card.appendChild(pillRow);
-
-      // Log weights (simple row per exercise)
-      if(getTrackWeights()){
-        const wrap = document.createElement("div");
-        wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
-        wrap.innerHTML = `
-          <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last round</div>
-          <div class="weightRow">
-            <label>A1 Wt</label>
-            <input id="wt1-${block.id}" inputmode="decimal" placeholder="—" />
-            <label>Reps</label>
-            <input id="r1-${block.id}" inputmode="numeric" placeholder="—" />
-            <button class="btnGhost" id="log1-${block.id}">Log</button>
-          </div>
-          <div class="weightRow">
-            <label>A2 Wt</label>
-            <input id="wt2-${block.id}" inputmode="decimal" placeholder="—" />
-            <label>Reps</label>
-            <input id="r2-${block.id}" inputmode="numeric" placeholder="—" />
-            <button class="btnGhost" id="log2-${block.id}">Log</button>
-          </div>
-        `;
-        card.appendChild(wrap);
-
-        wrap.querySelector(`#log1-${block.id}`).addEventListener("click", () => {
-          const w = parseFloat($(`wt1-${block.id}`).value);
-          const r = parseInt($(`r1-${block.id}`).value, 10);
-          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-          logWeight(pair.a1.name, w, r);
-          toast(`Logged ${pair.a1.name}`);
-          renderPartnerSession(sessionId);
-        });
-        wrap.querySelector(`#log2-${block.id}`).addEventListener("click", () => {
-          const w = parseFloat($(`wt2-${block.id}`).value);
-          const r = parseInt($(`r2-${block.id}`).value, 10);
-          if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
-          logWeight(pair.a2.name, w, r);
-          toast(`Logged ${pair.a2.name}`);
-          renderPartnerSession(sessionId);
-        });
-      }
-
-      // Rest timer
-      card.appendChild(buildRestTimerRow(sessionId, block));
-
-    } else if(block.format === "rounds"){
+    } else {
       const pair = pick.picked || block.pairs[0];
-      head.querySelector(`#blockTitle-${block.id}`).textContent = `${pair.a1.name} ↔ ${pair.a2.name}`;
-
-      const picker = document.createElement("div");
-      picker.className = "pickerRow";
-      block.pairs.forEach((opt, i) => {
-        const chip = document.createElement("div");
-        chip.className = "pickerChip" + (i === pick.index ? " on" : "");
-        chip.textContent = `${opt.a1.name.split(" ")[0]} ↔ ${opt.a2.name.split(" ")[0]}`;
-        chip.addEventListener("click", () => {
-          PARTNER.rotations[rotKey(sessionId, block.id)] = i;
-          savePartnerState(PARTNER);
-          renderPartnerSession(sessionId);
-        });
-        picker.appendChild(chip);
-      });
-      card.appendChild(picker);
-
-      const exList = document.createElement("div");
-      exList.className = "exerciseList";
-      exList.innerHTML = `
-        <div class="exerciseItem">
-          <div><span class="slot">A1</span>${pair.a1.name}</div>
-          <div><span class="eqp">${pair.a1.equipment}</span> • <b>${pair.a1.target || ""}</b></div>
+      const wrap = document.createElement("div");
+      wrap.style.cssText = "display:flex; flex-direction:column; gap:6px;";
+      wrap.innerHTML = `
+        <div style="font-size:10px; color:var(--muted); font-weight:900; letter-spacing:.5px; text-transform:uppercase;">Log last round</div>
+        <div class="weightRow">
+          <label>A1 Wt</label>
+          <input id="wt1-${block.id}" inputmode="decimal" placeholder="—" />
+          <label>Reps</label>
+          <input id="r1-${block.id}" inputmode="numeric" placeholder="—" />
+          <button class="btnGhost" id="log1-${block.id}">Log</button>
         </div>
-        <div class="exerciseItem">
-          <div><span class="slot">A2</span>${pair.a2.name}</div>
-          <div><span class="eqp">${pair.a2.equipment}</span> • <b>${pair.a2.target || ""}</b></div>
+        <div class="weightRow">
+          <label>A2 Wt</label>
+          <input id="wt2-${block.id}" inputmode="decimal" placeholder="—" />
+          <label>Reps</label>
+          <input id="r2-${block.id}" inputmode="numeric" placeholder="—" />
+          <button class="btnGhost" id="log2-${block.id}">Log</button>
         </div>
       `;
-      card.appendChild(exList);
-
-      const turnEl = document.createElement("div");
-      turnEl.className = "turnIndicator " + bs.turn;
-      turnEl.innerHTML = `<div class="turnLabel">${bs.turn === "you" ? "YOU WORK" : "PARTNER WORKS"}</div><div class="turnHint">tap to swap</div>`;
-      turnEl.addEventListener("click", () => {
-        bs.turn = bs.turn === "you" ? "partner" : "you";
+      host.appendChild(wrap);
+      wrap.querySelector(`#log1-${block.id}`).addEventListener("click", () => {
+        const w = parseFloat($(`wt1-${block.id}`).value);
+        const r = parseInt($(`r1-${block.id}`).value, 10);
+        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+        logWeight(pair.a1.name, w, r);
+        toast(`Logged ${pair.a1.name}`);
         renderPartnerSession(sessionId);
       });
-      card.appendChild(turnEl);
-
-      const pillRow = document.createElement("div");
-      pillRow.className = "setPillRow";
-      bs.setsDone.forEach((done, i) => {
-        const p = document.createElement("div");
-        p.className = "setPill" + (done ? " done" : "");
-        p.textContent = `Round ${i+1}`;
-        p.addEventListener("click", () => {
-          bs.setsDone[i] = !bs.setsDone[i];
-          if(bs.setsDone[i]) startBlockRest(sessionId, block);
-          renderPartnerSession(sessionId);
-        });
-        pillRow.appendChild(p);
+      wrap.querySelector(`#log2-${block.id}`).addEventListener("click", () => {
+        const w = parseFloat($(`wt2-${block.id}`).value);
+        const r = parseInt($(`r2-${block.id}`).value, 10);
+        if(!Number.isFinite(w) || !Number.isFinite(r)){ toast("Enter weight + reps"); return; }
+        logWeight(pair.a2.name, w, r);
+        toast(`Logged ${pair.a2.name}`);
+        renderPartnerSession(sessionId);
       });
-      card.appendChild(pillRow);
-
-      card.appendChild(buildRestTimerRow(sessionId, block));
     }
+  }
 
-    host.appendChild(card);
-  });
+  // Rest timer
+  host.appendChild(buildRestTimerRow(sessionId, block));
+}
 
-  // Complete button state
-  const allBlocksDone = sess.blocks.every(b => {
-    if(b.format === "together") return true;
-    const bs = ensureBlockState(sessionId, b);
-    return bs.setsDone.every(Boolean) && bs.setsDone.length > 0;
-  });
-  $("partnerCompleteBtn").disabled = !allBlocksDone;
+function autoAdvanceBlock(sessionId){
+  const sess = getSessionById(sessionId);
+  if(!sess) return;
+  const cur = getPartnerActiveBlockIdx(sessionId);
+  if(cur < sess.blocks.length - 1){
+    setPartnerActiveBlockIdx(sessionId, cur + 1);
+  }
 }
 
 function buildRestTimerRow(sessionId, block){
@@ -6882,6 +6872,26 @@ $("partnerCompleteBtn").addEventListener("click", () => {
 $("partnerBackBtn").addEventListener("click", () => {
   setView("partner-dash");
   renderPartnerDashboard();
+});
+
+$("partnerPrevBlockBtn").addEventListener("click", () => {
+  const sessionId = activePartnerSessionId;
+  if(!sessionId) return;
+  const cur = getPartnerActiveBlockIdx(sessionId);
+  if(cur > 0){
+    setPartnerActiveBlockIdx(sessionId, cur - 1);
+    renderPartnerSession(sessionId);
+  }
+});
+$("partnerNextBlockBtn").addEventListener("click", () => {
+  const sessionId = activePartnerSessionId;
+  if(!sessionId) return;
+  const sess = getSessionById(sessionId);
+  const cur = getPartnerActiveBlockIdx(sessionId);
+  if(sess && cur < sess.blocks.length - 1){
+    setPartnerActiveBlockIdx(sessionId, cur + 1);
+    renderPartnerSession(sessionId);
+  }
 });
 
 (async function init(){
