@@ -9779,7 +9779,7 @@ function setView(which){
 }
 function updateHeaderForView(which){
   const mode = getMode();
-  const showSwitch = mode !== null && which !== "mode";
+  const showSwitch = false; // partner/solo switch removed
   $("modeSwitchChip").style.display = showSwitch ? "inline-flex" : "none";
   // Chip shows the OTHER mode (what you'll switch to)
   $("modeSwitchLabel").textContent = mode === "partner" ? "Solo" : "Partner";
@@ -11472,10 +11472,9 @@ $("partnerNextBlockBtn").addEventListener("click", () => {
   todayKey = getLocalDateKey();
   $("todayLabel").textContent = `Today: ${todayKey}`;
 
-  // Show mode gate ASAP — don't wait on fetches
-  const currentMode = getMode();
-  setMode(currentMode);
-  if(!currentMode) setView("mode");
+  // Partner/solo chooser removed — always run solo
+  const currentMode = "solo";
+  setMode("solo");
 
   // Kick off both data loads in parallel
   const [_w, _p] = await Promise.all([loadWorkoutsFromFile(), loadPartnerData()]);
@@ -11502,13 +11501,8 @@ $("partnerNextBlockBtn").addEventListener("click", () => {
   // Always render solo workout so it's ready when switched to
   renderWorkout();
 
-  // Route to the right view based on persisted mode
-  if(currentMode === "solo"){
-    setView("workout");
-  } else if(currentMode === "partner"){
-    renderPartnerDashboard();
-    setView("partner-dash");
-  }
+  // Always land on the solo workout view
+  setView("workout");
 })();
 </script>
 </body>
