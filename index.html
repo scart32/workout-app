@@ -14,27 +14,27 @@
     :root{
       color-scheme: dark;
 
-      --bg0:#140F1E;
-      --bg1:#1A1428;
-      --bg2:#241A38;
+      --bg0:#160A2B;
+      --bg1:#231152;
+      --bg2:#461D7C;
 
-      --text:#F3EFFA;
-      --muted:#A99FB8;
-      --muted2: rgba(169,159,184,.72);
+      --text:#F6F1FF;
+      --muted:#B6A9CE;
+      --muted2: rgba(182,169,206,.72);
 
       /* palette (var names kept for compatibility) */
-      --n-lime:    #FFD65A;
-      --n-cyan:    #FFC53D;
+      --n-lime:    #FDD023;
+      --n-cyan:    #FDD023;
       --n-magenta: #E07CA8;
       --n-violet:  #9B8CE0;
-      --n-amber:   #FFC53D;
-      --n-orange:  #FFC53D;
+      --n-amber:   #FDD023;
+      --n-orange:  #FDD023;
 
       /* Gold accent on deep purple */
-      --accent:  #FFC53D;
-      --accent2: #FFA51E;
-      --accentGlow: rgba(255,197,61,.50);
-      --accentGlowSoft: rgba(255,197,61,.22);
+      --accent:  #FDD023;
+      --accent2: #F2B705;
+      --accentGlow: rgba(253,208,35,.50);
+      --accentGlowSoft: rgba(253,208,35,.22);
 
       --stroke: rgba(255,255,255,.08);
       --stroke2: rgba(255,255,255,.14);
@@ -61,10 +61,10 @@
       --accentGlowSoft: rgba(255,46,154,.18);
     }
     body.mode-solo{
-      --accent:  #FFC53D;
-      --accent2: #FFA51E;
-      --accentGlow: rgba(255,197,61,.50);
-      --accentGlowSoft: rgba(255,197,61,.22);
+      --accent:  #FDD023;
+      --accent2: #F2B705;
+      --accentGlow: rgba(253,208,35,.50);
+      --accentGlowSoft: rgba(253,208,35,.22);
     }
 
     *{box-sizing:border-box;}
@@ -80,7 +80,7 @@
       margin:0;
       font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
       background:
-        radial-gradient(1100px 820px at 50% -12%, rgba(255,197,61,.06), transparent 60%),
+        radial-gradient(1100px 820px at 50% -12%, rgba(253,208,35,.06), transparent 60%),
         linear-gradient(170deg, var(--bg0) 0%, var(--bg1) 65%, var(--bg2) 100%);
       color:var(--text);
       height:100dvh;
@@ -98,7 +98,7 @@
     }
     body.mode-solo{
       background:
-        radial-gradient(1100px 820px at 50% -12%, rgba(255,197,61,.06), transparent 60%),
+        radial-gradient(1100px 820px at 50% -12%, rgba(253,208,35,.06), transparent 60%),
         linear-gradient(170deg, var(--bg0) 0%, var(--bg1) 65%, var(--bg2) 100%);
     }
     /* When on the mode screen or the partner dashboard, allow the page
@@ -223,13 +223,13 @@
     button:disabled{opacity:.35; cursor:not-allowed;}
 
     .btnPrimary{
-      border-color: rgba(255,197,61,.55);
-      background: rgba(255,197,61,.18);
+      border-color: rgba(253,208,35,.55);
+      background: rgba(253,208,35,.18);
       box-shadow: var(--glow);
       color: #FFE6AE;
     }
     .btnPrimary:not(:disabled):hover{
-      background: rgba(255,197,61,.24);
+      background: rgba(253,208,35,.24);
     }
     .btnGhost{
       background: rgba(0,0,0,.18);
@@ -325,7 +325,7 @@
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius:999px;
       transition: width .3s ease;
-      box-shadow: 0 0 12px rgba(255,197,61,.45);
+      box-shadow: 0 0 12px rgba(253,208,35,.45);
     }
 
     .stack{
@@ -341,7 +341,7 @@
       flex: 1 1 auto;
       min-height: 0;
       border-radius: var(--r2);
-      border:1px solid rgba(255,197,61,.22);
+      border:1px solid rgba(253,208,35,.22);
       background: rgba(255,255,255,.03);
       box-shadow: var(--glow);
       overflow:hidden;
@@ -355,8 +355,8 @@
       justify-content:space-between;
       gap:10px;
       padding:8px 12px;
-      background: rgba(255,197,61,.06);
-      border-bottom:1px solid rgba(255,197,61,.18);
+      background: rgba(253,208,35,.06);
+      border-bottom:1px solid rgba(253,208,35,.18);
       white-space:nowrap;
     }
     .paneHeader b{
@@ -443,8 +443,8 @@
       transition: background .15s ease, border-color .15s ease;
     }
     .checkRow.isChecked{
-      background: rgba(255,197,61,.10);
-      border-color: rgba(255,197,61,.32);
+      background: rgba(253,208,35,.10);
+      border-color: rgba(253,208,35,.32);
     }
     .checkRow input{
       -webkit-appearance: checkbox;
@@ -513,8 +513,8 @@
       transition: background .12s ease, border-color .12s ease, box-shadow .12s ease;
     }
     .benchPill.done{
-      border-color: rgba(255,197,61,.55);
-      background: rgba(255,197,61,.16);
+      border-color: rgba(253,208,35,.55);
+      background: rgba(253,208,35,.16);
       color: #FFE6AE;
       box-shadow: none;
     }
@@ -554,7 +554,7 @@
     }
     #timerBig.running{
       color: var(--accent2);
-      text-shadow: 0 0 24px rgba(255,197,61,.45);
+      text-shadow: 0 0 24px rgba(253,208,35,.45);
     }
     .timerInner{
       padding:10px;
@@ -796,8 +796,8 @@
     .calLegend .dot.partner{ background: var(--n-magenta); box-shadow: 0 0 6px rgba(255,46,154,.55); }
     .calLegend .dot.manual{ background: var(--n-amber);  box-shadow: 0 0 6px rgba(255,184,0,.55); }
     .calSelected{
-      border-color: rgba(255,197,61,.70);
-      box-shadow: 0 0 0 3px rgba(255,197,61,.15);
+      border-color: rgba(253,208,35,.70);
+      box-shadow: 0 0 0 3px rgba(253,208,35,.15);
     }
 
     .toast{
@@ -843,9 +843,9 @@
     .sparkles{
       position:absolute;inset:-40px;opacity:.9;pointer-events:none;
       background:
-        radial-gradient(circle at 10% 20%, rgba(255,197,61,.30), transparent 35%),
+        radial-gradient(circle at 10% 20%, rgba(253,208,35,.30), transparent 35%),
         radial-gradient(circle at 90% 30%, rgba(155,140,224,.24), transparent 40%),
-        radial-gradient(circle at 50% 90%, rgba(255,197,61,.16), transparent 45%);
+        radial-gradient(circle at 50% 90%, rgba(253,208,35,.16), transparent 45%);
       filter: blur(2px);
       animation: floaty 1.4s ease-in-out infinite alternate;
     }
@@ -937,8 +937,8 @@
       color: #E8D3A0;
     }
     .pill.workout{
-      border-color: rgba(255,197,61,.45);
-      background: rgba(255,197,61,.12);
+      border-color: rgba(253,208,35,.45);
+      background: rgba(253,208,35,.12);
       color: #FFE6AE;
     }
     .pill.partner{
@@ -995,7 +995,7 @@
       inset: 0;
       z-index: 1500;
       pointer-events: none;
-      background: rgba(255,197,61,.82);
+      background: rgba(253,208,35,.82);
       opacity: 0;
       transition: opacity .10s ease;
     }
@@ -1074,11 +1074,11 @@
     }
     .timerOverlayBig.go{
       color: var(--accent2);
-      text-shadow: 0 0 50px rgba(255,197,61,.55);
+      text-shadow: 0 0 50px rgba(253,208,35,.55);
     }
     .timerOverlayBig.urgent{
-      color: #FFC53D;
-      text-shadow: 0 0 80px rgba(255,197,61,.70);
+      color: #FDD023;
+      text-shadow: 0 0 80px rgba(253,208,35,.70);
       animation: urgentPulse .4s ease-in-out infinite alternate;
     }
     @keyframes urgentPulse{
@@ -10317,7 +10317,7 @@ function spawnConfetti(){
     const p=document.createElement("i");
     p.style.left = Math.random()*100+"%";
     p.style.animationDelay = (Math.random()*0.12)+"s";
-    const colors=["rgba(255,197,61,.9)","rgba(155,140,224,.9)","rgba(232,197,122,.85)","rgba(255,255,255,.85)"];
+    const colors=["rgba(253,208,35,.9)","rgba(155,140,224,.9)","rgba(232,197,122,.85)","rgba(255,255,255,.85)"];
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
     p.style.width = (8+Math.random()*6)+"px";
     p.style.height= (10+Math.random()*8)+"px";
